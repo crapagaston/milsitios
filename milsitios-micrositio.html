@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sorteo Online — MilSitios</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       DESIGN TOKENS — idénticos en todos los micrositios
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    :root {
+      --bg: #F5F3EE;
+      --ink: #1A1814;
+      --ink-soft: #6B6760;
+      --accent: #E84C2B;
+      --accent-soft: #FDE8E3;
+      --card-bg: #FFFFFF;
+      --border: #E2DFD8;
+      --tag-bg: #ECEAE4;
+
+      /* Tool accent — CAMBIAR por micrositio */
+      --tool-color: #D97706;
+      --tool-bg: #FFFBEB;
+      --tool-icon: "🎰";
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      min-height: 100vh;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ━━━ NAV (igual en todos) ━━━━━━━━━━━━━━━━━━━━━━ */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(245, 243, 238, 0.88);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 clamp(1.5rem, 5vw, 4rem);
+      height: 60px;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .nav-back {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--ink-soft);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .nav-back:hover { color: var(--ink); }
+
+    .nav-sep {
+      color: var(--border);
+      font-size: 1.1rem;
+    }
+
+    .nav-logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.1rem;
+      letter-spacing: -0.03em;
+      color: var(--ink);
+      text-decoration: none;
+    }
+
+    .nav-logo span { color: var(--accent); }
+
+    .nav-tool-name {
+      margin-left: auto;
+      font-size: 0.85rem;
+      color: var(--ink-soft);
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    /* ━━━ TOOL HEADER ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    .tool-header {
+      padding: clamp(2.5rem, 6vw, 5rem) clamp(1.5rem, 5vw, 4rem) 2rem;
+      max-width: 760px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .tool-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: var(--tool-bg);
+      color: var(--tool-color);
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      padding: 0.35rem 0.85rem;
+      border-radius: 100px;
+      margin-bottom: 1.25rem;
+    }
+
+    .tool-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      letter-spacing: -0.04em;
+      line-height: 1.05;
+      margin-bottom: 0.75rem;
+    }
+
+    .tool-desc {
+      font-size: 1rem;
+      color: var(--ink-soft);
+      font-weight: 300;
+      line-height: 1.6;
+      max-width: 420px;
+      margin: 0 auto;
+    }
+
+    /* ━━━ TOOL BODY ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    .tool-body {
+      padding: 0 clamp(1.5rem, 5vw, 4rem) clamp(3rem, 6vw, 5rem);
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    /* ━━━ CARD ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    .card {
+      background: var(--card-bg);
+      border: 1.5px solid var(--border);
+      border-radius: 20px;
+      padding: 1.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .card-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      letter-spacing: -0.01em;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* ━━━ INPUT STYLES ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    .input-row {
+      display: flex;
+      gap: 0.6rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .ms-input {
+      flex: 1;
+      height: 46px;
+      padding: 0 1rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      background: var(--bg);
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      outline: none;
+      color: var(--ink);
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .ms-input::placeholder { color: var(--ink-soft); }
+
+    .ms-input:focus {
+      border-color: var(--ink);
+      box-shadow: 0 0 0 3px rgba(26,24,20,0.06);
+      background: var(--card-bg);
+    }
+
+    /* ━━━ BUTTONS ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    .btn {
+      height: 46px;
+      padding: 0 1.25rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 500;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: transform 0.15s, box-shadow 0.15s, background 0.15s;
+      white-space: nowrap;
+    }
+
+    .btn:active { transform: scale(0.97); }
+
+    .btn-ghost {
+      background: var(--tag-bg);
+      color: var(--ink-soft);
+    }
+
+    .btn-ghost:hover { background: var(--border); color: var(--ink); }
+
+    .btn-primary {
+      background: var(--ink);
+      color: #fff;
+      width: 100%;
+      justify-content: center;
+      height: 52px;
+      font-size: 1rem;
+      border-radius: 14px;
+      margin-top: 0.5rem;
+    }
+
+    .btn-primary:hover {
+      box-shadow: 0 8px 24px rgba(26,24,20,0.2);
+      transform: translateY(-1px);
+    }
+
+    .btn-accent {
+      background: var(--accent);
+      color: #fff;
+      width: 100%;
+      justify-content: center;
+      height: 56px;
+      font-size: 1.05rem;
+      font-weight: 600;
+      border-radius: 14px;
+    }
+
+    .btn-accent:hover {
+      box-shadow: 0 8px 24px rgba(232,76,43,0.3);
+      transform: translateY(-2px);
+    }
+
+    /* ━━━ PARTICIPANTS LIST ━━━━━━━━━━━━━━━━━━━━━━━━ */
+    .participants-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      min-height: 40px;
+    }
+
+    .participant-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: var(--tag-bg);
+      border-radius: 100px;
+      padding: 0.35rem 0.75rem 0.35rem 0.85rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+      animation: tagIn 0.2s ease;
+    }
+
+    @keyframes tagIn {
+      from { opacity: 0; transform: scale(0.85); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .participant-remove {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--ink-soft);
+      padding: 0;
+      font-size: 1rem;
+      line-height: 1;
+      transition: color 0.15s;
+    }
+
+    .participant-remove:hover { color: var(--accent); }
+
+    /* ━━━ RESULT ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    .result-card {
+      background: var(--ink);
+      color: #fff;
+      border-radius: 20px;
+      padding: 2.5rem 2rem;
+      text-align: center;
+      display: none;
+      animation: resultIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .result-card.show { display: block; }
+
+    @keyframes resultIn {
+      from { opacity: 0; transform: scale(0.8) translateY(20px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .result-emoji {
+      font-size: 3rem;
+      margin-bottom: 0.75rem;
+      display: block;
+      animation: spin 0.5s ease;
+    }
+
+    @keyframes spin {
+      from { transform: rotate(-20deg) scale(0.5); }
+      to { transform: rotate(0deg) scale(1); }
+    }
+
+    .result-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 0.5rem;
+    }
+
+    .result-winner {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin-bottom: 0.5rem;
+    }
+
+    .result-sub {
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 1.5rem;
+    }
+
+    .btn-reset {
+      background: rgba(255,255,255,0.12);
+      color: #fff;
+      height: 44px;
+      padding: 0 1.5rem;
+      border: none;
+      border-radius: 12px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-reset:hover { background: rgba(255,255,255,0.2); }
+
+    /* ━━━ CONFETTI ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    .confetti-piece {
+      position: fixed;
+      width: 8px;
+      height: 8px;
+      border-radius: 2px;
+      pointer-events: none;
+      z-index: 9999;
+      animation: confettiFall linear forwards;
+    }
+
+    @keyframes confettiFall {
+      0% { opacity: 1; transform: translateY(-10px) rotate(0deg); }
+      100% { opacity: 0; transform: translateY(100vh) rotate(720deg); }
+    }
+
+    /* ━━━ DIVIDER ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    .section-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 1.5rem 0;
+    }
+
+    /* ━━━ RELATED TOOLS ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    .related-section {
+      padding: 0 clamp(1.5rem, 5vw, 4rem) clamp(3rem, 6vw, 5rem);
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    .related-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: 0.75rem;
+      color: var(--ink-soft);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-size: 0.75rem;
+    }
+
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
+    }
+
+    @media (max-width: 520px) {
+      .related-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    .related-card {
+      background: var(--card-bg);
+      border: 1.5px solid var(--border);
+      border-radius: 14px;
+      padding: 1rem;
+      text-decoration: none;
+      color: var(--ink);
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+
+    .related-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--ink);
+    }
+
+    .related-icon { font-size: 1.4rem; }
+
+    .related-name {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+
+    .related-cat {
+      font-size: 0.72rem;
+      color: var(--ink-soft);
+    }
+
+    /* ━━━ FOOTER ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 1.75rem clamp(1.5rem, 5vw, 4rem);
+      max-width: 760px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .footer-logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1rem;
+      color: var(--ink);
+      text-decoration: none;
+    }
+
+    .footer-logo span { color: var(--accent); }
+    .footer-text { font-size: 0.78rem; color: var(--ink-soft); }
+
+    /* ━━━ RESPONSIVE ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    @media (max-width: 480px) {
+      .input-row { flex-direction: column; }
+      .input-row .btn { width: 100%; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="milsitios-index.html" class="nav-back">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+    Inicio
+  </a>
+  <span class="nav-sep">/</span>
+  <a href="milsitios-index.html" class="nav-logo">Mil<span>Sitios</span></a>
+  <span class="nav-tool-name">
+    <span style="color:var(--tool-color)">●</span> Social & Grupos
+  </span>
+</nav>
+
+<!-- TOOL HEADER -->
+<header class="tool-header">
+  <div class="tool-chip">🎉 Social & Grupos</div>
+  <h1 class="tool-title">Sorteo Online</h1>
+  <p class="tool-desc">Agregá los participantes y elegí un ganador al azar. Sin registros, totalmente gratis.</p>
+</header>
+
+<!-- TOOL BODY -->
+<main class="tool-body">
+
+  <!-- CARD: agregar participantes -->
+  <div class="card">
+    <p class="card-title">
+      <span>👥</span> Participantes
+      <span id="count" style="margin-left:auto;font-family:'DM Sans';font-weight:400;font-size:0.8rem;color:var(--ink-soft)">0 agregados</span>
+    </p>
+
+    <div class="input-row">
+      <input
+        type="text"
+        class="ms-input"
+        id="nameInput"
+        placeholder="Nombre del participante"
+        autocomplete="off"
+      />
+      <button class="btn btn-ghost" onclick="addParticipant()">+ Agregar</button>
+    </div>
+
+    <div class="participants-list" id="participantsList">
+      <!-- tags dinámicos -->
+    </div>
+
+    <div class="section-divider"></div>
+
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem">
+      <span style="font-size:0.82rem;color:var(--ink-soft)">O pegá una lista separada por comas o enters</span>
+      <button class="btn btn-ghost" style="height:34px;font-size:0.8rem;padding:0 0.9rem" onclick="clearAll()">Limpiar todo</button>
+    </div>
+    <textarea
+      class="ms-input"
+      id="bulkInput"
+      placeholder="Ana, Bruno, Carla, Diego…"
+      style="height:72px;padding:0.75rem 1rem;resize:none;width:100%"
+    ></textarea>
+    <button class="btn btn-primary" onclick="bulkAdd()">Importar lista</button>
+  </div>
+
+  <!-- CARD: opciones -->
+  <div class="card">
+    <p class="card-title"><span>⚙️</span> Opciones</p>
+    <div style="display:flex;align-items:center;gap:0.75rem;font-size:0.9rem;color:var(--ink-soft)">
+      <input type="checkbox" id="excludeWinner" style="width:16px;height:16px;accent-color:var(--accent)" />
+      <label for="excludeWinner">Excluir al ganador de sorteos futuros</label>
+    </div>
+  </div>
+
+  <!-- BTN SORTEAR -->
+  <button class="btn btn-accent" onclick="doSorteo()" id="sortBtn">
+    🎰 &nbsp;¡Realizar sorteo!
+  </button>
+
+  <!-- RESULT -->
+  <div class="result-card" id="resultCard">
+    <span class="result-emoji">🏆</span>
+    <p class="result-label">El ganador es</p>
+    <p class="result-winner" id="winnerName">—</p>
+    <p class="result-sub" id="resultSub"></p>
+    <button class="btn-reset" onclick="resetResult()">↻ &nbsp;Volver a sortear</button>
+  </div>
+
+</main>
+
+<!-- RELATED TOOLS -->
+<section class="related-section">
+  <p class="related-title">También te puede interesar</p>
+  <div class="related-grid">
+    <a href="#" class="related-card">
+      <span class="related-icon">🎁</span>
+      <span class="related-name">Amigo Invisible</span>
+      <span class="related-cat">Social & Grupos</span>
+    </a>
+    <a href="#" class="related-card">
+      <span class="related-icon">🗳</span>
+      <span class="related-name">Votación Simple</span>
+      <span class="related-cat">Social & Grupos</span>
+    </a>
+    <a href="#" class="related-card">
+      <span class="related-icon">⚽</span>
+      <span class="related-name">Armar Equipos</span>
+      <span class="related-cat">Social & Grupos</span>
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <a href="milsitios-index.html" class="footer-logo">Mil<span>Sitios</span></a>
+  <p class="footer-text">Hecho con ☕ en Argentina</p>
+</footer>
+
+<script>
+  let participants = [];
+
+  const input = document.getElementById('nameInput');
+  const list = document.getElementById('participantsList');
+  const countEl = document.getElementById('count');
+
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter') addParticipant();
+  });
+
+  function updateCount() {
+    countEl.textContent = participants.length + ' agregado' + (participants.length !== 1 ? 's' : '');
+  }
+
+  function renderList() {
+    list.innerHTML = participants.map((p, i) => `
+      <span class="participant-tag">
+        ${p}
+        <button class="participant-remove" onclick="remove(${i})" title="Quitar">×</button>
+      </span>
+    `).join('');
+    updateCount();
+  }
+
+  function addParticipant() {
+    const val = input.value.trim();
+    if (!val) return;
+    if (participants.includes(val)) {
+      input.style.borderColor = 'var(--accent)';
+      setTimeout(() => input.style.borderColor = '', 600);
+      return;
+    }
+    participants.push(val);
+    input.value = '';
+    input.focus();
+    renderList();
+  }
+
+  function remove(i) {
+    participants.splice(i, 1);
+    renderList();
+  }
+
+  function clearAll() {
+    participants = [];
+    document.getElementById('bulkInput').value = '';
+    renderList();
+  }
+
+  function bulkAdd() {
+    const raw = document.getElementById('bulkInput').value;
+    const names = raw.split(/[\n,]+/).map(n => n.trim()).filter(Boolean);
+    names.forEach(n => {
+      if (!participants.includes(n)) participants.push(n);
+    });
+    document.getElementById('bulkInput').value = '';
+    renderList();
+  }
+
+  function doSorteo() {
+    if (participants.length < 2) {
+      alert('Agregá al menos 2 participantes para realizar el sorteo.');
+      return;
+    }
+
+    const sortBtn = document.getElementById('sortBtn');
+    sortBtn.textContent = '🎲 Sorteando…';
+    sortBtn.disabled = true;
+
+    let count = 0;
+    const interval = setInterval(() => {
+      const fake = participants[Math.floor(Math.random() * participants.length)];
+      document.getElementById('winnerName').textContent = fake;
+      document.getElementById('resultCard').classList.add('show');
+      count++;
+      if (count >= 12) {
+        clearInterval(interval);
+        const winner = participants[Math.floor(Math.random() * participants.length)];
+        document.getElementById('winnerName').textContent = winner;
+        document.getElementById('resultSub').textContent =
+          `Ganador entre ${participants.length} participantes`;
+
+        launchConfetti();
+
+        const exclude = document.getElementById('excludeWinner').checked;
+        if (exclude) {
+          setTimeout(() => {
+            participants = participants.filter(p => p !== winner);
+            renderList();
+          }, 500);
+        }
+
+        sortBtn.textContent = '🎰  ¡Realizar sorteo!';
+        sortBtn.disabled = false;
+      }
+    }, 80);
+  }
+
+  function resetResult() {
+    document.getElementById('resultCard').classList.remove('show');
+  }
+
+  function launchConfetti() {
+    const colors = ['#E84C2B','#D97706','#2563EB','#7C3AED','#059669','#F5F3EE'];
+    for (let i = 0; i < 60; i++) {
+      const el = document.createElement('div');
+      el.className = 'confetti-piece';
+      el.style.left = Math.random() * 100 + 'vw';
+      el.style.top = '-10px';
+      el.style.background = colors[Math.floor(Math.random() * colors.length)];
+      el.style.animationDuration = (1 + Math.random() * 2) + 's';
+      el.style.animationDelay = (Math.random() * 0.5) + 's';
+      el.style.transform = `rotate(${Math.random() * 360}deg)`;
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 3000);
+    }
+  }
+</script>
+</body>
+</html>
