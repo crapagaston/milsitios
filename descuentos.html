@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Calculador de Descuentos — MilSitios</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #F5F3EE;
+      --ink: #1A1814;
+      --ink-soft: #6B6760;
+      --accent: #E84C2B;
+      --accent-soft: #FDE8E3;
+      --card-bg: #FFFFFF;
+      --border: #E2DFD8;
+      --tag-bg: #ECEAE4;
+      --green: #059669;
+      --green-bg: #ECFDF5;
+      --tool-color: #E84C2B;
+      --tool-bg: #FDE8E3;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      min-height: 100vh;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 0;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky; top: 0; z-index: 200; height: 56px;
+      background: rgba(245,243,238,.92);
+      backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: .75rem; padding: 0 1.25rem;
+    }
+    .nav-back { display: flex; align-items: center; gap: .4rem; font-size: .85rem; font-weight: 500; color: var(--ink-soft); text-decoration: none; -webkit-tap-highlight-color: transparent; }
+    .nav-back:hover { color: var(--ink); }
+    .nav-sep { color: var(--border); }
+    .nav-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.1rem; letter-spacing: -.03em; color: var(--ink); text-decoration: none; }
+    .nav-logo span { color: var(--accent); }
+    .nav-chip { margin-left: auto; font-size: .75rem; color: var(--tool-color); font-weight: 600; }
+
+    /* ── HERO ── */
+    .hero { padding: 2rem 1.25rem 1.5rem; max-width: 700px; margin: 0 auto; text-align: center; }
+    .tool-chip { display: inline-flex; align-items: center; gap: .4rem; background: var(--tool-bg); color: var(--tool-color); font-size: .72rem; font-weight: 600; letter-spacing: .07em; text-transform: uppercase; padding: .3rem .8rem; border-radius: 100px; margin-bottom: .9rem; }
+    h1 { font-family: 'Syne', sans-serif; font-weight: 800; font-size: clamp(1.9rem, 7vw, 3rem); line-height: 1; letter-spacing: -.04em; margin-bottom: .5rem; }
+    .hero-sub { font-size: .9rem; color: var(--ink-soft); font-weight: 300; line-height: 1.6; }
+
+    /* ── BODY ── */
+    .body { padding: 0 1.25rem 3rem; max-width: 700px; margin: 0 auto; }
+
+    /* ── MODE TABS ── */
+    .mode-tabs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: .4rem;
+      background: var(--card-bg);
+      border: 1.5px solid var(--border);
+      border-radius: 16px;
+      padding: .4rem;
+      margin-bottom: 1rem;
+    }
+    @media(min-width:500px) { .mode-tabs { grid-template-columns: repeat(5,1fr); } }
+
+    .mode-tab {
+      padding: .55rem .3rem;
+      border-radius: 11px;
+      border: none;
+      background: transparent;
+      font-family: 'DM Sans', sans-serif;
+      font-size: .72rem;
+      font-weight: 500;
+      color: var(--ink-soft);
+      cursor: pointer;
+      transition: all .2s;
+      -webkit-tap-highlight-color: transparent;
+      text-align: center;
+      line-height: 1.3;
+    }
+    .mode-tab .tab-icon { display: block; font-size: 1.1rem; margin-bottom: .2rem; }
+    .mode-tab.active {
+      background: var(--ink);
+      color: #fff;
+      font-weight: 600;
+    }
+
+    /* ── CARD ── */
+    .card {
+      background: var(--card-bg);
+      border: 1.5px solid var(--border);
+      border-radius: 20px;
+      padding: 1.4rem;
+      margin-bottom: 1rem;
+      display: none;
+    }
+    .card.active-card { display: block; }
+    .card-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1rem; letter-spacing: -.02em; margin-bottom: 1.1rem; display: flex; align-items: center; gap: .5rem; }
+    .card-desc { font-size: .8rem; color: var(--ink-soft); margin-top: -.65rem; margin-bottom: 1rem; line-height: 1.5; }
+
+    /* ── INPUTS ── */
+    .field { display: flex; flex-direction: column; gap: .35rem; margin-bottom: .85rem; }
+    .field-label { font-size: .75rem; font-weight: 600; color: var(--ink-soft); text-transform: uppercase; letter-spacing: .05em; }
+    .field-hint { font-size: .72rem; color: var(--ink-soft); margin-top: -.2rem; }
+
+    .input-prefix-wrap { position: relative; }
+    .input-prefix {
+      position: absolute; left: .9rem; top: 50%; transform: translateY(-50%);
+      font-size: .9rem; color: var(--ink-soft); pointer-events: none; font-weight: 500;
+    }
+    .ms-input {
+      width: 100%; height: 48px;
+      padding: 0 1rem;
+      font-family: 'DM Sans', sans-serif; font-size: 1rem;
+      background: var(--bg); border: 1.5px solid var(--border);
+      border-radius: 12px; outline: none; color: var(--ink);
+      transition: border-color .2s, box-shadow .2s; -webkit-appearance: none;
+    }
+    .ms-input.has-prefix { padding-left: 2.1rem; }
+    .ms-input:focus { border-color: var(--ink); box-shadow: 0 0 0 3px rgba(26,24,20,.06); background: var(--card-bg); }
+    .ms-input.big { height: 56px; font-size: 1.2rem; font-family: 'Syne', sans-serif; font-weight: 700; }
+
+    .fields-row { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; }
+
+    /* slider */
+    .slider-wrap { display: flex; align-items: center; gap: .75rem; }
+    .ms-slider {
+      flex: 1; -webkit-appearance: none; appearance: none;
+      height: 6px; border-radius: 100px;
+      background: var(--border); outline: none; cursor: pointer;
+    }
+    .ms-slider::-webkit-slider-thumb {
+      -webkit-appearance: none; appearance: none;
+      width: 22px; height: 22px; border-radius: 50%;
+      background: var(--ink); cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0,0,0,.15);
+    }
+    .slider-val { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1rem; min-width: 44px; text-align: right; }
+
+    /* stepper */
+    .stepper-wrap { display: flex; align-items: center; gap: .5rem; }
+    .btn-step { width: 40px; height: 40px; border-radius: 11px; border: 1.5px solid var(--border); background: var(--bg); font-size: 1.2rem; cursor: pointer; display: flex; align-items: center; justify-content: center; font-weight: 700; transition: background .15s; -webkit-tap-highlight-color: transparent; }
+    .btn-step:hover { background: var(--tag-bg); }
+    .btn-step:active { transform: scale(.92); }
+    .step-val { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.3rem; min-width: 36px; text-align: center; }
+
+    /* ── RESULT PANEL ── */
+    .result-panel {
+      background: var(--ink);
+      border-radius: 20px;
+      padding: 1.5rem;
+      color: #fff;
+      margin-bottom: 1rem;
+      display: none;
+      animation: resultIn .35s cubic-bezier(.34,1.2,.64,1);
+    }
+    .result-panel.show { display: block; }
+    @keyframes resultIn { from{opacity:0;transform:translateY(10px)scale(.97)} to{opacity:1;transform:translateY(0)scale(1)} }
+
+    .result-main {
+      display: flex; align-items: flex-end; justify-content: space-between;
+      margin-bottom: 1.25rem; gap: .5rem; flex-wrap: wrap;
+    }
+    .result-pay-label { font-size: .72rem; text-transform: uppercase; letter-spacing: .08em; color: rgba(255,255,255,.5); margin-bottom: .2rem; }
+    .result-pay-amount { font-family: 'Syne', sans-serif; font-weight: 800; font-size: clamp(2.2rem,8vw,3.5rem); line-height: 1; letter-spacing: -.04em; }
+    .result-save-badge {
+      background: var(--accent); color: #fff;
+      border-radius: 12px; padding: .5rem .9rem;
+      text-align: center; flex-shrink: 0;
+    }
+    .result-save-label { font-size: .65rem; text-transform: uppercase; letter-spacing: .08em; opacity: .8; }
+    .result-save-amount { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.3rem; line-height: 1.1; }
+
+    .result-breakdown {
+      border-top: 1px solid rgba(255,255,255,.1);
+      padding-top: 1rem;
+      display: flex; flex-direction: column; gap: .5rem;
+    }
+    .result-line {
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: .85rem;
+    }
+    .result-line .rl-label { color: rgba(255,255,255,.6); }
+    .result-line .rl-val { font-family: 'Syne', sans-serif; font-weight: 600; }
+    .result-line.highlight .rl-val { color: #6EE7B7; }
+    .result-line.strikethrough .rl-val { text-decoration: line-through; opacity: .5; }
+
+    .result-verdict {
+      margin-top: 1rem; padding: .75rem 1rem;
+      background: rgba(255,255,255,.07); border-radius: 12px;
+      font-size: .82rem; line-height: 1.5; color: rgba(255,255,255,.75);
+    }
+    .result-verdict strong { color: #fff; }
+
+    /* ── CALC BUTTON ── */
+    .btn-calc {
+      width: 100%; height: 52px;
+      background: var(--accent); color: #fff;
+      border: none; border-radius: 14px;
+      font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700;
+      cursor: pointer; -webkit-tap-highlight-color: transparent;
+      transition: transform .15s, box-shadow .2s;
+      display: flex; align-items: center; justify-content: center; gap: .4rem;
+    }
+    .btn-calc:hover { box-shadow: 0 8px 24px rgba(232,76,43,.3); transform: translateY(-1px); }
+    .btn-calc:active { transform: scale(.98); }
+
+    /* ── COMPARADOR ── */
+    .compare-items { display: flex; flex-direction: column; gap: .75rem; margin-bottom: .85rem; }
+    .compare-item {
+      background: var(--bg); border: 1.5px solid var(--border);
+      border-radius: 14px; padding: 1rem;
+      transition: border-color .2s;
+    }
+    .compare-item.winner { border-color: var(--green); background: var(--green-bg); }
+    .compare-item-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: .75rem; }
+    .compare-item-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: .85rem; }
+    .compare-winner-badge { font-size: .65rem; font-weight: 700; background: var(--green); color: #fff; padding: .2rem .55rem; border-radius: 100px; }
+    .compare-fields { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; }
+    .compare-result { font-size: .78rem; color: var(--green); font-weight: 600; margin-top: .35rem; }
+
+    .btn-add-item { display: flex; align-items: center; justify-content: center; gap: .4rem; width: 100%; padding: .6rem; border: 1.5px dashed var(--border); background: transparent; border-radius: 12px; font-family: 'DM Sans', sans-serif; font-size: .82rem; color: var(--ink-soft); cursor: pointer; -webkit-tap-highlight-color: transparent; margin-bottom: .85rem; transition: background .15s; }
+    .btn-add-item:hover { background: var(--tag-bg); }
+
+    /* ── CUOTAS ── */
+    .cuotas-table { width: 100%; border-collapse: collapse; font-size: .82rem; margin-top: .25rem; }
+    .cuotas-table th { font-family: 'Syne', sans-serif; font-weight: 700; text-align: left; padding: .45rem .3rem; border-bottom: 1.5px solid var(--border); font-size: .72rem; color: var(--ink-soft); }
+    .cuotas-table td { padding: .5rem .3rem; border-bottom: 1px solid var(--border); }
+    .cuotas-table tr:last-child td { border-bottom: none; }
+    .cuotas-table .best-row td { color: var(--green); font-weight: 600; }
+    .cuotas-table .best-row td:first-child { font-family: 'Syne', sans-serif; font-weight: 700; }
+
+    /* ── RELATED ── */
+    .related { padding: 0 1.25rem 3rem; max-width: 700px; margin: 0 auto; }
+    .related-title { font-size: .72rem; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-soft); font-weight: 600; margin-bottom: .75rem; }
+    .related-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: .65rem; }
+    .related-card { background: var(--card-bg); border: 1.5px solid var(--border); border-radius: 14px; padding: .9rem; text-decoration: none; color: var(--ink); display: flex; flex-direction: column; gap: .3rem; transition: transform .2s, border-color .2s; }
+    .related-card:hover { transform: translateY(-2px); border-color: var(--tool-color); }
+    .related-icon { font-size: 1.3rem; }
+    .related-name { font-family: 'Syne', sans-serif; font-size: .82rem; font-weight: 700; }
+    .related-cat { font-size: .7rem; color: var(--ink-soft); }
+
+    footer { border-top: 1px solid var(--border); padding: 1.75rem 1.25rem; max-width: 700px; margin: 0 auto; display: flex; flex-direction: column; gap: .5rem; }
+    @media(min-width:540px) { footer { flex-direction: row; align-items: center; justify-content: space-between; } }
+    .footer-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: .95rem; color: var(--ink); text-decoration: none; }
+    .footer-logo span { color: var(--accent); }
+    .footer-text { font-size: .75rem; color: var(--ink-soft); }
+
+    @keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+    .fade-in { animation: fadeUp .4s ease both; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-back">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+    Inicio
+  </a>
+  <span class="nav-sep">/</span>
+  <a href="index.html" class="nav-logo">Mil<span>Sitios</span></a>
+  <span class="nav-chip">🏷️ Descuentos</span>
+</nav>
+
+<header class="hero">
+  <div class="tool-chip">🏷️ Finanzas & Compras</div>
+  <h1>Calculador de<br/>Descuentos</h1>
+  <p class="hero-sub">Calculá exactamente cuánto pagás y cuánto ahorrás en cualquier tipo de promoción.</p>
+</header>
+
+<div class="body">
+
+  <!-- TABS -->
+  <div class="mode-tabs" id="modeTabs">
+    <button class="mode-tab active" onclick="setMode('porcentaje',this)">
+      <span class="tab-icon">%</span>% Descuento
+    </button>
+    <button class="mode-tab" onclick="setMode('segunda',this)">
+      <span class="tab-icon">2️⃣</span>2da unidad
+    </button>
+    <button class="mode-tab" onclick="setMode('cuotas',this)">
+      <span class="tab-icon">💳</span>Cuotas
+    </button>
+    <button class="mode-tab" onclick="setMode('combo',this)">
+      <span class="tab-icon">🔗</span>Descuentos combinados
+    </button>
+    <button class="mode-tab" onclick="setMode('comparar',this)">
+      <span class="tab-icon">⚖️</span>Comparar ofertas
+    </button>
+  </div>
+
+  <!-- ── 1. PORCENTAJE ── -->
+  <div class="card active-card fade-in" id="card-porcentaje">
+    <p class="card-title">% Descuento sobre precio</p>
+    <p class="card-desc">Ingresá el precio original y el porcentaje de descuento.</p>
+
+    <div class="field">
+      <label class="field-label">Precio original</label>
+      <div class="input-prefix-wrap">
+        <span class="input-prefix">$</span>
+        <input type="number" class="ms-input big has-prefix" id="p_precio" placeholder="0" inputmode="decimal" oninput="calcPorcentaje()"/>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">Descuento</label>
+      <div class="slider-wrap">
+        <input type="range" class="ms-slider" id="p_slider" min="1" max="90" value="20" oninput="syncSlider('p')"/>
+        <span class="slider-val" id="p_sliderVal">20%</span>
+      </div>
+      <div class="input-prefix-wrap" style="margin-top:.5rem">
+        <span class="input-prefix">%</span>
+        <input type="number" class="ms-input has-prefix" id="p_pct" value="20" min="1" max="99" inputmode="decimal" oninput="syncInput('p'); calcPorcentaje()"/>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">Cantidad de unidades</label>
+      <div class="stepper-wrap">
+        <button class="btn-step" onclick="stepQty('p_qty',-1,'calcPorcentaje')">−</button>
+        <span class="step-val" id="p_qty">1</span>
+        <button class="btn-step" onclick="stepQty('p_qty',1,'calcPorcentaje')">+</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 2. SEGUNDA UNIDAD ── -->
+  <div class="card fade-in" id="card-segunda">
+    <p class="card-title">Descuento en segunda (y siguientes) unidad</p>
+    <p class="card-desc">La primera unidad sale a precio normal, las siguientes a precio con descuento.</p>
+
+    <div class="field">
+      <label class="field-label">Precio original</label>
+      <div class="input-prefix-wrap">
+        <span class="input-prefix">$</span>
+        <input type="number" class="ms-input big has-prefix" id="seg_precio" placeholder="0" inputmode="decimal" oninput="calcSegunda()"/>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">Descuento en unidades adicionales</label>
+      <div class="slider-wrap">
+        <input type="range" class="ms-slider" id="seg_slider" min="1" max="99" value="50" oninput="syncSlider('seg')"/>
+        <span class="slider-val" id="seg_sliderVal">50%</span>
+      </div>
+      <div class="input-prefix-wrap" style="margin-top:.5rem">
+        <span class="input-prefix">%</span>
+        <input type="number" class="ms-input has-prefix" id="seg_pct" value="50" min="1" max="99" inputmode="decimal" oninput="syncInput('seg'); calcSegunda()"/>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">Cantidad de unidades a comprar</label>
+      <div class="stepper-wrap">
+        <button class="btn-step" onclick="stepField('seg_qty',-1,1,20,'calcSegunda')">−</button>
+        <span class="step-val" id="seg_qty">2</span>
+        <button class="btn-step" onclick="stepField('seg_qty',1,1,20,'calcSegunda')">+</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 4. CUOTAS ── -->
+  <div class="card fade-in" id="card-cuotas">
+    <p class="card-title">Cuotas con y sin interés</p>
+    <p class="card-desc">Calculá el costo real de pagar en cuotas vs. pagar de contado.</p>
+
+    <div class="field">
+      <label class="field-label">Precio de contado</label>
+      <div class="input-prefix-wrap">
+        <span class="input-prefix">$</span>
+        <input type="number" class="ms-input big has-prefix" id="cuo_precio" placeholder="0" inputmode="decimal" oninput="calcCuotas()"/>
+      </div>
+    </div>
+    <div class="fields-row">
+      <div class="field">
+        <label class="field-label">Cantidad de cuotas</label>
+        <input type="number" class="ms-input" id="cuo_n" value="12" min="1" max="72" inputmode="numeric" oninput="calcCuotas()"/>
+      </div>
+      <div class="field">
+        <label class="field-label">Interés mensual (%)</label>
+        <div class="input-prefix-wrap">
+          <span class="input-prefix">%</span>
+          <input type="number" class="ms-input has-prefix" id="cuo_tna" value="0" min="0" max="30" inputmode="decimal" step="0.1" oninput="calcCuotas()" placeholder="0 = sin interés"/>
+        </div>
+        <span class="field-hint">0% = sin interés / cuotas fijas</span>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">Descuento por pago de contado (%)</label>
+      <div class="slider-wrap">
+        <input type="range" class="ms-slider" id="cuo_desc_slider" min="0" max="40" value="0" oninput="syncCuoDesc()"/>
+        <span class="slider-val" id="cuo_desc_sliderVal">0%</span>
+      </div>
+    </div>
+    <div id="cuotas-result-table" style="display:none">
+      <table class="cuotas-table" id="cuotasTable"></table>
+    </div>
+  </div>
+
+  <!-- ── 5. COMBO ── -->
+  <div class="card fade-in" id="card-combo">
+    <p class="card-title">Descuentos combinados / escalonados</p>
+    <p class="card-desc">Cuando aplicás varios descuentos seguidos. El segundo descuento se aplica sobre el precio ya reducido.</p>
+
+    <div class="field">
+      <label class="field-label">Precio original</label>
+      <div class="input-prefix-wrap">
+        <span class="input-prefix">$</span>
+        <input type="number" class="ms-input big has-prefix" id="cmb_precio" placeholder="0" inputmode="decimal" oninput="calcCombo()"/>
+      </div>
+    </div>
+
+    <div id="combo_discounts">
+      <div class="field" data-combo-row="0">
+        <label class="field-label">Descuento 1 (ej: descuento de la tarjeta)</label>
+        <div class="slider-wrap">
+          <input type="range" class="ms-slider" min="0" max="70" value="20" oninput="syncComboSlider(0,this); calcCombo()"/>
+          <span class="slider-val" id="csl_0">20%</span>
+        </div>
+      </div>
+      <div class="field" data-combo-row="1">
+        <label class="field-label">Descuento 2 (ej: promoción del local)</label>
+        <div class="slider-wrap">
+          <input type="range" class="ms-slider" min="0" max="70" value="15" oninput="syncComboSlider(1,this); calcCombo()"/>
+          <span class="slider-val" id="csl_1">15%</span>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn-add-item" id="addComboBtn" onclick="addComboDiscount()">+ Agregar otro descuento</button>
+  </div>
+
+  <!-- ── 6. COMPARAR ── -->
+  <div class="card fade-in" id="card-comparar">
+    <p class="card-title">Comparar ofertas</p>
+    <p class="card-desc">Compará hasta 4 productos/tiendas para saber cuál conviene más por unidad.</p>
+
+    <div class="compare-items" id="compareItems">
+      <div class="compare-item" data-idx="0">
+        <div class="compare-item-header">
+          <span class="compare-item-name">Opción A</span>
+          <span class="compare-winner-badge" style="display:none">✓ Mejor precio</span>
+        </div>
+        <div class="compare-fields">
+          <div class="field">
+            <label class="field-label">Precio total</label>
+            <div class="input-prefix-wrap">
+              <span class="input-prefix">$</span>
+              <input type="number" class="ms-input has-prefix" placeholder="0" inputmode="decimal" oninput="calcComparar()"/>
+            </div>
+          </div>
+          <div class="field">
+            <label class="field-label">Cantidad</label>
+            <input type="number" class="ms-input" value="1" min="1" inputmode="numeric" oninput="calcComparar()"/>
+          </div>
+        </div>
+        <div class="compare-result" id="cmp_result_0"></div>
+      </div>
+
+      <div class="compare-item" data-idx="1">
+        <div class="compare-item-header">
+          <span class="compare-item-name">Opción B</span>
+          <span class="compare-winner-badge" style="display:none">✓ Mejor precio</span>
+        </div>
+        <div class="compare-fields">
+          <div class="field">
+            <label class="field-label">Precio total</label>
+            <div class="input-prefix-wrap">
+              <span class="input-prefix">$</span>
+              <input type="number" class="ms-input has-prefix" placeholder="0" inputmode="decimal" oninput="calcComparar()"/>
+            </div>
+          </div>
+          <div class="field">
+            <label class="field-label">Cantidad</label>
+            <input type="number" class="ms-input" value="1" min="1" inputmode="numeric" oninput="calcComparar()"/>
+          </div>
+        </div>
+        <div class="compare-result" id="cmp_result_1"></div>
+      </div>
+    </div>
+
+    <button class="btn-add-item" id="addCmpBtn" onclick="addCompareItem()">+ Agregar opción C, D…</button>
+  </div>
+
+  <!-- ── RESULT PANEL (shared) ── -->
+  <div class="result-panel" id="resultPanel">
+    <div class="result-main">
+      <div>
+        <div class="result-pay-label" id="res_pay_label">Pagás</div>
+        <div class="result-pay-amount" id="res_pay">$0</div>
+      </div>
+      <div class="result-save-badge" id="res_save_badge">
+        <div class="result-save-label" id="res_save_label">Ahorrás</div>
+        <div class="result-save-amount" id="res_save">$0</div>
+      </div>
+    </div>
+    <div class="result-breakdown" id="res_breakdown"></div>
+    <div class="result-verdict" id="res_verdict" style="display:none"></div>
+  </div>
+
+</div><!-- /body -->
+
+<div class="related">
+  <p class="related-title">También te puede interesar</p>
+  <div class="related-grid">
+    <a href="milsitios-micrositio.html" class="related-card"><span class="related-icon">🎰</span><span class="related-name">Sorteo Online</span><span class="related-cat">Social & Grupos</span></a>
+    <a href="juegos-de-cartas.html" class="related-card"><span class="related-icon">🃏</span><span class="related-name">Juegos de Cartas</span><span class="related-cat">Entretenimiento</span></a>
+    <a href="index.html" class="related-card"><span class="related-icon">🛠</span><span class="related-name">Ver todos</span><span class="related-cat">MilSitios</span></a>
+  </div>
+</div>
+
+<footer>
+  <a href="index.html" class="footer-logo">Mil<span>Sitios</span></a>
+  <p class="footer-text">Hecho con ☕ en Argentina</p>
+</footer>
+
+<script>
+  const fmt = n => '$' + Math.round(n).toLocaleString('es-AR');
+  const fmtDec = n => '$' + n.toLocaleString('es-AR', {minimumFractionDigits:2, maximumFractionDigits:2});
+  const pct = (saved, orig) => orig > 0 ? ((saved/orig)*100).toFixed(1)+'%' : '0%';
+
+  /* ── MODE SWITCHING ── */
+  let currentMode = 'porcentaje';
+  function setMode(mode, btn) {
+    currentMode = mode;
+    document.querySelectorAll('.mode-tab').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.card').forEach(c => c.classList.remove('active-card'));
+    document.getElementById('card-' + (mode === 'segunda' ? 'segunda' : mode === 'cuotas' ? 'cuotas' : mode === 'combo' ? 'combo' : mode === 'comparar' ? 'comparar' : 'porcentaje')).classList.add('active-card');
+    document.getElementById('resultPanel').classList.remove('show');
+    // retrigger calc if there's data
+    const calcMap = { porcentaje: calcPorcentaje, segunda: calcSegunda, cuotas: calcCuotas, combo: calcCombo, comparar: calcComparar };
+    if (calcMap[mode]) calcMap[mode]();
+  }
+
+  /* ── SLIDER SYNC ── */
+  function syncSlider(prefix) {
+    const s = document.getElementById(prefix+'_slider');
+    const inp = document.getElementById(prefix+'_pct');
+    const lbl = document.getElementById(prefix+'_sliderVal');
+    inp.value = s.value;
+    lbl.textContent = s.value + '%';
+    if (prefix === 'p') calcPorcentaje();
+    if (prefix === 'seg') calcSegunda();
+  }
+  function syncInput(prefix) {
+    const s = document.getElementById(prefix+'_slider');
+    const inp = document.getElementById(prefix+'_pct');
+    const lbl = document.getElementById(prefix+'_sliderVal');
+    s.value = inp.value;
+    lbl.textContent = inp.value + '%';
+  }
+  function syncCuoDesc() {
+    const s = document.getElementById('cuo_desc_slider');
+    document.getElementById('cuo_desc_sliderVal').textContent = s.value + '%';
+    calcCuotas();
+  }
+
+  /* ── STEPPERS ── */
+  function stepQty(id, delta, calcFn) {
+    const el = document.getElementById(id);
+    const v = Math.max(1, parseInt(el.textContent) + delta);
+    el.textContent = v;
+    window[calcFn]();
+  }
+  function stepField(id, delta, min, max, calcFn) {
+    const el = document.getElementById(id);
+    const v = Math.max(min, Math.min(max, parseInt(el.textContent) + delta));
+    el.textContent = v;
+    if (calcFn) window[calcFn]();
+  }
+
+  /* ── SHOW RESULT ── */
+  function showResult(payTotal, origTotal, breakdown, verdict, opts) {
+    opts = opts || {};
+    const saved = origTotal - payTotal;
+    document.getElementById('res_pay_label').textContent = opts.payLabel || 'Pagás';
+    document.getElementById('res_pay').textContent = fmt(payTotal);
+
+    const badge = document.getElementById('res_save_badge');
+    const saveLabel = document.getElementById('res_save_label');
+    const saveAmt = document.getElementById('res_save');
+
+    if (opts.extraLabel) {
+      // cuotas mode: show "Pagás de más" in red, or "Sin sobrecosto" in green
+      saveLabel.textContent = opts.extraLabel;
+      saveAmt.textContent = opts.extraVal;
+      badge.style.background = opts.extraColor || 'var(--accent)';
+    } else {
+      saveLabel.textContent = 'Ahorrás';
+      saveAmt.textContent = fmt(saved) + (saved > 0 ? ' (' + pct(saved, origTotal) + ')' : '');
+      badge.style.background = '';
+    }
+
+    document.getElementById('res_breakdown').innerHTML = breakdown.map(l =>
+      `<div class="result-line ${l.cls||''}"><span class="rl-label">${l.label}</span><span class="rl-val">${l.val}</span></div>`
+    ).join('');
+    const vEl = document.getElementById('res_verdict');
+    if (verdict) { vEl.innerHTML = verdict; vEl.style.display = ''; }
+    else { vEl.style.display = 'none'; }
+    document.getElementById('resultPanel').classList.add('show');
+  }
+
+  /* ══ 1. PORCENTAJE ══ */
+  function calcPorcentaje() {
+    const precio = parseFloat(document.getElementById('p_precio').value) || 0;
+    const pctVal = parseFloat(document.getElementById('p_pct').value) || 0;
+    const qty = parseInt(document.getElementById('p_qty').textContent) || 1;
+    if (!precio) { document.getElementById('resultPanel').classList.remove('show'); return; }
+    const descUnit = precio * pctVal / 100;
+    const precioDesc = precio - descUnit;
+    const total = precio * qty;
+    const totalDesc = precioDesc * qty;
+    showResult(totalDesc, total, [
+      { label: 'Precio original', val: fmt(precio), cls: 'strikethrough' },
+      { label: `Descuento (${pctVal}%)`, val: '−' + fmt(descUnit) },
+      { label: 'Precio con descuento', val: fmt(precioDesc), cls: 'highlight' },
+      ...(qty > 1 ? [
+        { label: `Cantidad (× ${qty})`, val: qty + ' unidades' },
+        { label: 'Total original', val: fmt(total), cls: 'strikethrough' },
+        { label: 'Total con descuento', val: fmt(totalDesc), cls: 'highlight' },
+      ] : []),
+    ], qty > 1 ? `Ahorrás ${fmt(descUnit)} por unidad, <strong>${fmt(total - totalDesc)} en total</strong>.` : null);
+  }
+
+  /* ══ 2. SEGUNDA UNIDAD ══ */
+  function calcSegunda() {
+    const precio = parseFloat(document.getElementById('seg_precio').value) || 0;
+    const pctVal = parseFloat(document.getElementById('seg_pct').value) || 0;
+    const qty = parseInt(document.getElementById('seg_qty').textContent);
+    if (!precio) { document.getElementById('resultPanel').classList.remove('show'); return; }
+
+    const precioDesc = precio * (1 - pctVal / 100);
+    const total = precio * qty;
+    const totalDesc = precio + precioDesc * (qty - 1);
+
+    const breakdown = [
+      { label: 'Precio 1ª unidad', val: fmt(precio) },
+      { label: `Precio 2ª+ unidad (−${pctVal}%)`, val: fmt(precioDesc), cls: 'highlight' },
+    ];
+    if (qty > 2) breakdown.push({ label: `Unidades adicionales (${qty-1} × ${fmt(precioDesc)})`, val: fmt(precioDesc * (qty-1)) });
+    breakdown.push({ label: 'Total sin descuento', val: fmt(total), cls: 'strikethrough' });
+    breakdown.push({ label: 'Total a pagar', val: fmt(totalDesc), cls: 'highlight' });
+
+    showResult(totalDesc, total, breakdown,
+      qty === 1 ? '⚠️ Agregá al menos 2 unidades para aprovechar la promo.' :
+      `Promedio efectivo por unidad: <strong>${fmtDec(totalDesc/qty)}</strong>.`
+    );
+  }
+
+  /* ══ 4. CUOTAS ══ */
+  function calcCuotas() {
+    const precio = parseFloat(document.getElementById('cuo_precio').value) || 0;
+    const nCuotas = parseInt(document.getElementById('cuo_n').value) || 1;
+    const tasaMensual = parseFloat(document.getElementById('cuo_tna').value) || 0;
+    const descContado = parseFloat(document.getElementById('cuo_desc_slider').value) || 0;
+    if (!precio) { document.getElementById('cuotas-result-table').style.display='none'; document.getElementById('resultPanel').classList.remove('show'); return; }
+
+    const precioContado = precio * (1 - descContado/100);
+    let totalCuotas, cuotaMensual;
+    if (tasaMensual === 0) {
+      cuotaMensual = precio / nCuotas;
+      totalCuotas = precio;
+    } else {
+      const r = tasaMensual / 100;
+      cuotaMensual = precio * (r * Math.pow(1+r, nCuotas)) / (Math.pow(1+r, nCuotas) - 1);
+      totalCuotas = cuotaMensual * nCuotas;
+    }
+    const sobrecosto = totalCuotas - precio;
+    const diffConContado = totalCuotas - precioContado;
+
+    // build table
+    const rows = [];
+    rows.push({ label: 'Contado' + (descContado > 0 ? ` (−${descContado}%)` : ''), cuota: '—', total: precioContado, diff: 0, best: true });
+    if (tasaMensual === 0) {
+      rows.push({ label: `${nCuotas} cuotas sin interés`, cuota: cuotaMensual, total: precio, diff: precio - precioContado, best: false });
+    } else {
+      // show a few options
+      [3,6,12,18,24].filter(c=>c<=nCuotas||(c===nCuotas)).concat([nCuotas]).filter((v,i,a)=>a.indexOf(v)===i).sort((a,b)=>a-b).forEach(c => {
+        const r = tasaMensual/100;
+        const cM = precio*(r*Math.pow(1+r,c))/(Math.pow(1+r,c)-1);
+        const tot = cM*c;
+        rows.push({ label: `${c} cuotas (${tasaMensual}% TEM)`, cuota: cM, total: tot, diff: tot-precioContado, best: false });
+      });
+    }
+    const minTotal = Math.min(...rows.map(r=>r.total));
+    rows.forEach(r=>r.best = r.total === minTotal);
+
+    document.getElementById('cuotas-result-table').style.display = '';
+    document.getElementById('cuotasTable').innerHTML = `
+      <thead><tr><th>Opción</th><th>Cuota</th><th>Total</th><th>Diferencia</th></tr></thead>
+      <tbody>
+        ${rows.map(r=>`
+          <tr class="${r.best?'best-row':''}">
+            <td>${r.label}${r.best?' ✓':''}</td>
+            <td>${r.cuota==='—'?'—':fmtDec(r.cuota)}</td>
+            <td>${fmtDec(r.total)}</td>
+            <td style="color:${r.diff>0?'var(--accent)':r.diff<0?'var(--green)':'var(--ink-soft)'}">${r.diff===0?'Base':r.diff>0?'+'+fmt(r.diff):fmt(r.diff)}</td>
+          </tr>
+        `).join('')}
+      </tbody>
+    `;
+
+    showResult(cuotaMensual, cuotaMensual, [
+      { label: 'Precio de contado', val: fmtDec(precioContado) },
+      ...(descContado > 0 ? [{ label: `Descuento contado (${descContado}%)`, val: '−' + fmt(precio*descContado/100) }] : []),
+      { label: `Cuota mensual (${nCuotas} cuotas)`, val: fmtDec(cuotaMensual) },
+      { label: 'Total en cuotas', val: fmtDec(totalCuotas) },
+      ...(sobrecosto > 0 ? [{ label: 'Sobrecosto por intereses', val: '+' + fmt(sobrecosto) }] : []),
+      { label: diffConContado > 0 ? 'Pagás de más vs contado' : 'Igual que contado', val: diffConContado > 0 ? '+' + fmt(diffConContado) : fmt(0), cls: diffConContado > 0 ? '' : 'highlight' },
+    ], sobrecosto > 0
+      ? `Pagar en ${nCuotas} cuotas te cuesta <strong>${fmt(sobrecosto)} más</strong> que el precio de lista. ${descContado > 0 ? `El descuento por contado te ahorra adicionalmente ${fmt(precio*descContado/100)}.` : ''}`
+      : `Cuotas sin interés: pagás el mismo precio que de lista (${fmtDec(precio)}), solo diferido en el tiempo.`,
+    sobrecosto > 0
+      ? { payLabel: 'Cuota mensual', extraLabel: 'Pagás de más', extraVal: '+' + fmt(sobrecosto), extraColor: 'var(--accent)' }
+      : { payLabel: 'Cuota mensual', extraLabel: 'Sin sobrecosto', extraVal: '✓ Sin interés', extraColor: '#059669' }
+    );
+  }
+
+  /* ══ 5. COMBO ══ */
+  let comboDiscounts = [20, 15];
+  function syncComboSlider(idx, el) {
+    comboDiscounts[idx] = parseInt(el.value);
+    document.getElementById('csl_' + idx).textContent = el.value + '%';
+  }
+  function addComboDiscount() {
+    if (comboDiscounts.length >= 4) return;
+    const idx = comboDiscounts.length;
+    comboDiscounts.push(10);
+    const container = document.getElementById('combo_discounts');
+    const div = document.createElement('div');
+    div.className = 'field';
+    div.setAttribute('data-combo-row', idx);
+    div.innerHTML = `
+      <label class="field-label">Descuento ${idx+1}</label>
+      <div class="slider-wrap">
+        <input type="range" class="ms-slider" min="0" max="70" value="10" oninput="syncComboSlider(${idx},this); calcCombo()"/>
+        <span class="slider-val" id="csl_${idx}">10%</span>
+      </div>
+    `;
+    container.appendChild(div);
+    if (comboDiscounts.length >= 4) document.getElementById('addComboBtn').style.display = 'none';
+    calcCombo();
+  }
+  function calcCombo() {
+    const precio = parseFloat(document.getElementById('cmb_precio').value) || 0;
+    if (!precio) { document.getElementById('resultPanel').classList.remove('show'); return; }
+    let current = precio;
+    const breakdown = [{ label: 'Precio original', val: fmt(precio), cls: 'strikethrough' }];
+    comboDiscounts.forEach((d, i) => {
+      const descAmount = current * d / 100;
+      breakdown.push({ label: `Descuento ${i+1} (${d}% sobre ${fmt(current)})`, val: '−' + fmt(descAmount) });
+      current -= descAmount;
+      breakdown.push({ label: `Precio tras descuento ${i+1}`, val: fmt(current), cls: 'highlight' });
+    });
+    const saved = precio - current;
+    const descEfect = (saved / precio * 100).toFixed(1);
+    breakdown.push({ label: 'Descuento total efectivo', val: descEfect + '%', cls: 'highlight' });
+    showResult(current, precio, breakdown,
+      `Los ${comboDiscounts.length} descuentos combinados equivalen a un descuento único del <strong>${descEfect}%</strong>, no la suma simple de ${comboDiscounts.reduce((a,b)=>a+b,0)}%.`
+    );
+  }
+
+  /* ══ 6. COMPARAR ══ */
+  let cmpCount = 2;
+  const LETTERS = ['A','B','C','D'];
+  function addCompareItem() {
+    if (cmpCount >= 4) return;
+    const idx = cmpCount++;
+    const container = document.getElementById('compareItems');
+    const div = document.createElement('div');
+    div.className = 'compare-item';
+    div.setAttribute('data-idx', idx);
+    div.innerHTML = `
+      <div class="compare-item-header">
+        <span class="compare-item-name">Opción ${LETTERS[idx]}</span>
+        <span class="compare-winner-badge" style="display:none">✓ Mejor precio</span>
+      </div>
+      <div class="compare-fields">
+        <div class="field">
+          <label class="field-label">Precio total</label>
+          <div class="input-prefix-wrap"><span class="input-prefix">$</span>
+          <input type="number" class="ms-input has-prefix" placeholder="0" inputmode="decimal" oninput="calcComparar()"/></div>
+        </div>
+        <div class="field">
+          <label class="field-label">Cantidad</label>
+          <input type="number" class="ms-input" value="1" min="1" inputmode="numeric" oninput="calcComparar()"/>
+        </div>
+      </div>
+      <div class="compare-result" id="cmp_result_${idx}"></div>
+    `;
+    container.appendChild(div);
+    if (cmpCount >= 4) document.getElementById('addCmpBtn').style.display = 'none';
+  }
+  function calcComparar() {
+    const items = document.querySelectorAll('.compare-item');
+    const data = [];
+    items.forEach((item, i) => {
+      const inputs = item.querySelectorAll('input');
+      const precio = parseFloat(inputs[0].value) || 0;
+      const qty = parseInt(inputs[1].value) || 1;
+      data.push({ precio, qty, unitPrice: precio > 0 ? precio / qty : Infinity, idx: i });
+    });
+    const valid = data.filter(d => d.precio > 0);
+    if (valid.length < 1) { document.getElementById('resultPanel').classList.remove('show'); return; }
+    const minUnit = Math.min(...valid.map(d => d.unitPrice));
+    data.forEach((d, i) => {
+      const el = document.getElementById('cmp_result_' + i);
+      const badge = items[i].querySelector('.compare-winner-badge');
+      const item = items[i];
+      if (d.precio > 0) {
+        el.textContent = 'Precio por unidad: ' + fmtDec(d.unitPrice);
+        if (d.unitPrice === minUnit) {
+          item.classList.add('winner');
+          badge.style.display = '';
+        } else {
+          item.classList.remove('winner');
+          badge.style.display = 'none';
+          if (minUnit !== Infinity && d.unitPrice !== Infinity) {
+            const diff = ((d.unitPrice - minUnit) / minUnit * 100).toFixed(1);
+            el.textContent += ` (+${diff}% más caro/u)`;
+          }
+        }
+      } else {
+        el.textContent = '';
+        item.classList.remove('winner');
+        badge.style.display = 'none';
+      }
+    });
+    // show result panel with best option
+    const winner = data.find(d => d.unitPrice === minUnit);
+    if (winner) {
+      const breakdown = valid.map((d,i) => ({
+        label: `Opción ${LETTERS[d.idx]}`,
+        val: fmtDec(d.unitPrice) + '/u',
+        cls: d.unitPrice === minUnit ? 'highlight' : ''
+      }));
+      showResult(winner.precio, winner.precio, breakdown,
+        `La <strong>Opción ${LETTERS[winner.idx]}</strong> es la más conveniente con ${fmtDec(minUnit)} por unidad.`
+      );
+    }
+  }
+
+  /* ── INIT: run calc on load so result shows if pre-filled ── */
+  document.getElementById('p_precio').value = '';
+</script>
+
+</body>
+</html>

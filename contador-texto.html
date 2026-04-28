@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Contador de Texto — MilSitios</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg:#F5F3EE;--ink:#1A1814;--ink-soft:#6B6760;
+      --accent:#E84C2B;--accent-soft:#FDE8E3;
+      --card-bg:#FFFFFF;--border:#E2DFD8;--tag-bg:#ECEAE4;
+      --tool-color:#DB2777;--tool-bg:#FDF2F8;
+      --green:#059669;--green-bg:#ECFDF5;
+      --blue:#2563EB;--blue-bg:#EFF6FF;
+      --purple:#7C3AED;--purple-bg:#F5F3FF;
+      --orange:#D97706;--orange-bg:#FFFBEB;
+      --teal:#0891B2;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+    body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");pointer-events:none;z-index:0}
+
+    nav{position:sticky;top:0;z-index:200;height:56px;background:rgba(245,243,238,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.75rem;padding:0 1.25rem}
+    .nav-back{display:flex;align-items:center;gap:.4rem;font-size:.85rem;font-weight:500;color:var(--ink-soft);text-decoration:none;-webkit-tap-highlight-color:transparent;transition:color .2s}
+    .nav-back:hover{color:var(--ink)}
+    .nav-sep{color:var(--border)}
+    .nav-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem;letter-spacing:-.03em;color:var(--ink);text-decoration:none}
+    .nav-logo span{color:var(--accent)}
+    .nav-chip{margin-left:auto;font-size:.75rem;color:var(--tool-color);font-weight:600}
+
+    .hero{padding:2rem 1.25rem 1.5rem;max-width:760px;margin:0 auto;text-align:center}
+    .tool-chip{display:inline-flex;align-items:center;gap:.4rem;background:var(--tool-bg);color:var(--tool-color);font-size:.72rem;font-weight:600;letter-spacing:.07em;text-transform:uppercase;padding:.3rem .8rem;border-radius:100px;margin-bottom:.9rem}
+    h1{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(1.9rem,7vw,3rem);line-height:1;letter-spacing:-.04em;margin-bottom:.5rem}
+    .hero-sub{font-size:.9rem;color:var(--ink-soft);font-weight:300;line-height:1.6}
+
+    .main{padding:0 1.25rem 3rem;max-width:760px;margin:0 auto}
+
+    /* ── TEXTAREA ── */
+    .textarea-wrap{position:relative;margin-bottom:1rem}
+    .ms-textarea{width:100%;min-height:200px;padding:1.1rem 1.25rem 3rem;font-family:'DM Sans',sans-serif;font-size:1rem;line-height:1.6;background:var(--card-bg);border:1.5px solid var(--border);border-radius:20px;outline:none;color:var(--ink);resize:vertical;transition:border-color .2s,box-shadow .2s;-webkit-appearance:none}
+    .ms-textarea::placeholder{color:var(--ink-soft)}
+    .ms-textarea:focus{border-color:var(--tool-color);box-shadow:0 0 0 3px rgba(219,39,119,.07)}
+    .textarea-footer{position:absolute;bottom:0;left:0;right:0;padding:.55rem 1.1rem;display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border);background:rgba(245,243,238,.95);border-radius:0 0 18px 18px;pointer-events:none}
+    .textarea-live{font-size:.75rem;color:var(--ink-soft);font-weight:500}
+    .textarea-live b{font-family:'Syne',sans-serif;font-weight:700;color:var(--tool-color)}
+    .btn-clear{pointer-events:all;background:none;border:none;font-size:.75rem;color:var(--ink-soft);cursor:pointer;padding:.2rem .5rem;border-radius:6px;font-family:'DM Sans',sans-serif;transition:background .15s,color .15s;-webkit-tap-highlight-color:transparent}
+    .btn-clear:hover{background:var(--tag-bg);color:var(--accent)}
+
+    /* ── LIMIT BAR ── */
+    .limit-wrap{background:var(--card-bg);border:1.5px solid var(--border);border-radius:14px;padding:.75rem 1rem;margin-bottom:1rem;display:flex;align-items:center;gap:.6rem;flex-wrap:wrap}
+    .limit-label{font-size:.75rem;color:var(--ink-soft);font-weight:500;white-space:nowrap}
+    .limit-presets{display:flex;gap:.3rem;flex-wrap:wrap;flex:1}
+    .limit-btn{padding:.22rem .6rem;border-radius:100px;border:1.5px solid var(--border);background:var(--bg);font-family:'DM Sans',sans-serif;font-size:.7rem;font-weight:500;cursor:pointer;transition:all .15s;color:var(--ink-soft);-webkit-tap-highlight-color:transparent;white-space:nowrap}
+    .limit-btn:hover{background:var(--tag-bg);color:var(--ink)}
+    .limit-btn.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+    .limit-progress-wrap{width:100%;display:none}
+    .limit-bar-track{height:6px;background:var(--border);border-radius:100px;overflow:hidden}
+    .limit-bar-fill{height:100%;border-radius:100px;background:var(--green);transition:width .2s,background .2s}
+    .limit-info{display:flex;justify-content:space-between;margin-top:.3rem}
+    .limit-count{font-family:'Syne',sans-serif;font-size:.72rem;font-weight:700;color:var(--ink-soft)}
+    .limit-count.warn{color:var(--orange)}.limit-count.over{color:var(--accent)}
+
+    /* ── STATS GRID ── */
+    .stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.65rem;margin-bottom:1rem}
+    @media(min-width:480px){.stats-grid{grid-template-columns:repeat(3,1fr)}}
+    @media(min-width:640px){.stats-grid{grid-template-columns:repeat(4,1fr)}}
+
+    .stat-card{background:var(--card-bg);border:1.5px solid var(--border);border-radius:16px;padding:.95rem 1rem .85rem;display:flex;flex-direction:column;gap:.2rem;transition:transform .2s,border-color .2s}
+    .stat-card:hover{transform:translateY(-2px);border-color:var(--sc,var(--border))}
+    .stat-icon{font-size:1rem;margin-bottom:.05rem}
+    .stat-val{font-family:'Syne',sans-serif;font-weight:800;font-size:1.7rem;line-height:1;letter-spacing:-.04em;color:var(--sc,var(--ink));transition:color .15s}
+    .stat-val.pop{animation:numPop .2s ease}
+    @keyframes numPop{0%{transform:scale(1)}50%{transform:scale(1.1)}100%{transform:scale(1)}}
+    .stat-name{font-size:.68rem;color:var(--ink-soft);font-weight:500;text-transform:uppercase;letter-spacing:.05em}
+    .stat-sub{font-size:.67rem;color:var(--ink-soft);margin-top:.05rem}
+
+    /* ── SECTION CARDS ── */
+    .section-card{background:var(--card-bg);border:1.5px solid var(--border);border-radius:18px;overflow:hidden;margin-bottom:.65rem}
+    .sec-header{display:flex;align-items:center;justify-content:space-between;padding:.95rem 1.2rem;cursor:pointer;-webkit-tap-highlight-color:transparent;user-select:none;transition:background .15s}
+    .sec-header:hover{background:var(--bg)}
+    .sec-header-left{display:flex;align-items:center;gap:.55rem}
+    .sec-title{font-family:'Syne',sans-serif;font-weight:700;font-size:.9rem;letter-spacing:-.01em}
+    .sec-chevron{color:var(--ink-soft);font-size:.75rem;transition:transform .25s;flex-shrink:0}
+    .sec-chevron.open{transform:rotate(180deg)}
+    .sec-body{border-top:1px solid var(--border);padding:1.1rem 1.2rem;display:none}
+    .sec-body.open{display:block}
+
+    /* ── SYLLABLES ── */
+    .syl-text{font-size:.95rem;line-height:2.1;word-break:break-word}
+    .syl-dot{color:var(--tool-color);font-weight:700;font-size:.7em;opacity:.65;margin:0 .02em}
+
+    /* ── FREQ ── */
+    .freq-list{display:flex;flex-direction:column;gap:.3rem}
+    .freq-row{display:grid;grid-template-columns:minmax(80px,1fr) 1fr auto;align-items:center;gap:.6rem}
+    .freq-word{font-size:.83rem;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .freq-bar-track{height:5px;background:var(--border);border-radius:100px;overflow:hidden}
+    .freq-bar{height:100%;border-radius:100px;background:var(--tool-color);transition:width .3s}
+    .freq-n{font-family:'Syne',sans-serif;font-weight:700;font-size:.8rem;color:var(--tool-color);min-width:20px;text-align:right}
+
+    /* ── READING ── */
+    .reading-grid{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
+    @media(min-width:480px){.reading-grid{grid-template-columns:repeat(3,1fr)}}
+    .reading-item{background:var(--bg);border-radius:12px;padding:.8rem .9rem;display:flex;flex-direction:column;gap:.15rem}
+    .reading-icon{font-size:1rem}
+    .reading-val{font-family:'Syne',sans-serif;font-weight:800;font-size:1.15rem;letter-spacing:-.03em}
+    .reading-label{font-size:.68rem;color:var(--ink-soft);line-height:1.4}
+
+    /* ── SENTENCES ── */
+    .sent-list{display:flex;flex-direction:column;gap:.3rem}
+    .sent-item{display:flex;gap:.6rem;align-items:flex-start;padding:.45rem 0;border-bottom:1px solid var(--border)}
+    .sent-item:last-child{border-bottom:none}
+    .sent-num{font-family:'Syne',sans-serif;font-weight:700;font-size:.68rem;color:var(--ink-soft);min-width:16px;padding-top:.1rem;flex-shrink:0}
+    .sent-text{font-size:.83rem;line-height:1.55}
+    .sent-meta{font-size:.67rem;color:var(--ink-soft);margin-top:.15rem}
+
+    /* ── SOCIAL ── */
+    .social-row{background:var(--bg);border-radius:11px;padding:.7rem .9rem;margin-bottom:.45rem}
+    .social-row-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:.4rem}
+    .social-name{font-size:.8rem;font-weight:500}
+    .social-remaining{font-family:'Syne',sans-serif;font-weight:700;font-size:.78rem}
+    .social-bar-track{height:5px;background:var(--border);border-radius:100px;overflow:hidden}
+    .social-bar{height:100%;border-radius:100px;transition:width .3s}
+    .social-sub{font-size:.67rem;color:var(--ink-soft);margin-top:.25rem}
+
+    /* ── EMPTY STATE ── */
+    .empty{text-align:center;padding:1.5rem 1rem;color:var(--ink-soft);font-size:.82rem;line-height:1.6}
+    .empty-icon{font-size:1.75rem;display:block;margin-bottom:.4rem;opacity:.35}
+
+    /* ── MISC ── */
+    .hint-text{font-size:.72rem;color:var(--ink-soft);margin-top:.65rem}
+
+    .related{padding:0 1.25rem 3rem;max-width:760px;margin:0 auto}
+    .related-title{font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-soft);font-weight:600;margin-bottom:.75rem}
+    .related-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.65rem}
+    .related-card{background:var(--card-bg);border:1.5px solid var(--border);border-radius:14px;padding:.9rem;text-decoration:none;color:var(--ink);display:flex;flex-direction:column;gap:.3rem;transition:transform .2s,border-color .2s}
+    .related-card:hover{transform:translateY(-2px);border-color:var(--tool-color)}
+    .related-icon{font-size:1.3rem}
+    .related-name{font-family:'Syne',sans-serif;font-size:.82rem;font-weight:700}
+    .related-cat{font-size:.7rem;color:var(--ink-soft)}
+
+    footer{border-top:1px solid var(--border);padding:1.75rem 1.25rem;max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:.5rem}
+    @media(min-width:540px){footer{flex-direction:row;align-items:center;justify-content:space-between}}
+    .footer-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:.95rem;color:var(--ink);text-decoration:none}
+    .footer-logo span{color:var(--accent)}
+    .footer-text{font-size:.75rem;color:var(--ink-soft)}
+
+    @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+    .fi{animation:fadeUp .4s ease both}
+    .fi:nth-child(1){animation-delay:.04s}.fi:nth-child(2){animation-delay:.08s}
+    .fi:nth-child(3){animation-delay:.12s}.fi:nth-child(4){animation-delay:.16s}
+    .fi:nth-child(5){animation-delay:.2s}.fi:nth-child(6){animation-delay:.2s}
+    .fi:nth-child(7){animation-delay:.24s}.fi:nth-child(8){animation-delay:.24s}
+    .fi:nth-child(9){animation-delay:.28s}.fi:nth-child(10){animation-delay:.28s}
+    .fi:nth-child(11){animation-delay:.32s}
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-back">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+    Inicio
+  </a>
+  <span class="nav-sep">/</span>
+  <a href="index.html" class="nav-logo">Mil<span>Sitios</span></a>
+  <span class="nav-chip">✍️ Texto</span>
+</nav>
+
+<header class="hero">
+  <div class="tool-chip">✍️ Texto & Contenido</div>
+  <h1>Contador de Texto</h1>
+  <p class="hero-sub">Pegá o escribí cualquier texto y obtené al instante caracteres, palabras, sílabas, oraciones, tiempo de lectura y mucho más.</p>
+</header>
+
+<div class="main">
+
+  <!-- TEXTAREA -->
+  <div class="textarea-wrap fi">
+    <textarea class="ms-textarea" id="mainText" placeholder="Escribí o pegá tu texto acá…" oninput="analyze()" spellcheck="false"></textarea>
+    <div class="textarea-footer">
+      <span class="textarea-live"><b id="liveChars">0</b> caracteres · <b id="liveWords">0</b> palabras</span>
+      <button class="btn-clear" onclick="clearText()">Limpiar ✕</button>
+    </div>
+  </div>
+
+  <!-- LIMIT BAR -->
+  <div class="limit-wrap fi">
+    <span class="limit-label">Límite:</span>
+    <div class="limit-presets">
+      <button class="limit-btn" onclick="setLimit(0,this)">Sin límite</button>
+      <button class="limit-btn" onclick="setLimit(140,this)">Twitter (140)</button>
+      <button class="limit-btn" onclick="setLimit(280,this)">Twitter X (280)</button>
+      <button class="limit-btn" onclick="setLimit(2200,this)">Instagram (2200)</button>
+      <button class="limit-btn" onclick="setLimit(160,this)">SMS (160)</button>
+      <button class="limit-btn" onclick="setLimit(3000,this)">LinkedIn (3000)</button>
+    </div>
+    <div class="limit-progress-wrap" id="limitPW">
+      <div class="limit-bar-track"><div class="limit-bar-fill" id="limitFill"></div></div>
+      <div class="limit-info">
+        <span class="limit-count" id="limitCount"></span>
+        <span class="limit-count" id="limitPct" style="color:var(--ink-soft)"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- STATS GRID -->
+  <div class="stats-grid">
+    <div class="stat-card fi" style="--sc:var(--tool-color)">
+      <span class="stat-icon">🔤</span>
+      <span class="stat-val" id="sc_chars">0</span>
+      <span class="stat-name">Caracteres</span>
+      <span class="stat-sub" id="sc_chars_sub">sin espacios: 0</span>
+    </div>
+    <div class="stat-card fi" style="--sc:var(--blue)">
+      <span class="stat-icon">💬</span>
+      <span class="stat-val" id="sc_words">0</span>
+      <span class="stat-name">Palabras</span>
+      <span class="stat-sub" id="sc_words_sub">únicas: 0</span>
+    </div>
+    <div class="stat-card fi" style="--sc:var(--purple)">
+      <span class="stat-icon">🎵</span>
+      <span class="stat-val" id="sc_sylls">0</span>
+      <span class="stat-name">Sílabas</span>
+      <span class="stat-sub" id="sc_sylls_sub">prom/palabra: —</span>
+    </div>
+    <div class="stat-card fi" style="--sc:var(--green)">
+      <span class="stat-icon">📝</span>
+      <span class="stat-val" id="sc_sents">0</span>
+      <span class="stat-name">Oraciones</span>
+      <span class="stat-sub" id="sc_sents_sub">prom palabras: —</span>
+    </div>
+    <div class="stat-card fi" style="--sc:var(--orange)">
+      <span class="stat-icon">📄</span>
+      <span class="stat-val" id="sc_paras">0</span>
+      <span class="stat-name">Párrafos</span>
+      <span class="stat-sub" id="sc_paras_sub">líneas: 0</span>
+    </div>
+    <div class="stat-card fi" style="--sc:var(--accent)">
+      <span class="stat-icon">🔡</span>
+      <span class="stat-val" id="sc_nospace">0</span>
+      <span class="stat-name">Sin espacios</span>
+      <span class="stat-sub">solo caracteres</span>
+    </div>
+    <div class="stat-card fi" style="--sc:var(--teal)">
+      <span class="stat-icon">⏱</span>
+      <span class="stat-val" id="sc_read">—</span>
+      <span class="stat-name">Lectura</span>
+      <span class="stat-sub">~200 pal/min</span>
+    </div>
+    <div class="stat-card fi" style="--sc:var(--purple)">
+      <span class="stat-icon">🗣</span>
+      <span class="stat-val" id="sc_speak">—</span>
+      <span class="stat-name">En voz alta</span>
+      <span class="stat-sub">~130 pal/min</span>
+    </div>
+  </div>
+
+  <!-- SECCIÓN: SÍLABAS -->
+  <div class="section-card fi">
+    <div class="sec-header" onclick="toggleSec('body-sylls',this)">
+      <div class="sec-header-left">
+        <span>🎵</span>
+        <span class="sec-title">Separación silábica</span>
+      </div>
+      <span class="sec-chevron">▾</span>
+    </div>
+    <div class="sec-body" id="body-sylls">
+      <div id="cnt-sylls"><div class="empty"><span class="empty-icon">🎵</span>Escribí texto arriba para ver la separación silábica.</div></div>
+    </div>
+  </div>
+
+  <!-- SECCIÓN: FRECUENCIA -->
+  <div class="section-card fi">
+    <div class="sec-header" onclick="toggleSec('body-freq',this)">
+      <div class="sec-header-left">
+        <span>📊</span>
+        <span class="sec-title">Palabras más usadas</span>
+      </div>
+      <span class="sec-chevron">▾</span>
+    </div>
+    <div class="sec-body" id="body-freq">
+      <div id="cnt-freq"><div class="empty"><span class="empty-icon">📊</span>Escribí texto arriba para ver la frecuencia.</div></div>
+    </div>
+  </div>
+
+  <!-- SECCIÓN: ORACIONES -->
+  <div class="section-card fi">
+    <div class="sec-header" onclick="toggleSec('body-sents',this)">
+      <div class="sec-header-left">
+        <span>📝</span>
+        <span class="sec-title">Desglose de oraciones</span>
+      </div>
+      <span class="sec-chevron">▾</span>
+    </div>
+    <div class="sec-body" id="body-sents">
+      <div id="cnt-sents"><div class="empty"><span class="empty-icon">📝</span>Escribí texto arriba para ver el desglose por oración.</div></div>
+    </div>
+  </div>
+
+  <!-- SECCIÓN: TIEMPOS -->
+  <div class="section-card fi">
+    <div class="sec-header" onclick="toggleSec('body-read',this)">
+      <div class="sec-header-left">
+        <span>📖</span>
+        <span class="sec-title">Tiempos de lectura y locución</span>
+      </div>
+      <span class="sec-chevron">▾</span>
+    </div>
+    <div class="sec-body" id="body-read">
+      <div id="cnt-read"><div class="empty"><span class="empty-icon">📖</span>Escribí texto arriba para ver los tiempos estimados.</div></div>
+    </div>
+  </div>
+
+  <!-- SECCIÓN: REDES SOCIALES -->
+  <div class="section-card fi">
+    <div class="sec-header" onclick="toggleSec('body-social',this)">
+      <div class="sec-header-left">
+        <span>📱</span>
+        <span class="sec-title">Límites de redes sociales</span>
+      </div>
+      <span class="sec-chevron">▾</span>
+    </div>
+    <div class="sec-body" id="body-social">
+      <div id="cnt-social"><div class="empty"><span class="empty-icon">📱</span>Escribí texto arriba para comparar con cada red.</div></div>
+    </div>
+  </div>
+
+</div>
+
+<div class="related">
+  <p class="related-title">También te puede interesar</p>
+  <div class="related-grid">
+    <a href="milsitios-micrositio.html" class="related-card"><span class="related-icon">🎰</span><span class="related-name">Sorteo Online</span><span class="related-cat">Social & Grupos</span></a>
+    <a href="descuentos.html" class="related-card"><span class="related-icon">🏷️</span><span class="related-name">Calculador de Descuentos</span><span class="related-cat">Finanzas</span></a>
+    <a href="juegos-de-cartas.html" class="related-card"><span class="related-icon">🃏</span><span class="related-name">Juegos de Cartas</span><span class="related-cat">Entretenimiento</span></a>
+  </div>
+</div>
+
+<footer>
+  <a href="index.html" class="footer-logo">Mil<span>Sitios</span></a>
+  <p class="footer-text">Hecho con ☕ en Argentina</p>
+</footer>
+
+<script>
+/* ══════════════════════════════════════════
+   UTILS
+══════════════════════════════════════════ */
+const fmt = n => n.toLocaleString('es-AR');
+
+function fmtTime(secs) {
+  if (!secs || secs <= 0) return '—';
+  if (secs < 60) return secs + 's';
+  const m = Math.floor(secs/60), s = secs % 60;
+  return s > 0 ? m+'m '+s+'s' : m+'m';
+}
+
+/* ══════════════════════════════════════════
+   SÍLABAS (español)
+══════════════════════════════════════════ */
+const VOW = 'aáeéiíoóuúüAÁEÉIÍOÓUÚÜ';
+const STRONG = 'aáeéoóAÁEÉOÓ';
+const WEAK   = 'iíuúüIÍUÚÜ';
+
+function isVowel(c) { return VOW.includes(c); }
+function isStrong(c) { return STRONG.includes(c); }
+function isWeak(c)   { return WEAK.includes(c); }
+
+function syllabifyWord(word) {
+  const clean = word.replace(/[^a-záéíóúüñA-ZÁÉÍÓÚÜÑ]/g,'');
+  if (!clean) return word ? [word] : [];
+  const w = clean;
+  let sylls = [], syl = '', i = 0;
+
+  while (i < w.length) {
+    const c = w[i];
+    syl += c;
+
+    if (isVowel(c)) {
+      // check diptong
+      if (i+1 < w.length && isVowel(w[i+1])) {
+        const a = c, b = w[i+1];
+        const isDip = (isWeak(a)&&isWeak(b)) || (isWeak(a)&&isStrong(b)) || (isStrong(a)&&isWeak(b));
+        if (isDip) { syl += w[i+1]; i++; }
+        // hiatus: two strong vowels = separate syllables
+      }
+      // look ahead for consonants until next vowel
+      let j = i+1;
+      let cons = '';
+      while (j < w.length && !isVowel(w[j])) { cons += w[j]; j++; }
+
+      if (j >= w.length) {
+        // end of word – absorb all remaining consonants
+        syl += cons;
+        i += cons.length;
+        sylls.push(syl);
+        syl = '';
+      } else {
+        // split consonants: keep 1 with current syllable if > 1
+        // digraphs ch ll rr gu qu stay together
+        const digraphs = ['ch','ll','rr','qu','gu'];
+        if (cons.length === 0) {
+          sylls.push(syl); syl = '';
+        } else if (cons.length === 1) {
+          // single consonant goes to NEXT syllable
+          sylls.push(syl); syl = '';
+        } else {
+          // check if last 2 form a starting cluster
+          const last2 = cons.slice(-2);
+          const isCluster = digraphs.includes(last2) || /^(bl|cl|fl|gl|pl|br|cr|dr|fr|gr|pr|tr)$/.test(last2);
+          if (isCluster) {
+            const keep = cons.slice(0, cons.length-2);
+            syl += keep; i += keep.length;
+          } else {
+            const keep = cons.slice(0, cons.length-1);
+            syl += keep; i += keep.length;
+          }
+          sylls.push(syl); syl = '';
+        }
+      }
+    }
+    i++;
+  }
+  if (syl) {
+    if (sylls.length) sylls[sylls.length-1] += syl;
+    else sylls.push(syl);
+  }
+  return sylls.length ? sylls : [clean];
+}
+
+function countSyllables(word) {
+  return syllabifyWord(word).length;
+}
+
+/* ══════════════════════════════════════════
+   STOPWORDS
+══════════════════════════════════════════ */
+const STOP = new Set(['de','la','el','en','y','a','los','del','se','las','un','por','con','una','su','para','es','al','lo','como','más','pero','sus','le','ya','o','este','sí','porque','esta','entre','cuando','muy','sin','sobre','también','me','hasta','hay','donde','quien','desde','todo','nos','durante','todos','uno','les','ni','contra','otros','ese','eso','ante','ellos','e','esto','mí','antes','algunos','qué','unos','yo','otro','otras','otra','él','tanto','esa','estos','mucho','quienes','nada','muchos','cual','poco','ella','estar','estas','algunas','algo','nosotros','mi','mis','tú','te','ti','tu','tus','vos','son','fue','era','han','ser','ha','sea','eso','esos','que','no','si','por','como','le','lo','las','los','una','unos','unas','del','al','me','se','su','sus']);
+
+/* ══════════════════════════════════════════
+   STATE
+══════════════════════════════════════════ */
+let currentLimit = 0;
+let debounce;
+let openSections = new Set();
+let lastStats = {};
+
+/* ══════════════════════════════════════════
+   MAIN ANALYZE
+══════════════════════════════════════════ */
+function analyze() {
+  clearTimeout(debounce);
+  debounce = setTimeout(_analyze, 50);
+}
+
+function _analyze() {
+  const text = document.getElementById('mainText').value;
+
+  // chars
+  const chars = text.length;
+  const charsNoSpace = text.replace(/\s/g,'').length;
+
+  // words
+  const wordTokens = text.trim() ? text.trim().split(/\s+/) : [];
+  const words = wordTokens.filter(w => /[a-záéíóúüñA-ZÁÉÍÓÚÜÑ]/.test(w));
+  const wc = words.length;
+  const uniqueWords = new Set(words.map(w => w.toLowerCase().replace(/[^a-záéíóúüñ]/gi,''))).size;
+
+  // syllables
+  let syllTotal = 0;
+  words.forEach(w => { syllTotal += countSyllables(w); });
+  const avgSyll = wc > 0 ? (syllTotal/wc).toFixed(1) : '—';
+
+  // sentences (split on . ! ?)
+  const sentTokens = text.trim() ? text.split(/(?<=[.!?¿¡])\s+|(?<=[.!?])\s*$/).map(s=>s.trim()).filter(s=>/[a-zA-ZáéíóúüñÁÉÍÓÚÜÑ]/.test(s)) : [];
+  // fallback for browsers without lookbehind
+  let sentences;
+  try { sentences = sentTokens; } catch(e) {
+    sentences = text.trim() ? text.split(/[.!?]+/).map(s=>s.trim()).filter(s=>s.length>1) : [];
+  }
+  if (!sentences.length && text.trim()) sentences = [text.trim()];
+  const sc = sentences.length;
+  const avgWordsPerSent = sc > 0 && wc > 0 ? (wc/sc).toFixed(1) : '—';
+
+  // paragraphs
+  const paras = text.trim() ? text.split(/\n{2,}/).map(p=>p.trim()).filter(Boolean) : [];
+  const pc = paras.length || (text.trim() ? 1 : 0);
+  const lines = text.split('\n').length;
+
+  // time
+  const readSec = wc > 0 ? Math.max(1, Math.round(wc/(200/60))) : 0;
+  const speakSec = wc > 0 ? Math.max(1, Math.round(wc/(130/60))) : 0;
+
+  lastStats = { text, chars, charsNoSpace, words, wc, uniqueWords, syllTotal, avgSyll, sentences, sc, avgWordsPerSent, pc, lines, readSec, speakSec };
+
+  // update live bar
+  document.getElementById('liveChars').textContent = fmt(chars);
+  document.getElementById('liveWords').textContent = fmt(wc);
+
+  // update limit
+  updateLimitBar(chars);
+
+  // update stat cards
+  setVal('sc_chars', fmt(chars));
+  document.getElementById('sc_chars_sub').textContent = 'sin espacios: ' + fmt(charsNoSpace);
+  setVal('sc_words', fmt(wc));
+  document.getElementById('sc_words_sub').textContent = 'únicas: ' + fmt(uniqueWords);
+  setVal('sc_sylls', fmt(syllTotal));
+  document.getElementById('sc_sylls_sub').textContent = 'prom/palabra: ' + avgSyll;
+  setVal('sc_sents', fmt(sc));
+  document.getElementById('sc_sents_sub').textContent = 'prom palabras: ' + avgWordsPerSent;
+  setVal('sc_paras', fmt(pc));
+  document.getElementById('sc_paras_sub').textContent = 'líneas: ' + fmt(lines);
+  setVal('sc_nospace', fmt(charsNoSpace));
+  setVal('sc_read', fmtTime(readSec));
+  setVal('sc_speak', fmtTime(speakSec));
+
+  // update open sections
+  if (openSections.has('sylls')) renderSylls();
+  if (openSections.has('freq'))  renderFreq();
+  if (openSections.has('sents')) renderSents();
+  if (openSections.has('read'))  renderRead();
+  if (openSections.has('social'))renderSocial();
+}
+
+function setVal(id, val) {
+  const el = document.getElementById(id);
+  if (el.textContent !== val) {
+    el.textContent = val;
+    el.classList.remove('pop');
+    void el.offsetWidth;
+    el.classList.add('pop');
+  }
+}
+
+/* ══════════════════════════════════════════
+   LIMIT BAR
+══════════════════════════════════════════ */
+function setLimit(n, btn) {
+  currentLimit = n;
+  document.querySelectorAll('.limit-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const pw = document.getElementById('limitPW');
+  pw.style.display = n ? '' : 'none';
+  if (n) updateLimitBar(document.getElementById('mainText').value.length);
+}
+
+function updateLimitBar(chars) {
+  if (!currentLimit) return;
+  const pct = Math.min(100, chars/currentLimit*100);
+  const fill = document.getElementById('limitFill');
+  const count = document.getElementById('limitCount');
+  const pctEl = document.getElementById('limitPct');
+  fill.style.width = pct+'%';
+  const color = chars > currentLimit ? 'var(--accent)' : pct > 85 ? 'var(--orange)' : 'var(--green)';
+  fill.style.background = color;
+  const rem = currentLimit - chars;
+  count.textContent = rem >= 0 ? fmt(rem)+' restantes' : fmt(Math.abs(rem))+' de más';
+  count.className = 'limit-count'+(rem<0?' over':pct>85?' warn':'');
+  pctEl.textContent = pct.toFixed(1)+'%';
+}
+
+/* ══════════════════════════════════════════
+   SECTION TOGGLE
+══════════════════════════════════════════ */
+function toggleSec(bodyId, header) {
+  const body = document.getElementById(bodyId);
+  const chevron = header.querySelector('.sec-chevron');
+  const key = bodyId.replace('body-','');
+  const isOpen = body.classList.toggle('open');
+  chevron.classList.toggle('open', isOpen);
+  if (isOpen) {
+    openSections.add(key);
+    const fn = { sylls:renderSylls, freq:renderFreq, sents:renderSents, read:renderRead, social:renderSocial }[key];
+    if (fn) fn();
+  } else {
+    openSections.delete(key);
+  }
+}
+
+/* ══════════════════════════════════════════
+   RENDER: SÍLABAS
+══════════════════════════════════════════ */
+function renderSylls() {
+  const el = document.getElementById('cnt-sylls');
+  const { words } = lastStats;
+  if (!words || !words.length) { el.innerHTML = empty('🎵','Escribí texto para ver la separación silábica.'); return; }
+  const shown = words.slice(0,100);
+  const html = shown.map(w => {
+    const sylls = syllabifyWord(w);
+    if (sylls.length <= 1) return w + ' ';
+    return sylls.map((s,i) => i<sylls.length-1 ? s+'<span class="syl-dot">·</span>' : s).join('') + ' ';
+  }).join('');
+  el.innerHTML = `<div class="syl-text">${html}</div>`
+    + (words.length > 100 ? `<p class="hint-text">Mostrando las primeras 100 palabras de ${fmt(words.length)}.</p>` : '');
+}
+
+/* ══════════════════════════════════════════
+   RENDER: FRECUENCIA
+══════════════════════════════════════════ */
+function renderFreq() {
+  const el = document.getElementById('cnt-freq');
+  const { words } = lastStats;
+  if (!words || !words.length) { el.innerHTML = empty('📊','Escribí texto para ver la frecuencia.'); return; }
+  const freq = {};
+  words.forEach(w => {
+    const c = w.toLowerCase().replace(/[^a-záéíóúüñ]/gi,'');
+    if (c.length > 2 && !STOP.has(c)) freq[c] = (freq[c]||0)+1;
+  });
+  const sorted = Object.entries(freq).sort((a,b)=>b[1]-a[1]).slice(0,25);
+  if (!sorted.length) { el.innerHTML = empty('📊','No hay palabras significativas todavía.'); return; }
+  const max = sorted[0][1];
+  el.innerHTML = `<div class="freq-list">${sorted.map(([w,n])=>`
+    <div class="freq-row">
+      <span class="freq-word">${w}</span>
+      <div class="freq-bar-track"><div class="freq-bar" style="width:${n/max*100}%"></div></div>
+      <span class="freq-n">${n}</span>
+    </div>`).join('')}</div>
+    <p class="hint-text">* Se excluyen artículos, preposiciones y palabras de menos de 3 letras.</p>`;
+}
+
+/* ══════════════════════════════════════════
+   RENDER: ORACIONES
+══════════════════════════════════════════ */
+function renderSents() {
+  const el = document.getElementById('cnt-sents');
+  const { sentences } = lastStats;
+  if (!sentences || !sentences.length) { el.innerHTML = empty('📝','Escribí texto para ver el desglose.'); return; }
+  const shown = sentences.slice(0,30);
+  el.innerHTML = `<div class="sent-list">${shown.map((s,i)=>{
+    const wc = s.trim().split(/\s+/).filter(Boolean).length;
+    const cc = s.length;
+    const syll = s.trim().split(/\s+/).filter(w=>/[a-z]/i.test(w)).reduce((a,w)=>a+countSyllables(w),0);
+    return `<div class="sent-item">
+      <span class="sent-num">${i+1}</span>
+      <div>
+        <div class="sent-text">${s.trim()}</div>
+        <div class="sent-meta">${wc} palabra${wc!==1?'s':''} · ${cc} caracteres · ${syll} sílabas</div>
+      </div>
+    </div>`;
+  }).join('')}</div>`
+  + (sentences.length>30 ? `<p class="hint-text">Mostrando 30 de ${fmt(sentences.length)} oraciones.</p>` : '');
+}
+
+/* ══════════════════════════════════════════
+   RENDER: TIEMPOS
+══════════════════════════════════════════ */
+function renderRead() {
+  const el = document.getElementById('cnt-read');
+  const { wc } = lastStats;
+  if (!wc) { el.innerHTML = empty('📖','Escribí texto para ver los tiempos estimados.'); return; }
+  const speeds = [
+    { icon:'🐢', label:'Lectura lenta',         sub:'~150 pal/min', wpm:150 },
+    { icon:'📖', label:'Lectura normal',         sub:'~200 pal/min', wpm:200 },
+    { icon:'⚡', label:'Lectura veloz',          sub:'~300 pal/min', wpm:300 },
+    { icon:'🗣', label:'Voz alta / narración',   sub:'~130 pal/min', wpm:130 },
+    { icon:'🎙', label:'Podcast / locutor',      sub:'~160 pal/min', wpm:160 },
+    { icon:'🎤', label:'Discurso / presentación',sub:'~110 pal/min', wpm:110 },
+  ];
+  el.innerHTML = `<div class="reading-grid">${speeds.map(s=>{
+    const sec = Math.max(1,Math.round(wc/(s.wpm/60)));
+    return `<div class="reading-item">
+      <span class="reading-icon">${s.icon}</span>
+      <span class="reading-val">${fmtTime(sec)}</span>
+      <span class="reading-label">${s.label}</span>
+      <span class="reading-label" style="font-size:.62rem">${s.sub}</span>
+    </div>`;
+  }).join('')}</div>
+  <p class="hint-text">Los tiempos son estimaciones. Varían según el lector y la dificultad del texto.</p>`;
+}
+
+/* ══════════════════════════════════════════
+   RENDER: REDES SOCIALES
+══════════════════════════════════════════ */
+const SOCIALS = [
+  { name:'Twitter / X',            icon:'🐦', limit:280 },
+  { name:'Twitter (viejo)',         icon:'🐦', limit:140 },
+  { name:'Instagram caption',       icon:'📸', limit:2200 },
+  { name:'Instagram bio',           icon:'📸', limit:150 },
+  { name:'TikTok caption',          icon:'🎵', limit:2200 },
+  { name:'Facebook post',           icon:'👍', limit:63206 },
+  { name:'LinkedIn post',           icon:'💼', limit:3000 },
+  { name:'LinkedIn titular',        icon:'💼', limit:220 },
+  { name:'YouTube título',          icon:'▶️', limit:100 },
+  { name:'YouTube descripción',     icon:'▶️', limit:5000 },
+  { name:'WhatsApp estado',         icon:'💬', limit:139 },
+  { name:'SMS',                     icon:'📱', limit:160 },
+  { name:'Correo electrónico (asunto)',icon:'📧', limit:78 },
+];
+
+function renderSocial() {
+  const el = document.getElementById('cnt-social');
+  const { chars } = lastStats;
+  if (!chars && chars !== 0) { el.innerHTML = empty('📱','Escribí texto para comparar.'); return; }
+  el.innerHTML = SOCIALS.map(s => {
+    const pct = Math.min(100, chars/s.limit*100);
+    const rem = s.limit - chars;
+    const over = rem < 0;
+    const warn = !over && pct > 85;
+    const color = over ? 'var(--accent)' : warn ? 'var(--orange)' : 'var(--green)';
+    return `<div class="social-row">
+      <div class="social-row-top">
+        <span class="social-name">${s.icon} ${s.name}</span>
+        <span class="social-remaining" style="color:${color}">${over?'+'+fmt(Math.abs(rem))+' de más':fmt(rem)+' restantes'}</span>
+      </div>
+      <div class="social-bar-track"><div class="social-bar" style="width:${pct}%;background:${color}"></div></div>
+      <div class="social-sub">${fmt(chars)} / ${fmt(s.limit)} caracteres (${pct.toFixed(1)}%)</div>
+    </div>`;
+  }).join('');
+}
+
+/* ══════════════════════════════════════════
+   HELPERS
+══════════════════════════════════════════ */
+function empty(icon, msg) {
+  return `<div class="empty"><span class="empty-icon">${icon}</span>${msg}</div>`;
+}
+
+function clearText() {
+  document.getElementById('mainText').value = '';
+  lastStats = {};
+  _analyze();
+}
+</script>
+
+</body>
+</html>
