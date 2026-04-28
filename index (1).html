@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MilSitios — Herramientas para todo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #F5F3EE;
+      --ink: #1A1814;
+      --ink-soft: #6B6760;
+      --accent: #E84C2B;
+      --accent-soft: #FDE8E3;
+      --card-bg: #FFFFFF;
+      --border: #E2DFD8;
+      --tag-bg: #ECEAE4;
+      --games-color: #7C3AED; --games-bg: #F5F3FF;
+      --social-color: #D97706; --social-bg: #FFFBEB;
+      --finance-color: #2563EB; --finance-bg: #EFF6FF;
+      --text-color: #DB2777; --text-bg: #FDF2F8;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      min-height: 100vh;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 0;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky; top: 0; z-index: 200;
+      height: 56px;
+      background: rgba(245,243,238,.92);
+      backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 1.25rem;
+    }
+    .logo {
+      font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.25rem;
+      letter-spacing: -.03em; color: var(--ink); text-decoration: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .logo span { color: var(--accent); }
+    .nav-count {
+      font-size: .75rem; color: var(--ink-soft); font-weight: 500;
+      background: var(--tag-bg); padding: .25rem .65rem; border-radius: 100px;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      padding: 3.5rem 1.25rem 2.5rem;
+      max-width: 860px; margin: 0 auto;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: .4rem;
+      background: var(--accent-soft); color: var(--accent);
+      font-size: .72rem; font-weight: 600; letter-spacing: .08em;
+      text-transform: uppercase; padding: .3rem .8rem; border-radius: 100px;
+      margin-bottom: 1.2rem;
+    }
+    .hero-badge::before {
+      content: ''; width: 5px; height: 5px;
+      background: var(--accent); border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(.7)} }
+
+    h1 {
+      font-family: 'Syne', sans-serif; font-weight: 800;
+      font-size: clamp(2.4rem, 9vw, 5.2rem);
+      line-height: 1; letter-spacing: -.04em; margin-bottom: 1rem;
+    }
+    h1 em { font-style: normal; color: var(--accent); }
+    .hero-sub {
+      font-size: clamp(.95rem, 2.5vw, 1.1rem); color: var(--ink-soft);
+      font-weight: 300; line-height: 1.6; max-width: 420px; margin-bottom: 2.5rem;
+    }
+
+    /* ── SEARCH ── */
+    .search-wrap { position: relative; max-width: 520px; margin-bottom: 2.5rem; }
+    .search-icon {
+      position: absolute; left: 1rem; top: 50%; transform: translateY(-50%);
+      color: var(--ink-soft); pointer-events: none; width: 17px; height: 17px;
+    }
+    .search-input {
+      width: 100%; height: 50px; padding: 0 1rem 0 2.85rem;
+      font-family: 'DM Sans', sans-serif; font-size: .95rem;
+      background: var(--card-bg); border: 1.5px solid var(--border);
+      border-radius: 14px; outline: none; color: var(--ink);
+      transition: border-color .2s, box-shadow .2s; -webkit-appearance: none;
+    }
+    .search-input::placeholder { color: var(--ink-soft); }
+    .search-input:focus { border-color: var(--ink); box-shadow: 0 0 0 3px rgba(26,24,20,.07); }
+
+    .search-results {
+      position: absolute; top: calc(100% + 6px); left: 0; right: 0;
+      background: var(--card-bg); border: 1.5px solid var(--border);
+      border-radius: 14px; overflow: hidden;
+      box-shadow: 0 16px 40px rgba(0,0,0,.1); z-index: 100; display: none;
+    }
+    .search-results.show { display: block; }
+    .sr-item {
+      display: flex; align-items: center; gap: .85rem;
+      padding: .8rem 1rem; text-decoration: none; color: var(--ink);
+      transition: background .15s; -webkit-tap-highlight-color: transparent;
+    }
+    .sr-item:not(:last-child) { border-bottom: 1px solid var(--border); }
+    .sr-item:hover { background: var(--bg); }
+    .sr-icon { width: 34px; height: 34px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
+    .sr-name { font-size: .88rem; font-weight: 500; }
+    .sr-cat { font-size: .72rem; color: var(--ink-soft); margin-top: 1px; }
+
+    /* ── STATS ── */
+    .stats-row { display: flex; gap: 2rem; flex-wrap: wrap; }
+    .stat-item { display: flex; flex-direction: column; gap: .15rem; }
+    .stat-number { font-family: 'Syne', sans-serif; font-size: 1.35rem; font-weight: 700; }
+    .stat-label { font-size: .72rem; color: var(--ink-soft); text-transform: uppercase; letter-spacing: .06em; }
+
+    /* ── DIVIDER ── */
+    .divider { height: 1px; background: var(--border); margin: 0 1.25rem; }
+
+    /* ── SECTION ── */
+    .section { padding: 2.5rem 1.25rem; max-width: 860px; margin: 0 auto; }
+    .section-header { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 1.5rem; }
+    .section-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.2rem; letter-spacing: -.03em; }
+
+    /* ── TOOLS GRID ── */
+    .tools-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: .85rem;
+    }
+    @media(min-width: 480px) { .tools-grid { grid-template-columns: 1fr 1fr; } }
+    @media(min-width: 720px) { .tools-grid { grid-template-columns: repeat(3, 1fr); } }
+
+    /* featured spans full width on mobile, 2 cols on md+ */
+    .tool-card.featured {
+      background: var(--ink); color: #fff; border-color: var(--ink);
+    }
+    @media(min-width: 480px) { .tool-card.featured { grid-column: span 2; } }
+    @media(min-width: 720px) { .tool-card.featured { grid-column: span 2; } }
+
+    .tool-card {
+      background: var(--card-bg);
+      border: 1.5px solid var(--border);
+      border-radius: 18px;
+      padding: 1.3rem;
+      text-decoration: none;
+      color: var(--ink);
+      display: flex;
+      align-items: flex-start;
+      gap: .9rem;
+      position: relative;
+      overflow: hidden;
+      transition: transform .2s, box-shadow .2s, border-color .2s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    @media(hover:hover) {
+      .tool-card:hover { transform: translateY(-3px); box-shadow: 0 14px 36px rgba(0,0,0,.08); border-color: var(--ink); }
+      .tool-card.featured:hover { box-shadow: 0 14px 36px rgba(0,0,0,.18); border-color: var(--ink); }
+    }
+    .tool-card:active { transform: scale(.98); }
+
+    .tool-icon {
+      width: 44px; height: 44px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem; flex-shrink: 0;
+    }
+    .tool-card.featured .tool-icon { background: rgba(255,255,255,.12) !important; }
+
+    .tool-info { flex: 1; min-width: 0; }
+    .tool-name {
+      font-family: 'Syne', sans-serif; font-weight: 700;
+      font-size: .95rem; letter-spacing: -.02em; margin-bottom: .25rem;
+    }
+    .tool-desc { font-size: .8rem; color: var(--ink-soft); line-height: 1.5; }
+    .tool-card.featured .tool-desc { color: rgba(255,255,255,.6); }
+
+    .tool-footer { display: flex; align-items: center; justify-content: space-between; margin-top: .85rem; }
+    .tool-cat {
+      font-size: .68rem; font-weight: 600; padding: .2rem .6rem;
+      border-radius: 100px; letter-spacing: .04em; text-transform: uppercase;
+    }
+    .tool-arrow {
+      width: 26px; height: 26px; border-radius: 7px;
+      background: var(--bg); display: flex; align-items: center;
+      justify-content: center; font-size: .85rem; flex-shrink: 0;
+      transition: background .2s;
+    }
+    .tool-card.featured .tool-arrow { background: rgba(255,255,255,.15); }
+    @media(hover:hover) { .tool-card:hover .tool-arrow { background: var(--accent-soft); } }
+
+    /* ── CATEGORIES ── */
+    .cat-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: .85rem;
+    }
+    @media(min-width: 480px) { .cat-grid { grid-template-columns: 1fr 1fr; } }
+    @media(min-width: 720px) { .cat-grid { grid-template-columns: repeat(3, 1fr); } }
+
+    .cat-card { background: var(--card-bg); border: 1.5px solid var(--border); border-radius: 18px; overflow: hidden; }
+    .cat-header { display: flex; align-items: center; gap: .65rem; padding: 1rem 1.2rem; border-bottom: 1px solid var(--border); }
+    .cat-icon { width: 34px; height: 34px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
+    .cat-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: .9rem; letter-spacing: -.01em; }
+    .cat-count { margin-left: auto; font-size: .7rem; color: var(--ink-soft); background: var(--tag-bg); padding: .18rem .55rem; border-radius: 100px; font-weight: 500; white-space: nowrap; }
+    .cat-tools { padding: .45rem .7rem; }
+    .cat-tool-link {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: .5rem .55rem; border-radius: 9px; text-decoration: none;
+      color: var(--ink); font-size: .83rem; transition: background .15s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .cat-tool-link:hover { background: var(--bg); }
+    .cat-tool-link .arrow { color: var(--ink-soft); font-size: .78rem; }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border); padding: 2rem 1.25rem;
+      max-width: 860px; margin: 0 auto;
+      display: flex; flex-direction: column; gap: .5rem;
+    }
+    @media(min-width: 540px) { footer { flex-direction: row; align-items: center; justify-content: space-between; } }
+    .footer-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: .95rem; color: var(--ink); text-decoration: none; }
+    .footer-logo span { color: var(--accent); }
+    .footer-text { font-size: .75rem; color: var(--ink-soft); }
+
+    @keyframes fadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+    .fi { animation: fadeUp .45s ease both; }
+    .fi:nth-child(1){animation-delay:.05s} .fi:nth-child(2){animation-delay:.1s}
+    .fi:nth-child(3){animation-delay:.15s} .fi:nth-child(4){animation-delay:.2s}
+    .fi:nth-child(5){animation-delay:.25s} .fi:nth-child(6){animation-delay:.3s}
+    .fi:nth-child(7){animation-delay:.35s}
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="logo" href="index.html">Mil<span>Sitios</span></a>
+  <span class="nav-count">7 herramientas</span>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">🛠 Herramientas gratuitas</div>
+  <h1>Mil herramientas,<br/><em>un solo lugar.</em></h1>
+  <p class="hero-sub">Micrositios simples para resolver cosas de todos los días. Sin registros, sin vueltas.</p>
+
+  <!-- SEARCH -->
+  <div class="search-wrap" id="searchWrap">
+    <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+    </svg>
+    <input
+      type="search" class="search-input" id="searchInput"
+      placeholder="Buscar… ej: sorteo, truco, descuento"
+      autocomplete="off" autocorrect="off" spellcheck="false"
+    />
+    <div class="search-results" id="searchResults"></div>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-item"><span class="stat-number">7</span><span class="stat-label">Herramientas</span></div>
+    <div class="stat-item"><span class="stat-number">4</span><span class="stat-label">Categorías</span></div>
+    <div class="stat-item"><span class="stat-number">100%</span><span class="stat-label">Gratuitas</span></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- TODAS LAS HERRAMIENTAS -->
+<section class="section" id="herramientas">
+  <div class="section-header">
+    <h2 class="section-title">✦ Todas las herramientas</h2>
+  </div>
+  <div class="tools-grid">
+
+    <!-- SORTEO — featured -->
+    <a href="milsitios-micrositio.html" class="tool-card featured fi">
+      <div class="tool-icon">🎰</div>
+      <div class="tool-info">
+        <div class="tool-name">Sorteo Online</div>
+        <div class="tool-desc">Ingresá nombres y elegí un ganador al azar. Transparente y sin trampa.</div>
+        <div class="tool-footer">
+          <span class="tool-cat" style="background:rgba(255,255,255,.12);color:rgba(255,255,255,.7)">Social</span>
+          <span class="tool-arrow">↗</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- DESCUENTOS -->
+    <a href="descuentos.html" class="tool-card fi">
+      <div class="tool-icon" style="background:var(--accent-soft)">🏷️</div>
+      <div class="tool-info">
+        <div class="tool-name">Calculador de Descuentos</div>
+        <div class="tool-desc">%, 2ª unidad, cuotas, descuentos combinados y comparación de ofertas.</div>
+        <div class="tool-footer">
+          <span class="tool-cat" style="background:var(--finance-bg);color:var(--finance-color)">Finanzas</span>
+          <span class="tool-arrow">↗</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- CONTADOR TEXTO -->
+    <a href="contador-texto.html" class="tool-card fi">
+      <div class="tool-icon" style="background:#FDF2F8">✍️</div>
+      <div class="tool-info">
+        <div class="tool-name">Contador de Texto</div>
+        <div class="tool-desc">Caracteres, palabras, sílabas, oraciones, tiempos de lectura y más.</div>
+        <div class="tool-footer">
+          <span class="tool-cat" style="background:#FDF2F8;color:#DB2777">Texto</span>
+          <span class="tool-arrow">↗</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- JUEGOS HUB -->
+    <a href="juegos-de-cartas.html" class="tool-card fi">
+      <div class="tool-icon" style="background:var(--games-bg)">🃏</div>
+      <div class="tool-info">
+        <div class="tool-name">Juegos de Cartas</div>
+        <div class="tool-desc">Truco, Escoba de 15, La Pocha y Dado virtual. Todo en un lugar.</div>
+        <div class="tool-footer">
+          <span class="tool-cat" style="background:var(--games-bg);color:var(--games-color)">Juegos</span>
+          <span class="tool-arrow">↗</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- TRUCO -->
+    <a href="truco.html" class="tool-card fi">
+      <div class="tool-icon" style="background:var(--games-bg)">🃏</div>
+      <div class="tool-info">
+        <div class="tool-name">Contador Truco</div>
+        <div class="tool-desc">Marcador por equipo con tantos rápidos: truco, envido y falta envido.</div>
+        <div class="tool-footer">
+          <span class="tool-cat" style="background:var(--games-bg);color:var(--games-color)">Juegos</span>
+          <span class="tool-arrow">↗</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- ESCOBA -->
+    <a href="escoba.html" class="tool-card fi">
+      <div class="tool-icon" style="background:var(--games-bg)">🂡</div>
+      <div class="tool-info">
+        <div class="tool-name">Escoba de 15</div>
+        <div class="tool-desc">Contá escobas, cartas, oros y los sietes. Puntos automáticos por ronda.</div>
+        <div class="tool-footer">
+          <span class="tool-cat" style="background:var(--games-bg);color:var(--games-color)">Juegos</span>
+          <span class="tool-arrow">↗</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- POCHA -->
+    <a href="pocha.html" class="tool-card fi">
+      <div class="tool-icon" style="background:var(--games-bg)">♠️</div>
+      <div class="tool-info">
+        <div class="tool-name">La Pocha</div>
+        <div class="tool-desc">Apuestas por ronda, bazas ganadas y puntaje automático. Hasta 8 jugadores.</div>
+        <div class="tool-footer">
+          <span class="tool-cat" style="background:var(--games-bg);color:var(--games-color)">Juegos</span>
+          <span class="tool-arrow">↗</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- DADO -->
+    <a href="dado.html" class="tool-card fi">
+      <div class="tool-icon" style="background:var(--games-bg)">🎲</div>
+      <div class="tool-info">
+        <div class="tool-name">Dado Virtual</div>
+        <div class="tool-desc">D4, D6, D8, D10, D12 y D20. Hasta 8 dados con animación.</div>
+        <div class="tool-footer">
+          <span class="tool-cat" style="background:var(--games-bg);color:var(--games-color)">Juegos</span>
+          <span class="tool-arrow">↗</span>
+        </div>
+      </div>
+    </a>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- POR CATEGORÍA -->
+<section class="section" id="categorias">
+  <div class="section-header">
+    <h2 class="section-title">Explorar por categoría</h2>
+  </div>
+  <div class="cat-grid">
+
+    <!-- SOCIAL -->
+    <div class="cat-card fi">
+      <div class="cat-header">
+        <div class="cat-icon" style="background:var(--social-bg)">🎉</div>
+        <span class="cat-name">Social & Grupos</span>
+        <span class="cat-count">1 tool</span>
+      </div>
+      <div class="cat-tools">
+        <a href="milsitios-micrositio.html" class="cat-tool-link"><span>🎰 Sorteo Online</span><span class="arrow">↗</span></a>
+      </div>
+    </div>
+
+    <!-- FINANZAS -->
+    <div class="cat-card fi">
+      <div class="cat-header">
+        <div class="cat-icon" style="background:var(--finance-bg)">💰</div>
+        <span class="cat-name">Finanzas</span>
+        <span class="cat-count">1 tool</span>
+      </div>
+      <div class="cat-tools">
+        <a href="descuentos.html" class="cat-tool-link"><span>🏷️ Calculador de Descuentos</span><span class="arrow">↗</span></a>
+      </div>
+    </div>
+
+    <!-- TEXTO -->
+    <div class="cat-card fi">
+      <div class="cat-header">
+        <div class="cat-icon" style="background:var(--text-bg)">✍️</div>
+        <span class="cat-name">Texto & Contenido</span>
+        <span class="cat-count">1 tool</span>
+      </div>
+      <div class="cat-tools">
+        <a href="contador-texto.html" class="cat-tool-link"><span>✍️ Contador de Texto</span><span class="arrow">↗</span></a>
+      </div>
+    </div>
+
+    <!-- JUEGOS -->
+    <div class="cat-card fi">
+      <div class="cat-header">
+        <div class="cat-icon" style="background:var(--games-bg)">🎮</div>
+        <span class="cat-name">Juegos de Cartas</span>
+        <span class="cat-count">4 tools</span>
+      </div>
+      <div class="cat-tools">
+        <a href="truco.html" class="cat-tool-link"><span>🃏 Contador Truco</span><span class="arrow">↗</span></a>
+        <a href="escoba.html" class="cat-tool-link"><span>🂡 Escoba de 15</span><span class="arrow">↗</span></a>
+        <a href="pocha.html" class="cat-tool-link"><span>♠️ La Pocha</span><span class="arrow">↗</span></a>
+        <a href="dado.html" class="cat-tool-link"><span>🎲 Dado Virtual</span><span class="arrow">↗</span></a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<footer>
+  <a href="index.html" class="footer-logo">Mil<span>Sitios</span></a>
+  <p class="footer-text">Herramientas gratuitas para el día a día.</p>
+  <p class="footer-text">Hecho con ☕ en Argentina</p>
+</footer>
+
+<script>
+  const TOOLS = [
+    { name:'Sorteo Online',            cat:'Social & Grupos',   icon:'🎰', url:'milsitios-micrositio.html', catColor:'#D97706', catBg:'#FFFBEB' },
+    { name:'Calculador de Descuentos', cat:'Finanzas',          icon:'🏷️', url:'descuentos.html',          catColor:'#2563EB', catBg:'#EFF6FF' },
+    { name:'Contador de Texto',        cat:'Texto & Contenido', icon:'✍️', url:'contador-texto.html',      catColor:'#DB2777', catBg:'#FDF2F8' },
+    { name:'Juegos de Cartas',         cat:'Juegos',            icon:'🃏', url:'juegos-de-cartas.html',    catColor:'#7C3AED', catBg:'#F5F3FF' },
+    { name:'Contador Truco',           cat:'Juegos',            icon:'🃏', url:'truco.html',               catColor:'#7C3AED', catBg:'#F5F3FF' },
+    { name:'Escoba de 15',             cat:'Juegos',            icon:'🂡', url:'escoba.html',              catColor:'#7C3AED', catBg:'#F5F3FF' },
+    { name:'La Pocha',                 cat:'Juegos',            icon:'♠️', url:'pocha.html',               catColor:'#7C3AED', catBg:'#F5F3FF' },
+    { name:'Dado Virtual',             cat:'Juegos',            icon:'🎲', url:'dado.html',                catColor:'#7C3AED', catBg:'#F5F3FF' },
+  ];
+
+  const input   = document.getElementById('searchInput');
+  const results = document.getElementById('searchResults');
+  const wrap    = document.getElementById('searchWrap');
+
+  input.addEventListener('input', () => {
+    const q = input.value.toLowerCase().trim();
+    if (!q) { results.classList.remove('show'); return; }
+    const matches = TOOLS.filter(t =>
+      t.name.toLowerCase().includes(q) || t.cat.toLowerCase().includes(q)
+    ).slice(0, 6);
+    if (!matches.length) { results.classList.remove('show'); return; }
+    results.innerHTML = matches.map(t => `
+      <a href="${t.url}" class="sr-item">
+        <div class="sr-icon" style="background:${t.catBg}">${t.icon}</div>
+        <div>
+          <div class="sr-name">${t.name}</div>
+          <div class="sr-cat" style="color:${t.catColor}">${t.cat}</div>
+        </div>
+      </a>
+    `).join('');
+    results.classList.add('show');
+  });
+
+  document.addEventListener('click', e => {
+    if (!wrap.contains(e.target)) results.classList.remove('show');
+  });
+</script>
+</body>
+</html>
