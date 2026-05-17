@@ -1,0 +1,1443 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>El Impostor — MilSitios</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #F5F3EE;
+      --ink: #1A1814;
+      --ink-soft: #6B6760;
+      --accent: #E84C2B;
+      --accent-soft: #FDE8E3;
+      --card-bg: #FFFFFF;
+      --border: #E2DFD8;
+      --tag-bg: #ECEAE4;
+      --tool-color: #7C3AED;
+      --tool-bg: #F3EEFF;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      min-height: 100vh;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ━━━ NAV ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(245, 243, 238, 0.88);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 clamp(1.5rem, 5vw, 4rem);
+      height: 60px;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .nav-back {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--ink-soft);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-back:hover { color: var(--ink); }
+    .nav-sep { color: var(--border); font-size: 1.1rem; }
+    .nav-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.1rem; letter-spacing: -0.03em; color: var(--ink); text-decoration: none; }
+    .nav-logo span { color: var(--accent); }
+    .nav-tool-name { margin-left: auto; font-size: 0.85rem; color: var(--ink-soft); font-weight: 500; display: flex; align-items: center; gap: 0.4rem; }
+
+    /* ━━━ TOOL HEADER ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    .tool-header {
+      padding: clamp(2.5rem, 6vw, 5rem) clamp(1.5rem, 5vw, 4rem) 2rem;
+      max-width: 760px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .tool-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: var(--tool-bg);
+      color: var(--tool-color);
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      padding: 0.35rem 0.85rem;
+      border-radius: 100px;
+      margin-bottom: 1.25rem;
+    }
+    .tool-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      letter-spacing: -0.04em;
+      line-height: 1.05;
+      margin-bottom: 0.75rem;
+    }
+    .tool-desc {
+      font-size: 1rem;
+      color: var(--ink-soft);
+      font-weight: 300;
+      line-height: 1.6;
+      max-width: 420px;
+      margin: 0 auto;
+    }
+
+    /* ━━━ TOOL BODY ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    .tool-body {
+      padding: 0 clamp(1.5rem, 5vw, 4rem) clamp(3rem, 6vw, 5rem);
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    /* ━━━ CARD ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    .card {
+      background: var(--card-bg);
+      border: 1.5px solid var(--border);
+      border-radius: 20px;
+      padding: 1.75rem;
+      margin-bottom: 1rem;
+    }
+    .card-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      letter-spacing: -0.01em;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* ━━━ INPUTS ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    .input-row { display: flex; gap: 0.6rem; margin-bottom: 0.75rem; }
+    .ms-input {
+      flex: 1;
+      height: 46px;
+      padding: 0 1rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      background: var(--bg);
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      outline: none;
+      color: var(--ink);
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .ms-input::placeholder { color: var(--ink-soft); }
+    .ms-input:focus {
+      border-color: var(--ink);
+      box-shadow: 0 0 0 3px rgba(26,24,20,0.06);
+      background: var(--card-bg);
+    }
+    select.ms-input { cursor: pointer; }
+
+    /* ━━━ BUTTONS ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    .btn {
+      height: 46px;
+      padding: 0 1.25rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 500;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: transform 0.15s, box-shadow 0.15s, background 0.15s;
+      white-space: nowrap;
+    }
+    .btn:active { transform: scale(0.97); }
+    .btn-ghost { background: var(--tag-bg); color: var(--ink-soft); }
+    .btn-ghost:hover { background: var(--border); color: var(--ink); }
+    .btn-primary {
+      background: var(--ink);
+      color: #fff;
+      width: 100%;
+      justify-content: center;
+      height: 52px;
+      font-size: 1rem;
+      border-radius: 14px;
+      margin-top: 0.5rem;
+    }
+    .btn-primary:hover { box-shadow: 0 8px 24px rgba(26,24,20,0.2); transform: translateY(-1px); }
+    .btn-accent {
+      background: var(--tool-color);
+      color: #fff;
+      width: 100%;
+      justify-content: center;
+      height: 56px;
+      font-size: 1.05rem;
+      font-weight: 600;
+      border-radius: 14px;
+    }
+    .btn-accent:hover { box-shadow: 0 8px 24px rgba(124,58,237,0.35); transform: translateY(-2px); }
+
+    /* ━━━ TAGS ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    .tags-wrap { display: flex; flex-wrap: wrap; gap: 0.45rem; min-height: 36px; }
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      background: var(--tag-bg);
+      border-radius: 100px;
+      padding: 0.3rem 0.7rem 0.3rem 0.8rem;
+      font-size: 0.82rem;
+      font-weight: 500;
+      animation: tagIn 0.2s ease;
+    }
+    @keyframes tagIn { from { opacity:0; transform:scale(0.85); } to { opacity:1; transform:scale(1); } }
+    .tag-remove {
+      background: none; border: none; cursor: pointer;
+      color: var(--ink-soft); padding: 0; font-size: 1rem;
+      line-height: 1; transition: color 0.15s;
+    }
+    .tag-remove:hover { color: var(--accent); }
+
+    /* ━━━ TOGGLE ROW ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.6rem 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.88rem;
+      color: var(--ink-soft);
+    }
+    .toggle-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .toggle-row label { display: flex; align-items: center; gap: 0.5rem; cursor: pointer; flex: 1; }
+
+    /* ━━━ STEPPER ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    .stepper {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .step-btn {
+      width: 32px; height: 32px;
+      background: var(--tag-bg);
+      border: none;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      color: var(--ink);
+      transition: background 0.15s;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .step-btn:hover { background: var(--border); }
+    .step-val {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      min-width: 28px;
+      text-align: center;
+    }
+
+    /* ━━━ CATEGORY PILLS ━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    .cat-group-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+      margin: 0.9rem 0 0.4rem;
+    }
+    .cat-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-bottom: 0.25rem;
+    }
+    .cat-pill {
+      padding: 0.35rem 0.85rem;
+      border-radius: 100px;
+      border: 1.5px solid var(--border);
+      background: var(--bg);
+      font-size: 0.82rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s;
+      color: var(--ink-soft);
+      user-select: none;
+    }
+    .cat-pill:hover { border-color: var(--tool-color); color: var(--tool-color); }
+    .cat-pill.active {
+      background: var(--tool-color);
+      border-color: var(--tool-color);
+      color: #fff;
+    }
+
+    /* ━━━ SECTION DIVIDER ━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    .section-divider { height: 1px; background: var(--border); margin: 1.25rem 0; }
+
+    /* ━━━ PHASE SCREENS ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    .phase { display: none; }
+    .phase.active { display: block; }
+
+    /* ━━━ PASS SCREEN ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    .pass-screen {
+      background: var(--ink);
+      border-radius: 24px;
+      padding: 3rem 2rem;
+      text-align: center;
+      color: #fff;
+      margin-bottom: 1rem;
+      animation: fadeUp 0.35s ease;
+    }
+    @keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+    .pass-avatar {
+      width: 72px; height: 72px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2rem;
+      margin: 0 auto 1.25rem;
+    }
+    .pass-name {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.8rem;
+      letter-spacing: -0.03em;
+      margin-bottom: 0.3rem;
+    }
+    .pass-sub { font-size: 0.85rem; color: rgba(255,255,255,0.45); margin-bottom: 2rem; }
+    .btn-reveal {
+      background: rgba(255,255,255,0.12);
+      color: #fff;
+      border: none;
+      border-radius: 14px;
+      height: 52px;
+      padding: 0 2rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s;
+      display: inline-flex; align-items: center; gap: 0.5rem;
+    }
+    .btn-reveal:hover { background: rgba(255,255,255,0.2); }
+
+    /* ━━━ ROLE CARD ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    .role-card {
+      border-radius: 24px;
+      padding: 2.5rem 2rem;
+      text-align: center;
+      margin-bottom: 1rem;
+      animation: cardFlip 0.4s cubic-bezier(0.34,1.56,0.64,1);
+      position: relative;
+      overflow: hidden;
+    }
+    @keyframes cardFlip {
+      from { opacity:0; transform:scale(0.85) rotateX(-15deg); }
+      to { opacity:1; transform:scale(1) rotateX(0); }
+    }
+    .role-card.citizen { background: var(--tool-color); color: #fff; }
+    .role-card.impostor { background: var(--accent); color: #fff; }
+
+    .role-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: rgba(255,255,255,0.15);
+      border-radius: 100px;
+      padding: 0.3rem 0.9rem;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 1.25rem;
+    }
+    .role-icon { font-size: 3.5rem; margin-bottom: 0.75rem; display: block; animation: iconBounce 0.5s ease; }
+    @keyframes iconBounce { 0% { transform:scale(0.3) rotate(-10deg); } 70% { transform:scale(1.15) rotate(3deg); } 100% { transform:scale(1) rotate(0); } }
+    .role-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.6rem;
+      letter-spacing: -0.03em;
+      margin-bottom: 0.5rem;
+    }
+    .role-word {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(1.8rem, 5vw, 2.8rem);
+      letter-spacing: -0.04em;
+      margin: 0.75rem 0 0.5rem;
+      background: rgba(255,255,255,0.2);
+      border-radius: 14px;
+      padding: 0.5rem 1.5rem;
+      display: inline-block;
+    }
+    .role-cat {
+      font-size: 0.82rem;
+      color: rgba(255,255,255,0.55);
+      margin-bottom: 1.5rem;
+    }
+    .role-hint {
+      font-size: 0.88rem;
+      color: rgba(255,255,255,0.6);
+      margin-bottom: 2rem;
+      line-height: 1.5;
+    }
+    .btn-cover {
+      background: rgba(0,0,0,0.25);
+      color: #fff;
+      border: none;
+      border-radius: 14px;
+      height: 52px;
+      padding: 0 2rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s;
+      display: inline-flex; align-items: center; gap: 0.5rem;
+    }
+    .btn-cover:hover { background: rgba(0,0,0,0.35); }
+
+    /* ━━━ DEBATE PHASE ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    .debate-header {
+      background: var(--card-bg);
+      border: 1.5px solid var(--border);
+      border-radius: 20px;
+      padding: 1.75rem;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+    .timer-circle {
+      width: 120px; height: 120px;
+      margin: 0 auto 1rem;
+      position: relative;
+    }
+    .timer-circle svg { transform: rotate(-90deg); }
+    .timer-track { fill: none; stroke: var(--border); stroke-width: 6; }
+    .timer-prog { fill: none; stroke: var(--tool-color); stroke-width: 6; stroke-linecap: round; transition: stroke-dashoffset 1s linear; }
+    .timer-text {
+      position: absolute;
+      inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.6rem;
+      letter-spacing: -0.03em;
+    }
+    .debate-word-reveal {
+      background: var(--tool-bg);
+      border: 1.5px solid var(--tool-color);
+      border-radius: 12px;
+      padding: 0.75rem 1rem;
+      font-size: 0.82rem;
+      color: var(--tool-color);
+      font-weight: 500;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+    .players-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    .player-chip {
+      background: var(--tag-bg);
+      border-radius: 12px;
+      padding: 0.6rem 0.75rem;
+      font-size: 0.82rem;
+      font-weight: 500;
+      text-align: center;
+    }
+
+    /* ━━━ VOTING PHASE ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    .vote-player {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .vote-player:last-child { border-bottom: none; }
+    .vote-name { font-weight: 500; font-size: 0.92rem; }
+    .vote-count {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 0.9rem;
+      min-width: 28px;
+      text-align: center;
+    }
+    .vote-btns { display: flex; gap: 0.4rem; }
+    .vote-btn {
+      height: 34px; width: 34px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      background: var(--bg);
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.15s;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .vote-btn:hover { border-color: var(--accent); background: var(--accent-soft); }
+    .vote-btn.voted { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+    /* ━━━ REVEAL PHASE ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    .reveal-card {
+      background: var(--ink);
+      border-radius: 24px;
+      padding: 2.5rem 2rem;
+      text-align: center;
+      color: #fff;
+      margin-bottom: 1rem;
+      animation: fadeUp 0.4s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .reveal-icon { font-size: 3.5rem; margin-bottom: 0.75rem; display: block; }
+    .reveal-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(1.4rem,4vw,2rem);
+      letter-spacing: -0.03em;
+      margin-bottom: 0.5rem;
+    }
+    .reveal-sub { font-size: 0.85rem; color: rgba(255,255,255,0.45); margin-bottom: 1.75rem; }
+    .impostor-list { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 2rem; }
+    .impostor-chip {
+      background: var(--accent);
+      border-radius: 12px;
+      padding: 0.75rem 1.25rem;
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      animation: tagIn 0.3s ease both;
+    }
+    .word-reveal {
+      background: rgba(255,255,255,0.1);
+      border-radius: 12px;
+      padding: 1rem 1.5rem;
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.4rem;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.4rem;
+    }
+    .word-reveal-label { font-size: 0.75rem; color: rgba(255,255,255,0.45); margin-bottom: 1.5rem; }
+
+    /* ━━━ SCOREBOARD ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    .score-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      gap: 1rem;
+    }
+    .score-item {
+      text-align: center;
+      flex: 1;
+      padding: 1rem 0.5rem;
+      border-radius: 14px;
+    }
+    .score-item.citizens { background: var(--tool-bg); }
+    .score-item.impostors { background: var(--accent-soft); }
+    .score-number {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 2.5rem;
+      letter-spacing: -0.04em;
+    }
+    .score-item.citizens .score-number { color: var(--tool-color); }
+    .score-item.impostors .score-number { color: var(--accent); }
+    .score-label { font-size: 0.78rem; color: var(--ink-soft); font-weight: 500; }
+    .score-vs {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--ink-soft);
+    }
+
+    /* ━━━ BOTTOM BTNS ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    .bottom-btns { display: flex; flex-direction: column; gap: 0.6rem; margin-top: 0.75rem; }
+    .btn-outline {
+      background: transparent;
+      color: var(--ink-soft);
+      border: 1.5px solid var(--border);
+      width: 100%;
+      justify-content: center;
+      height: 46px;
+      font-size: 0.9rem;
+      border-radius: 14px;
+    }
+    .btn-outline:hover { border-color: var(--ink); color: var(--ink); background: var(--tag-bg); }
+
+    /* ━━━ COVER OVERLAY ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    #coverOverlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: var(--ink);
+      z-index: 200;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      text-align: center;
+      padding: 2rem;
+      cursor: pointer;
+    }
+    #coverOverlay.show { display: flex; }
+    .cover-icon { font-size: 4rem; margin-bottom: 1rem; }
+    .cover-text {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.4rem;
+      letter-spacing: -0.03em;
+      margin-bottom: 0.5rem;
+    }
+    .cover-sub { font-size: 0.85rem; color: rgba(255,255,255,0.4); }
+
+    /* ━━━ CUSTOM LIST TEXTAREA ━━━━━━━━━━━━━━━━━━━━━ */
+    .ms-textarea {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      background: var(--bg);
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      outline: none;
+      color: var(--ink);
+      resize: vertical;
+      min-height: 90px;
+      transition: border-color 0.2s;
+    }
+    .ms-textarea:focus { border-color: var(--ink); background: var(--card-bg); }
+
+    /* ━━━ NOTICE ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    .notice {
+      background: var(--tool-bg);
+      border: 1.5px solid rgba(124,58,237,0.2);
+      border-radius: 12px;
+      padding: 0.75rem 1rem;
+      font-size: 0.82rem;
+      color: var(--tool-color);
+      margin-top: 0.75rem;
+      line-height: 1.5;
+    }
+
+    /* ━━━ RELATED / FOOTER ━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    .related-section { padding: 0 clamp(1.5rem, 5vw, 4rem) clamp(3rem, 6vw, 5rem); max-width: 760px; margin: 0 auto; }
+    .related-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.75rem; margin-bottom: 0.75rem; color: var(--ink-soft); text-transform: uppercase; letter-spacing: 0.06em; }
+    .related-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; }
+    @media (max-width: 520px) { .related-grid { grid-template-columns: 1fr 1fr; } }
+    .related-card { background: var(--card-bg); border: 1.5px solid var(--border); border-radius: 14px; padding: 1rem; text-decoration: none; color: var(--ink); display: flex; flex-direction: column; gap: 0.4rem; transition: transform 0.2s, border-color 0.2s; }
+    .related-card:hover { transform: translateY(-2px); border-color: var(--ink); }
+    .related-icon { font-size: 1.4rem; }
+    .related-name { font-family: 'Syne', sans-serif; font-size: 0.85rem; font-weight: 700; letter-spacing: -0.01em; }
+    .related-cat { font-size: 0.72rem; color: var(--ink-soft); }
+
+    footer { border-top: 1px solid var(--border); padding: 1.75rem clamp(1.5rem, 5vw, 4rem); max-width: 760px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+    .footer-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1rem; color: var(--ink); text-decoration: none; }
+    .footer-logo span { color: var(--accent); }
+    .footer-text { font-size: 0.78rem; color: var(--ink-soft); }
+
+    @media (max-width: 480px) {
+      .input-row { flex-direction: column; }
+      .input-row .btn { width: 100%; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- COVER OVERLAY (pantalla negra entre jugadores) -->
+<div id="coverOverlay" onclick="hideCover()">
+  <div class="cover-icon">🙈</div>
+  <div class="cover-text">Pasá el teléfono al siguiente jugador</div>
+  <div class="cover-sub">Tocá para continuar</div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <a href="milsitios-index.html" class="nav-back">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+    Inicio
+  </a>
+  <span class="nav-sep">/</span>
+  <a href="milsitios-index.html" class="nav-logo">Mil<span>Sitios</span></a>
+  <span class="nav-tool-name">
+    <span style="color:var(--tool-color)">●</span> Social & Grupos
+  </span>
+</nav>
+
+<!-- TOOL HEADER -->
+<header class="tool-header">
+  <div class="tool-chip">🕵️ Social & Grupos</div>
+  <h1 class="tool-title">El Impostor</h1>
+  <p class="tool-desc">Un jugador conoce la palabra secreta. El impostor intenta pasar desapercibido. ¿Quién es?</p>
+</header>
+
+<!-- TOOL BODY -->
+<main class="tool-body">
+
+  <!-- ═══════════════════════════════════════
+       FASE 0: CONFIGURACIÓN
+  ═══════════════════════════════════════ -->
+  <div id="phaseConfig" class="phase active">
+
+    <!-- Jugadores -->
+    <div class="card">
+      <p class="card-title"><span>👥</span> Jugadores
+        <span id="playersCountLabel" style="margin-left:auto;font-family:'DM Sans';font-weight:400;font-size:0.8rem;color:var(--ink-soft)">4 jugadores</span>
+      </p>
+      <div class="input-row">
+        <input type="text" class="ms-input" id="playerNameInput" placeholder="Nombre del jugador" autocomplete="off" />
+        <button class="btn btn-ghost" onclick="addPlayer()">+ Agregar</button>
+      </div>
+      <div class="tags-wrap" id="playersList"></div>
+      <div class="notice" style="margin-top:0.75rem">
+        💡 Mínimo 3 jugadores. Si no agregás nombres, se usan <strong>Jugador 1, Jugador 2…</strong>
+      </div>
+    </div>
+
+    <!-- Cantidad de impostores -->
+    <div class="card">
+      <p class="card-title"><span>🕵️</span> Cantidad de impostores</p>
+      <div class="toggle-row">
+        <label>
+          <input type="radio" name="impostorMode" value="fixed" checked onchange="toggleImpostorMode()" style="accent-color:var(--tool-color)"/>
+          Cantidad fija
+        </label>
+        <div class="stepper" id="fixedStepper">
+          <button class="step-btn" onclick="changeImpostors(-1)">−</button>
+          <span class="step-val" id="impostorCount">1</span>
+          <button class="step-btn" onclick="changeImpostors(1)">+</button>
+        </div>
+      </div>
+      <div class="toggle-row">
+        <label>
+          <input type="radio" name="impostorMode" value="random" onchange="toggleImpostorMode()" style="accent-color:var(--tool-color)"/>
+          Random (el juego elige)
+        </label>
+        <span id="randomHint" style="font-size:0.78rem;color:var(--ink-soft);display:none">1 o más</span>
+      </div>
+    </div>
+
+    <!-- Listas de palabras -->
+    <div class="card">
+      <p class="card-title"><span>📋</span> Lista de palabras</p>
+
+      <p class="cat-group-label">🌍 Generales</p>
+      <div class="cat-grid" id="catGridGeneral"></div>
+
+      <p class="cat-group-label">🇦🇷 Argentina</p>
+      <div class="cat-grid" id="catGridArg"></div>
+
+      <div class="section-divider"></div>
+
+      <!-- Lista personalizada -->
+      <p class="card-title" style="margin-bottom:0.5rem"><span>✏️</span> Lista personalizada</p>
+      <div class="input-row" style="margin-bottom:0.5rem">
+        <input type="text" class="ms-input" id="customListName" placeholder="Nombre de la lista (ej: Mis películas)" autocomplete="off" />
+        <button class="btn btn-ghost" onclick="saveCustomList()">Guardar</button>
+      </div>
+      <textarea class="ms-textarea" id="customWords" placeholder="Escribí las palabras separadas por coma o enter&#10;Ej: Batman, La Odisea, Quijote, Dune…"></textarea>
+      <div class="notice">Las palabras guardadas se agregan como una categoría más arriba.</div>
+
+      <div class="section-divider"></div>
+
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem">
+        <span style="font-size:0.82rem;font-weight:500;color:var(--ink-soft)">Seleccionadas: <strong id="selectedCatCount" style="color:var(--ink)">0</strong> listas</span>
+        <button class="btn btn-ghost" style="height:32px;font-size:0.78rem;padding:0 0.75rem" onclick="clearCats()">Deseleccionar todo</button>
+      </div>
+    </div>
+
+    <!-- Opciones de juego -->
+    <div class="card">
+      <p class="card-title"><span>⚙️</span> Opciones</p>
+
+      <div class="toggle-row">
+        <label for="showCategory">
+          <span>🏷️</span> Mostrar la categoría a los ciudadanos
+        </label>
+        <input type="checkbox" id="showCategory" checked style="accent-color:var(--tool-color);width:16px;height:16px" />
+      </div>
+
+      <div class="toggle-row">
+        <label for="showImpostorCount">
+          <span>🔢</span> Revelar cuántos impostores hay
+        </label>
+        <input type="checkbox" id="showImpostorCount" checked style="accent-color:var(--tool-color);width:16px;height:16px" />
+      </div>
+
+      <div class="toggle-row" style="padding-bottom:0">
+        <label><span>⏱️</span> Tiempo de debate</label>
+        <select class="ms-input" id="timerSetting" style="flex:unset;width:auto;height:36px;font-size:0.85rem;padding:0 0.75rem">
+          <option value="0">Sin tiempo</option>
+          <option value="180">3 minutos</option>
+          <option value="300" selected>5 minutos</option>
+          <option value="600">10 minutos</option>
+          <option value="900">15 minutos</option>
+        </select>
+      </div>
+    </div>
+
+    <button class="btn btn-accent" onclick="startGame()">🕵️ &nbsp;¡Arrancar partida!</button>
+
+  </div><!-- /phaseConfig -->
+
+
+  <!-- ═══════════════════════════════════════
+       FASE 1: REPARTO DE ROLES
+  ═══════════════════════════════════════ -->
+  <div id="phaseRoles" class="phase">
+    <!-- se genera dinámicamente -->
+  </div>
+
+
+  <!-- ═══════════════════════════════════════
+       FASE 2: DEBATE + TIMER
+  ═══════════════════════════════════════ -->
+  <div id="phaseDebate" class="phase">
+    <div class="debate-header">
+      <p class="card-title" style="justify-content:center;margin-bottom:1.25rem"><span>💬</span> Tiempo de debate</p>
+      <div class="timer-circle" id="timerCircle">
+        <svg width="120" height="120" viewBox="0 0 120 120">
+          <circle class="timer-track" cx="60" cy="60" r="52"/>
+          <circle class="timer-prog" id="timerRing" cx="60" cy="60" r="52"
+            stroke-dasharray="326.7" stroke-dashoffset="0"/>
+        </svg>
+        <div class="timer-text" id="timerDisplay">—</div>
+      </div>
+      <div id="wordHintDebate" class="debate-word-reveal" style="display:none"></div>
+      <div style="display:flex;gap:0.5rem;justify-content:center;flex-wrap:wrap">
+        <button class="btn btn-ghost" id="timerPauseBtn" onclick="toggleTimer()" style="height:40px">⏸ Pausar</button>
+        <button class="btn btn-ghost" onclick="goToVoting()" style="height:40px">🗳 Votar ya</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <p class="card-title"><span>👥</span> Jugadores en partida</p>
+      <div class="players-grid" id="debatePlayers"></div>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════
+       FASE 3: VOTACIÓN
+  ═══════════════════════════════════════ -->
+  <div id="phaseVoting" class="phase">
+    <div class="card">
+      <p class="card-title"><span>🗳️</span> ¿Quién es el impostor?</p>
+      <p style="font-size:0.82rem;color:var(--ink-soft);margin-bottom:1rem">Cada uno vota a quien cree que es el impostor. Usá los ＋/− para sumar o restar votos.</p>
+      <div id="voteList"></div>
+    </div>
+    <button class="btn btn-accent" onclick="goToReveal()">🔍 &nbsp;Revelar resultado</button>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════
+       FASE 4: REVELACIÓN
+  ═══════════════════════════════════════ -->
+  <div id="phaseReveal" class="phase">
+    <div class="reveal-card" id="revealCard">
+      <span class="reveal-icon" id="revealIcon">🎭</span>
+      <h2 class="reveal-title" id="revealTitle">—</h2>
+      <p class="reveal-sub" id="revealSub"></p>
+      <div class="impostor-list" id="revealImpostors"></div>
+      <div class="word-reveal" id="revealWord"></div>
+      <p class="word-reveal-label">era la palabra secreta</p>
+    </div>
+
+    <!-- Puntaje -->
+    <div class="card">
+      <p class="card-title"><span>🏆</span> Puntaje acumulado</p>
+      <div class="score-row">
+        <div class="score-item citizens">
+          <div class="score-number" id="scoreCitizens">0</div>
+          <div class="score-label">🏙️ Ciudadanos</div>
+        </div>
+        <div class="score-vs">VS</div>
+        <div class="score-item impostors">
+          <div class="score-number" id="scoreImpostors">0</div>
+          <div class="score-label">🕵️ Impostores</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bottom-btns">
+      <button class="btn btn-accent" onclick="playAgainSamePlayers()">🔄 &nbsp;Otra ronda (mismos jugadores)</button>
+      <button class="btn btn-outline btn" onclick="goToConfig()">⚙️ &nbsp;Nueva partida desde cero</button>
+    </div>
+  </div>
+
+</main>
+
+<!-- RELATED -->
+<section class="related-section">
+  <p class="related-title">También te puede interesar</p>
+  <div class="related-grid">
+    <a href="escoba.html" class="related-card">
+      <span class="related-icon">🃏</span>
+      <span class="related-name">Escoba de 15</span>
+      <span class="related-cat">Juegos de cartas</span>
+    </a>
+    <a href="truco.html" class="related-card">
+      <span class="related-icon">🤠</span>
+      <span class="related-name">Contador Truco</span>
+      <span class="related-cat">Juegos de cartas</span>
+    </a>
+    <a href="milsitios-micrositio.html" class="related-card">
+      <span class="related-icon">🎉</span>
+      <span class="related-name">Sorteo Online</span>
+      <span class="related-cat">Social & Grupos</span>
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <a href="milsitios-index.html" class="footer-logo">Mil<span>Sitios</span></a>
+  <p class="footer-text">Hecho con ☕ en Argentina</p>
+</footer>
+
+<script>
+/* ═══════════════════════════════════════════════════
+   LISTAS DE PALABRAS
+═══════════════════════════════════════════════════ */
+const WORD_LISTS = {
+  general: [
+    { id:'lugares',     name:'Lugares del mundo',       emoji:'🌍', words:['Hospital','Playa','Aeropuerto','Casino','Biblioteca','Zoológico','Cárcel','Circo','Iglesia','Submarino','Estación espacial','Barco pirata','Castillo medieval','Bunker','Cementerio','Faro','Mina','Estadio','Teatro','Museo','Monasterio','Discoteca','Banco','Acuario','Planetario'] },
+    { id:'animales',    name:'Animales',                emoji:'🐾', words:['Ornitorrinco','Axolote','Tarántula','Mantis religiosa','Nudibranquio','Dragón de Komodo','Fosa','Okapi','Aye-aye','Narval','Calamón','Tarsero','Pangolín','Quokka','Capibara','Piraña','Anaconda','Cóndor','Llama','Tapir','Flamenco','Jaguar','Boa constrictor','Perezoso'] },
+    { id:'peliculas',   name:'Películas',               emoji:'🎬', words:['El Padrino','Titanic','Inception','Matrix','Joker','Avengers','Interstellar','El Señor de los Anillos','Gladiador','Pulp Fiction','Forrest Gump','El Silencio de los Inocentes','La La Land','Parasite','Shrek','Toy Story','Coco','Up','E.T.','Back to the Future','Alien','Jaws','Psycho','Blade Runner','Casablanca'] },
+    { id:'series',      name:'Series',                  emoji:'📺', words:['Breaking Bad','Game of Thrones','Stranger Things','The Office','Friends','Black Mirror','The Crown','Squid Game','Narcos','Peaky Blinders','The Wire','Euphoria','Succession','Better Call Saul','Westworld','Dark','Mindhunter','Sherlock','House of Cards','Twin Peaks','Lost','24','Dexter','Mr. Robot','Fleabag'] },
+    { id:'comidas',     name:'Comidas del mundo',       emoji:'🍽️', words:['Sushi','Ramen','Tacos','Pizza','Shawarma','Pad Thai','Ceviche','Moussaka','Goulash','Fondue','Dim Sum','Banh Mi','Bobó de camarão','Jerk chicken','Injera','Bibimbap','Pho','Rendang','Pierogi','Tagine','Feijoada','Paella','Borscht','Tom kha gai','Poutine'] },
+    { id:'paises',      name:'Países',                  emoji:'🗺️', words:['Bután','Mozambique','Kazajistán','Papúa Nueva Guinea','Estonia','Bolivia','Nepal','Surinam','Camboya','Etiopía','Letonia','Namibia','Albania','Paraguay','Laos','Moldavia','Kirguistán','Sierra Leone','Líbano','Kosovo','Montenegro','Eritrea','Tonga','Vanuatu','Maldivas'] },
+    { id:'profesiones', name:'Profesiones',             emoji:'💼', words:['Sommelière','Astrofísico','Forense','Catador de agua','Sexador de pollos','Probador de videojuegos','Negociador de rehenes','Analista de ADN','Buzo de saturación','Probador de colchones','Domador de leones','Ilusionista','Juglar','Alquimista','Fakir','Speleólogo','Taxidermista','Perfumista','Chocolatero','Armador de puzzles profesional'] },
+    { id:'objetos',     name:'Objetos cotidianos',      emoji:'🔧', words:['Clips de papel','Abrecartas','Cuaderno de espiral','Sacapuntas','Ruleta de cinta','Posavasos','Sacacorchos','Embudo','Colador','Rodillo de cocina','Pinzas para ropa','Espejo de bolsillo','Llavero','Brújula','Calculadora','Casete','Disquetera','Teléfono de disco','Telefonema','Polaroid'] },
+    { id:'deportes',    name:'Deportes',                emoji:'⚽', words:['Curling','Polo acuático','Bobsled','Kabaddi','Squash','Lacrosse','Korfball','Bandy','Pelota vasca','Gateball','Tchoukball','Bocce','Pallone col bracciale','Kin-ball','Underwater hockey','Sepak takraw','Buzkashi','Capoeira competitiva','Mancala deportivo','Ferret racing'] },
+    { id:'superheroes', name:'Superhéroes',             emoji:'🦸', words:['Spider-Man','Batman','Iron Man','Wonder Woman','Thor','Black Panther','Doctor Strange','Shazam','Green Lantern','Aquaman','Flash','Hawkeye','Scarlet Witch','Vision','Ant-Man','Capitán América','Hulk','Wolverine','Deadpool','Pantera Negra','Linterna Verde','Nightwing','Batgirl','Ms. Marvel','Moon Knight'] },
+    { id:'videojuegos', name:'Videojuegos',             emoji:'🎮', words:['Minecraft','Fortnite','Among Us','GTA V','The Legend of Zelda','God of War','Dark Souls','Stardew Valley','Hollow Knight','Celeste','Undertale','Portal','Half-Life','Doom','Tetris','Pac-Man','Super Mario','Sonic','Mega Man','Street Fighter','Mortal Kombat','Pokémon','Overwatch','League of Legends','Elden Ring'] },
+    { id:'marcas_glob', name:'Marcas globales',         emoji:'™️', words:['Apple','Google','Coca-Cola','Nike','McDonald\'s','Amazon','Tesla','Netflix','Spotify','YouTube','Instagram','WhatsApp','Lego','Ferrari','Rolex','Louis Vuitton','Chanel','Adidas','Samsung','Microsoft','Disney','IKEA','Zara','Airbnb','Uber'] },
+    { id:'historicos',  name:'Personajes históricos',   emoji:'🏛️', words:['Napoleón','Cleopatra','Julius César','Alejandro Magno','Leonardo da Vinci','Galileo Galilei','Darwin','Newton','Tesla','Einstein','Gandhi','Churchill','Bolívar','San Martín','Hipatia','Zenobia','Tamerlán','Gengis Kan','Saladin','Marco Polo','Cristóbal Colón','Hernán Cortés','Moctezuma','Atila','Vlad Tepes'] },
+    { id:'animacion',   name:'Películas de animación',  emoji:'🧸', words:['El Rey León','Frozen','Moana','Encanto','Ratatouille','WALL-E','Buscando a Nemo','Los Increíbles','Brave','Inside Out','Soul','Luca','Turning Red','Shrek','Kung Fu Panda','How to Train Your Dragon','Spirited Away','Princesa Mononoke','Nausicaä','Mi vecino Totoro','El viaje de Chihiro','Akira','Coraline','Kubo y las dos cuerdas mágicas'] },
+    { id:'villanos',    name:'Villanos famosos',        emoji:'😈', words:['Thanos','Joker','Darth Vader','Hannibal Lecter','Voldemort','Magneto','Lex Luthor','El Guasón','Sauron','Gollum','Freddy Krueger','Jason Voorhees','Michael Myers','Pennywise','El Chucky','Hans Landa','Anton Chigurh','Patrick Bateman','Amy Dunne','Regina George','Nurse Ratched','Alex DeLarge','Iago','Salieri','El Sheriff de Nottingham'] },
+    { id:'refranes',    name:'Refranes',                emoji:'📜', words:['A caballo regalado no le mires el diente','Más vale tarde que nunca','No hay mal que por bien no venga','Camarón que se duerme se lo lleva la corriente','El que madruga Dios lo ayuda','A mal tiempo buena cara','Dime con quién andas y te diré quién eres','Ojos que no ven corazón que no siente','No dejes para mañana lo que puedes hacer hoy','En boca cerrada no entran moscas','A río revuelto ganancia de pescadores','Más vale pájaro en mano que cien volando','El hábito no hace al monje','Perro que ladra no muerde','No todo lo que brilla es oro'] },
+    { id:'emojis',      name:'Emojis famosos',          emoji:'😂', words:['😂 Llorando de risa','🔥 Fuego','❤️ Corazón rojo','🤔 Pensativo','😭 Llorando fuerte','🥺 Ojos de cachorro','💀 Calavera','🤌 Mano italiana','😤 Humo en nariz','🫡 Saludo militar','🤡 Payaso','👀 Ojos','🙃 Cara al revés','😮‍💨 Exhalando','🫠 Derritiéndose','🤙 Llámame','✨ Destellos','🎉 Fiesta','💯 Cien puntos','🫶 Corazón con manos'] },
+    { id:'instrumentos',name:'Instrumentos musicales',  emoji:'🎵', words:['Theremin','Sitar','Didgeridoo','Bandoneón','Clavicémbalo','Hurdy-gurdy','Tabla','Erhu','Balalaika','Kalimba','Oud','Bouzouki','Bagpipe','Dulcimer','Cítara','Koto','Shamisen','Berimbau','Sanza','Cuatro venezolano','Tiple colombiano','Charango','Quena','Trutruka','Siku'] },
+  ],
+  argentina: [
+    { id:'lugares_arg', name:'Lugares de Argentina',    emoji:'🗻', words:['Quebrada de Humahuaca','Salinas Grandes','Glaciar Perito Moreno','Cataratas del Iguazú','Valle de la Luna','Ushuaia','Mar del Plata','Bariloche','Mendoza','Salta','Puerto Madryn','El Calafate','Tilcara','Villa Gesell','Mina Clavero','La Rioja','Corrientes','Posadas','Rosario','Córdoba capital','San Juan','El Bolsón','Villa la Angostura','San Martín de los Andes','Lago Puelo'] },
+    { id:'comidas_arg', name:'Comidas argentinas',      emoji:'🥩', words:['Asado','Empanada','Milanesa napolitana','Choripán','Locro','Humita','Tamales','Dulce de leche','Alfajor','Facturas','Medialunas','Matambre a la pizza','Revuelto gramajo','Provoleta','Sandwich de miga','Pizza media masa','Fugazza','Torta frita','Pastelitos','Arroz con leche','Vigilante','Garrapiñadas','Pionono','Matambre con ensalada rusa'] },
+    { id:'musica_arg',  name:'Música argentina',        emoji:'🎸', words:['Soda Stereo','Los Redondos','Patricio Rey y sus Redonditos de Ricota','Charly García','Fito Páez','Mercedes Sosa','Astor Piazzolla','Los Piojos','Divididos','La Beriso','Los Auténticos Decadentes','Andrés Calamaro','Gustavo Cerati','Spinetta','Virus','Los Abuelos de la Nada','Babasónicos','Attaque 77','2 Minutos','Los Pericos','Kapanga','La Mosca','Miranda!','Tan Biónica','WOS'] },
+    { id:'actores_arg', name:'Actores y figuras AR',    emoji:'🎭', words:['Ricardo Darín','Florencia Peña','Natalia Oreiro','Guillermo Francella','Adrián Suar','Facundo Arana','Benjamín Vicuña','Luciano Castro','Nicolás Cabré','Celeste Cid','Lali Espósito','Tini Stoessel','China Suárez','Pampita','Flor Vigna','Moria Casán','Carmen Barbieri','Iliana Calabró','Andrea Del Boca','Romina Yan'] },
+    { id:'tele_arg',    name:'Programas de TV argentina',emoji:'📡', words:['Showmatch','Tinelli','Gran Hermano Argentina','El Trece','La Peña de Morfi','Los simuladores','Okupas','Tumberos','Disputas','Pol-Ka','Ideas del Sur','Videomatch','CQC','Bendita TV','Peter Capusotto','PH Podemos Hablar','LAM','Intrusos','Polémica en el bar','Periodismo para todos','Telenoche','Esto no es Hollywood','Educando a Nina','Nueve lunas','Violetta'] },
+    { id:'farandula',   name:'Farándula argentina',     emoji:'💅', words:['Jorge Lanata','Susana Giménez','Mirtha Legrand','Marcelo Tinelli','Viviana Canosa','Jorge Rial','Ángel de Brito','Yanina Latorre','Karina La Princesita','L-Gante','Wanda Nara','Mauro Icardi','Jimena Barón','Mica Viciconte','Fabián Cubero','Nicole Neumann','Luciana Salazar','Mariana Nannis','Claudio Paul Caniggia','Carmen Peluffo'] },
+    { id:'memes_arg',   name:'Memes argentinos',        emoji:'🤣', words:['El nene de la moto','Memín Pingüín versión AR','La señora de la torta','El perro de la vergüenza','Ey muchacho','No era para tanto','Tía de WhatsApp','Esto es Argentina','El hombre araña señalando','404 cerebro no encontrado versión argenta','La gente está muy loca','Cheto vs Villero','La noche del Museo','Maradona en el Mundial','Gato de la heladera','Piquete de ternura','Messi llorando la Copa','Este país sin educación','El Potro Rodrigo en el cielo','Piñón Fijo misterioso'] },
+    { id:'marcas_arg',  name:'Marcas argentinas',       emoji:'🏷️', words:['Arcor','Mastellone','La Serenísima','Grido','Freddo','Havanna','Fernet Branca','Quilmes','Stella Artois AR','Santa Fe cerveza','Terrabusi','Bagley','Georgalos','Milka AR','Bonafide','Rapanui','El Noble','Don Satur','Escudo','La Saltivera','Aguila chocolate','La Campagnola','Cañuelas aceite','Molino Cañuelas','Marolio'] },
+    { id:'refranes_arg',name:'Dichos argentinos',       emoji:'🗣️', words:['Al que madruga Dios lo ayuda pero al que nace cansado ni Dios','No hay mal que dure cien años ni cuerpo que lo aguante','Che boludo','La gente copada nunca anda con la cara tapada','Qué caradura','No te hagas el vivo','Anda a cagar','Todo bien o qué','Qué hacés hermano','Dale que va','Hay de todo','Mirá vos','Ni en pedo','Qué fiaca','Bárbaro','Re copado','Una pavada','No tiene nombre','Es un pálido','La posta'] },
+    { id:'barrios_ba',  name:'Barrios de Buenos Aires', emoji:'🏙️', words:['Palermo Hollywood','San Telmo','La Boca','Recoleta','Belgrano','Villa Crespo','Caballito','Boedo','Almagro','Flores','Floresta','Villa del Parque','Devoto','Saavedra','Núñez','Colegiales','Chacarita','Villa Pueyrredón','Liniers','Lugano','Soldati','Constitución','Barracas','Parque Patricios','Mataderos'] },
+    { id:'deporte_arg', name:'Deporte argentino',       emoji:'⚽', words:['Diego Maradona','Lionel Messi','Gabriela Sabatini','Carlos Monzón','Guillermo Vilas','Juan Martín del Potro','Emanuel Ginóbili','Facundo Campazzo','Las Leonas','Los Pumas','Selección Argentina 2022','River Plate','Boca Juniors','Independiente','Racing Club','San Lorenzo','Vélez','Estudiantes LP','Huracán','Olimpo','Quilmes AC','Ferro','Atlanta','Platense'] },
+    { id:'hist_arg',    name:'Personajes históricos AR', emoji:'🎖️', words:['José de San Martín','Manuel Belgrano','Domingo F. Sarmiento','Bartolomé Mitre','Julio A. Roca','Hipólito Yrigoyen','Juan Domingo Perón','Eva Perón','Ernesto Che Guevara','Jorge L. Borges','Julio Cortázar','Victoria Ocampo','Alfonsina Storni','Mercedes Sosa','Carlos Gardel','Astor Piazzolla','Atahualpa Yupanqui','Florencio Sánchez','Estanislao del Campo','Martín Fierro'] },
+    { id:'politicos_arg',name:'Políticos argentinos',  emoji:'🏛️', words:['Cristina Kirchner','Mauricio Macri','Javier Milei','Alberto Fernández','Sergio Massa','Horacio Rodríguez Larreta','Axel Kicillof','Patricia Bullrich','Nicolás Maduro ... peor acá','Roberto Lavagna','Elisa Carrió','Miguel Ángel Pichetto','Emilio Monzó','Jorge Macri','Martín Lousteau','Wado de Pedro','Agustín Rossi','Gildo Insfrán','Gerardo Morales','Juan Schiaretti'] },
+  ]
+};
+
+/* ═══════════════════════════════════════════════════
+   ESTADO DEL JUEGO
+═══════════════════════════════════════════════════ */
+let state = {
+  players: [],
+  impostorMode: 'fixed',
+  impostorCount: 1,
+  selectedCats: [],
+  showCategory: true,
+  showImpostorCount: true,
+  timerSeconds: 300,
+  // runtime
+  roles: [],        // [{name, isImpostor}]
+  word: '',
+  category: '',
+  currentPlayerIdx: 0,
+  showingRole: false,
+  votes: {},        // {playerName: count}
+  score: { citizens: 0, impostors: 0 },
+  timerRemaining: 0,
+  timerInterval: null,
+  timerPaused: false,
+};
+
+/* ═══════════════════════════════════════════════════
+   INIT
+═══════════════════════════════════════════════════ */
+window.addEventListener('DOMContentLoaded', () => {
+  buildCatGrids();
+  renderPlayerTags();
+  document.getElementById('playerNameInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') addPlayer();
+  });
+});
+
+function buildCatGrids() {
+  buildGrid('catGridGeneral', WORD_LISTS.general);
+  buildGrid('catGridArg', WORD_LISTS.argentina);
+}
+
+function buildGrid(containerId, lists) {
+  const el = document.getElementById(containerId);
+  el.innerHTML = lists.map(l => `
+    <span class="cat-pill" data-id="${l.id}" onclick="toggleCat('${l.id}',this)">
+      ${l.emoji} ${l.name}
+    </span>
+  `).join('');
+}
+
+function toggleCat(id, el) {
+  const idx = state.selectedCats.indexOf(id);
+  if (idx > -1) {
+    state.selectedCats.splice(idx, 1);
+    el.classList.remove('active');
+  } else {
+    state.selectedCats.push(id);
+    el.classList.add('active');
+  }
+  document.getElementById('selectedCatCount').textContent = state.selectedCats.length;
+}
+
+function clearCats() {
+  state.selectedCats = [];
+  document.querySelectorAll('.cat-pill.active').forEach(p => p.classList.remove('active'));
+  document.getElementById('selectedCatCount').textContent = '0';
+}
+
+/* ━━━ JUGADORES ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+function addPlayer() {
+  const input = document.getElementById('playerNameInput');
+  const val = input.value.trim();
+  if (!val) return;
+  if (state.players.includes(val)) {
+    input.style.borderColor = 'var(--accent)';
+    setTimeout(() => input.style.borderColor = '', 700);
+    return;
+  }
+  state.players.push(val);
+  input.value = '';
+  input.focus();
+  renderPlayerTags();
+}
+
+function removePlayer(i) {
+  state.players.splice(i, 1);
+  renderPlayerTags();
+}
+
+function renderPlayerTags() {
+  const el = document.getElementById('playersList');
+  el.innerHTML = state.players.map((p, i) => `
+    <span class="tag">${p}<button class="tag-remove" onclick="removePlayer(${i})">×</button></span>
+  `).join('');
+  document.getElementById('playersCountLabel').textContent =
+    (state.players.length || '?') + ' jugador' + (state.players.length !== 1 ? 'es' : '');
+}
+
+/* ━━━ IMPOSTORES ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+function changeImpostors(delta) {
+  const n = Math.max(1, Math.min(5, state.impostorCount + delta));
+  state.impostorCount = n;
+  document.getElementById('impostorCount').textContent = n;
+}
+
+function toggleImpostorMode() {
+  const val = document.querySelector('input[name="impostorMode"]:checked').value;
+  state.impostorMode = val;
+  document.getElementById('fixedStepper').style.opacity = val === 'fixed' ? '1' : '0.3';
+  document.getElementById('fixedStepper').style.pointerEvents = val === 'fixed' ? '' : 'none';
+  document.getElementById('randomHint').style.display = val === 'random' ? 'inline' : 'none';
+}
+
+/* ━━━ LISTA PERSONALIZADA ━━━━━━━━━━━━━━━━━━━━━━━━━ */
+function saveCustomList() {
+  const name = document.getElementById('customListName').value.trim() || 'Mi lista';
+  const raw = document.getElementById('customWords').value;
+  const words = raw.split(/[\n,]+/).map(w => w.trim()).filter(Boolean);
+  if (words.length < 3) {
+    document.getElementById('customWords').style.borderColor = 'var(--accent)';
+    setTimeout(() => document.getElementById('customWords').style.borderColor = '', 700);
+    return;
+  }
+  const id = 'custom_' + Date.now();
+  const list = { id, name, emoji: '✏️', words };
+  WORD_LISTS.general.push(list);
+
+  // agregar pill
+  const container = document.getElementById('catGridGeneral');
+  const pill = document.createElement('span');
+  pill.className = 'cat-pill';
+  pill.dataset.id = id;
+  pill.innerHTML = `✏️ ${name}`;
+  pill.onclick = () => toggleCat(id, pill);
+  container.appendChild(pill);
+
+  document.getElementById('customListName').value = '';
+  document.getElementById('customWords').value = '';
+}
+
+/* ═══════════════════════════════════════════════════
+   ARRANCAR PARTIDA
+═══════════════════════════════════════════════════ */
+function startGame() {
+  // Validaciones
+  if (state.selectedCats.length === 0) {
+    alert('Seleccioná al menos una lista de palabras.');
+    return;
+  }
+
+  // Armar lista de jugadores
+  let players = [...state.players];
+  const total = Math.max(players.length, 3);
+  if (players.length < 3) {
+    for (let i = players.length + 1; i <= 3; i++) players.push('Jugador ' + i);
+  }
+
+  // Juntar todas las palabras de las categorías seleccionadas
+  let allWords = [];
+  let allLists = [...WORD_LISTS.general, ...WORD_LISTS.argentina];
+  let matchedCat = null;
+  state.selectedCats.forEach(catId => {
+    const list = allLists.find(l => l.id === catId);
+    if (list) allWords.push(...list.words.map(w => ({ word: w, cat: list.name })));
+  });
+
+  if (allWords.length === 0) { alert('Las listas seleccionadas están vacías.'); return; }
+
+  // Elegir palabra aleatoria
+  const chosen = allWords[Math.floor(Math.random() * allWords.length)];
+  state.word = chosen.word;
+  state.category = chosen.cat;
+
+  // Cantidad de impostores
+  let numImpostors;
+  if (state.impostorMode === 'random') {
+    const max = Math.max(1, Math.floor(players.length / 3));
+    numImpostors = Math.floor(Math.random() * max) + 1;
+  } else {
+    numImpostors = Math.min(state.impostorCount, Math.floor(players.length / 2));
+  }
+
+  // Repartir roles (shuffle jugadores, asignar impostores)
+  let shuffled = [...players].sort(() => Math.random() - 0.5);
+  state.roles = shuffled.map((name, i) => ({ name, isImpostor: i < numImpostors }));
+  // barajar para que el orden de turno sea diferente al de impostores
+  state.roles = state.roles.sort(() => Math.random() - 0.5);
+  state.currentPlayerIdx = 0;
+  state.showingRole = false;
+  state.votes = {};
+  players.forEach(p => state.votes[p] = 0);
+
+  // Opciones
+  state.showCategory = document.getElementById('showCategory').checked;
+  state.showImpostorCount = document.getElementById('showImpostorCount').checked;
+  state.timerSeconds = parseInt(document.getElementById('timerSetting').value);
+
+  showPhase('phaseRoles');
+  renderPassScreen();
+}
+
+/* ═══════════════════════════════════════════════════
+   FASE REPARTO
+═══════════════════════════════════════════════════ */
+function renderPassScreen() {
+  const idx = state.currentPlayerIdx;
+  const player = state.roles[idx];
+  const total = state.roles.length;
+  const container = document.getElementById('phaseRoles');
+
+  container.innerHTML = `
+    <div class="pass-screen">
+      <div class="pass-avatar">👤</div>
+      <p class="pass-name">${player.name}</p>
+      <p class="pass-sub">Jugador ${idx+1} de ${total}</p>
+      <button class="btn-reveal" onclick="revealRole()">
+        👁 Ver mi rol
+      </button>
+    </div>
+    <div class="notice">Asegurate de que nadie más esté mirando la pantalla antes de tocar.</div>
+  `;
+}
+
+function revealRole() {
+  const idx = state.currentPlayerIdx;
+  const player = state.roles[idx];
+  const total = state.roles.length;
+  const container = document.getElementById('phaseRoles');
+
+  const numImpostors = state.roles.filter(r => r.isImpostor).length;
+  const impostorInfo = state.showImpostorCount
+    ? `Hay ${numImpostors} impostor${numImpostors > 1 ? 'es' : ''} en esta partida.`
+    : '';
+
+  const catLine = state.showCategory
+    ? `<p class="role-cat">Categoría: <strong>${state.category}</strong></p>`
+    : `<p class="role-cat">Categoría oculta (modo difícil)</p>`;
+
+  if (player.isImpostor) {
+    container.innerHTML = `
+      <div class="role-card impostor">
+        <div class="role-badge">🕵️ Tu rol</div>
+        <span class="role-icon">🎭</span>
+        <p class="role-title">¡Sos el IMPOSTOR!</p>
+        ${catLine}
+        <p class="role-hint">No conocés la palabra. Tratá de no delatarte durante el debate.${impostorInfo ? '<br>' + impostorInfo : ''}</p>
+        <button class="btn-cover" onclick="nextPlayer()">
+          ✅ &nbsp;Entendido — cubrir pantalla
+        </button>
+      </div>
+    `;
+  } else {
+    container.innerHTML = `
+      <div class="role-card citizen">
+        <div class="role-badge">🏙️ Tu rol</div>
+        <span class="role-icon">🧑‍🤝‍🧑</span>
+        <p class="role-title">Sos Ciudadano</p>
+        <div class="role-word">${state.word}</div>
+        ${catLine}
+        <p class="role-hint">Describí la palabra sin decirla. Encontrá al impostor.<br>${impostorInfo}</p>
+        <button class="btn-cover" onclick="nextPlayer()">
+          ✅ &nbsp;Entendido — cubrir pantalla
+        </button>
+      </div>
+    `;
+  }
+}
+
+function nextPlayer() {
+  const total = state.roles.length;
+  if (state.currentPlayerIdx < total - 1) {
+    showCover(() => {
+      state.currentPlayerIdx++;
+      renderPassScreen();
+    });
+  } else {
+    // Todos vieron su rol → debate
+    showCover(() => {
+      startDebate();
+    });
+  }
+}
+
+/* ═══════════════════════════════════════════════════
+   COVER OVERLAY
+═══════════════════════════════════════════════════ */
+let coverCallback = null;
+function showCover(cb) {
+  coverCallback = cb;
+  document.getElementById('coverOverlay').classList.add('show');
+}
+function hideCover() {
+  document.getElementById('coverOverlay').classList.remove('show');
+  if (coverCallback) { coverCallback(); coverCallback = null; }
+}
+
+/* ═══════════════════════════════════════════════════
+   DEBATE
+═══════════════════════════════════════════════════ */
+function startDebate() {
+  showPhase('phaseDebate');
+
+  // Players grid
+  const grid = document.getElementById('debatePlayers');
+  grid.innerHTML = state.roles.map(r => `<div class="player-chip">👤 ${r.name}</div>`).join('');
+
+  // Word hint (solo si showCategory)
+  const hint = document.getElementById('wordHintDebate');
+  if (state.showCategory) {
+    hint.style.display = 'block';
+    hint.textContent = `🏷️ Categoría: ${state.category}`;
+  } else {
+    hint.style.display = 'none';
+  }
+
+  // Timer
+  if (state.timerSeconds > 0) {
+    state.timerRemaining = state.timerSeconds;
+    state.timerPaused = false;
+    document.getElementById('timerPauseBtn').textContent = '⏸ Pausar';
+    updateTimerDisplay();
+    state.timerInterval = setInterval(tickTimer, 1000);
+  } else {
+    document.getElementById('timerDisplay').textContent = '∞';
+    document.getElementById('timerPauseBtn').style.display = 'none';
+    document.getElementById('timerRing').style.strokeDashoffset = '0';
+  }
+}
+
+function tickTimer() {
+  if (state.timerPaused) return;
+  state.timerRemaining--;
+  updateTimerDisplay();
+  if (state.timerRemaining <= 0) {
+    clearInterval(state.timerInterval);
+    goToVoting();
+  }
+}
+
+function updateTimerDisplay() {
+  const m = Math.floor(state.timerRemaining / 60);
+  const s = state.timerRemaining % 60;
+  document.getElementById('timerDisplay').textContent = `${m}:${String(s).padStart(2,'0')}`;
+  const pct = state.timerRemaining / state.timerSeconds;
+  const circ = 326.7;
+  document.getElementById('timerRing').style.strokeDashoffset = circ * (1 - pct);
+  // color warning
+  const color = state.timerRemaining < 60 ? 'var(--accent)' : 'var(--tool-color)';
+  document.getElementById('timerRing').style.stroke = color;
+}
+
+function toggleTimer() {
+  state.timerPaused = !state.timerPaused;
+  document.getElementById('timerPauseBtn').textContent = state.timerPaused ? '▶ Reanudar' : '⏸ Pausar';
+}
+
+/* ═══════════════════════════════════════════════════
+   VOTACIÓN
+═══════════════════════════════════════════════════ */
+function goToVoting() {
+  if (state.timerInterval) clearInterval(state.timerInterval);
+  showPhase('phaseVoting');
+  renderVoteList();
+}
+
+function renderVoteList() {
+  const el = document.getElementById('voteList');
+  el.innerHTML = state.roles.map(r => `
+    <div class="vote-player">
+      <span class="vote-name">👤 ${r.name}</span>
+      <div class="vote-btns">
+        <button class="vote-btn" onclick="vote('${r.name}',-1)">−</button>
+        <span class="vote-count" id="vote_${r.name}">${state.votes[r.name] || 0}</span>
+        <button class="vote-btn" onclick="vote('${r.name}',1)">+</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function vote(name, delta) {
+  state.votes[name] = Math.max(0, (state.votes[name] || 0) + delta);
+  document.getElementById('vote_' + name).textContent = state.votes[name];
+}
+
+/* ═══════════════════════════════════════════════════
+   REVELACIÓN
+═══════════════════════════════════════════════════ */
+function goToReveal() {
+  showPhase('phaseReveal');
+
+  const impostors = state.roles.filter(r => r.isImpostor).map(r => r.name);
+  const mostVoted = getMostVoted();
+  const impostorCaught = mostVoted.some(v => impostors.includes(v));
+
+  // ¿ganaron ciudadanos o impostores?
+  let citizensWon = impostorCaught;
+
+  if (citizensWon) {
+    state.score.citizens++;
+    document.getElementById('revealIcon').textContent = '🎊';
+    document.getElementById('revealTitle').textContent = '¡Los ciudadanos ganaron!';
+    document.getElementById('revealSub').textContent = 'El impostor fue descubierto.';
+    document.getElementById('revealCard').style.background = 'var(--tool-color)';
+  } else {
+    state.score.impostors++;
+    document.getElementById('revealIcon').textContent = '🎭';
+    document.getElementById('revealTitle').textContent = '¡El impostor escapó!';
+    document.getElementById('revealSub').textContent = 'Los ciudadanos no acertaron.';
+    document.getElementById('revealCard').style.background = 'var(--accent)';
+  }
+
+  // Impostores
+  const impList = document.getElementById('revealImpostors');
+  impList.innerHTML = impostors.map((name, i) => `
+    <div class="impostor-chip" style="animation-delay:${i*0.1}s">🕵️ ${name}</div>
+  `).join('');
+
+  document.getElementById('revealWord').textContent = state.word;
+  document.getElementById('scoreCitizens').textContent = state.score.citizens;
+  document.getElementById('scoreImpostors').textContent = state.score.impostors;
+
+  launchConfetti(citizensWon);
+}
+
+function getMostVoted() {
+  let max = 0;
+  Object.values(state.votes).forEach(v => { if (v > max) max = v; });
+  return Object.keys(state.votes).filter(k => state.votes[k] === max && max > 0);
+}
+
+/* ═══════════════════════════════════════════════════
+   NUEVA RONDA / REINICIO
+═══════════════════════════════════════════════════ */
+function playAgainSamePlayers() {
+  // mantener jugadores, puntaje, config — sólo nueva palabra y roles
+  startGame();
+}
+
+function goToConfig() {
+  if (state.timerInterval) clearInterval(state.timerInterval);
+  showPhase('phaseConfig');
+  // resetear runtime pero conservar jugadores y puntaje
+}
+
+/* ═══════════════════════════════════════════════════
+   HELPERS
+═══════════════════════════════════════════════════ */
+function showPhase(id) {
+  document.querySelectorAll('.phase').forEach(p => p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function launchConfetti(big) {
+  const colors = ['#7C3AED','#E84C2B','#D97706','#2563EB','#059669','#F5F3EE'];
+  const count = big ? 80 : 30;
+  for (let i = 0; i < count; i++) {
+    const el = document.createElement('div');
+    el.style.cssText = `
+      position:fixed;width:8px;height:8px;border-radius:2px;
+      pointer-events:none;z-index:9999;
+      left:${Math.random()*100}vw;top:-10px;
+      background:${colors[Math.floor(Math.random()*colors.length)]};
+      animation:confettiFall ${1+Math.random()*2}s linear ${Math.random()*0.5}s forwards;
+      transform:rotate(${Math.random()*360}deg);
+    `;
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 3500);
+  }
+}
+</script>
+
+<style>
+@keyframes confettiFall {
+  0% { opacity:1; transform:translateY(-10px) rotate(0deg); }
+  100% { opacity:0; transform:translateY(100vh) rotate(720deg); }
+}
+</style>
+
+</body>
+</html>
