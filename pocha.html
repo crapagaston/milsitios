@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>La Pocha — MilSitios</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root{
+      --bg:#F5F3EE;--ink:#1A1814;--ink-soft:#6B6760;--accent:#E84C2B;--accent-soft:#FDE8E3;
+      --card-bg:#FFFFFF;--border:#E2DFD8;--tag-bg:#ECEAE4;
+      --tool-color:#7C3AED;--tool-bg:#F5F3FF;
+      --green:#059669;--green-bg:#ECFDF5;
+      --red:#DC2626;--red-bg:#FEF2F2;
+      --bet-color:#E97D16;--bet-bg:#FFF7ED;
+      --result-color:#0369A1;--result-bg:#EFF6FF;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+    body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");pointer-events:none;z-index:0}
+
+    nav{position:sticky;top:0;z-index:200;height:56px;background:rgba(245,243,238,.9);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.75rem;padding:0 1.25rem}
+    .nav-back{display:flex;align-items:center;gap:.4rem;font-size:.85rem;font-weight:500;color:var(--ink-soft);text-decoration:none;-webkit-tap-highlight-color:transparent}
+    .nav-back:hover{color:var(--ink)}
+    .nav-sep{color:var(--border)}
+    .nav-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem;letter-spacing:-.03em;color:var(--ink);text-decoration:none}
+    .nav-logo span{color:var(--accent)}
+    .nav-chip{margin-left:auto;font-size:.75rem;color:var(--tool-color);font-weight:600}
+
+    .hero{padding:2rem 1.25rem 1.5rem;max-width:700px;margin:0 auto;text-align:center}
+    .tool-chip{display:inline-flex;align-items:center;gap:.4rem;background:var(--tool-bg);color:var(--tool-color);font-size:.72rem;font-weight:600;letter-spacing:.07em;text-transform:uppercase;padding:.3rem .8rem;border-radius:100px;margin-bottom:.9rem}
+    h1{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(1.8rem,7vw,2.8rem);line-height:1;letter-spacing:-.04em;margin-bottom:.5rem}
+    .hero-sub{font-size:.9rem;color:var(--ink-soft);font-weight:300}
+
+    .body{padding:0 1.25rem 2rem;max-width:700px;margin:0 auto}
+    .card{background:var(--card-bg);border:1.5px solid var(--border);border-radius:20px;padding:1.25rem;margin-bottom:1rem}
+    .card-title{font-family:'Syne',sans-serif;font-weight:700;font-size:.92rem;margin-bottom:1rem;display:flex;align-items:center;gap:.5rem}
+    .ms-input{width:100%;height:44px;padding:0 .9rem;font-family:'DM Sans',sans-serif;font-size:.9rem;background:var(--bg);border:1.5px solid var(--border);border-radius:11px;outline:none;color:var(--ink);-webkit-appearance:none;transition:border-color .2s}
+    .ms-input:focus{border-color:var(--ink)}
+    .player-inputs{display:flex;flex-direction:column;gap:.5rem}
+    .player-row{display:flex;gap:.5rem;align-items:center}
+    .player-row .ms-input{flex:1}
+    .btn-icon{width:40px;height:40px;border-radius:10px;border:1.5px solid var(--border);background:var(--bg);font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent;transition:background .15s;flex-shrink:0}
+    .btn-icon:hover{background:var(--tag-bg)}
+    .btn-add{display:flex;align-items:center;gap:.4rem;padding:.5rem .9rem;border-radius:11px;border:1.5px dashed var(--border);background:transparent;font-family:'DM Sans',sans-serif;font-size:.82rem;color:var(--ink-soft);cursor:pointer;width:100%;justify-content:center;margin-top:.25rem;-webkit-tap-highlight-color:transparent;transition:background .15s}
+    .btn-add:hover{background:var(--tag-bg)}
+    .btn-start{width:100%;height:52px;background:var(--ink);color:#fff;border:none;border-radius:14px;font-family:'DM Sans',sans-serif;font-size:1rem;font-weight:600;cursor:pointer;-webkit-tap-highlight-color:transparent}
+    .btn-start:active{transform:scale(.98)}
+    .opt-btn{padding:.4rem .9rem;border-radius:100px;border:1.5px solid var(--border);background:var(--bg);font-family:'DM Sans',sans-serif;font-size:.8rem;font-weight:500;cursor:pointer;transition:all .15s;-webkit-tap-highlight-color:transparent}
+    .opt-btn.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+    .setup.hidden{display:none}
+    .scoreboard{display:none}.scoreboard.show{display:block}
+
+    /* RONDA INFO BAR */
+    .round-info-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;padding:.75rem 1rem;background:var(--card-bg);border:1.5px solid var(--border);border-radius:14px}
+    .round-info-label{font-size:.75rem;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.06em}
+    .round-info-val{font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem}
+    .round-info-right{text-align:right}
+
+    /* PHASE HEADER BADGES */
+    .phase-header{border-radius:16px 16px 0 0;margin:-1.25rem -1.25rem 1.25rem -1.25rem;padding:.9rem 1.25rem;display:flex;align-items:center;gap:.6rem}
+    .phase-header.bet-header{background:var(--bet-bg);border-bottom:2px solid #fed7aa}
+    .phase-header.result-header{background:var(--result-bg);border-bottom:2px solid #bae6fd}
+    .phase-badge{display:inline-flex;align-items:center;gap:.35rem;font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:.25rem .7rem;border-radius:100px}
+    .phase-badge.bet-badge{background:var(--bet-color);color:#fff}
+    .phase-badge.result-badge{background:var(--result-color);color:#fff}
+    .phase-title-text{font-family:'Syne',sans-serif;font-weight:700;font-size:.92rem}
+    .phase-title-text.bet-text{color:#92400e}
+    .phase-title-text.result-text{color:#075985}
+
+    /* CONTROLES +/- */
+    .btn-c{width:32px;height:32px;border-radius:9px;border:1.5px solid var(--border);background:var(--bg);font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent;font-weight:700;transition:background .15s}
+    .btn-c:active{transform:scale(.9)}
+    .btn-c.plus-btn{background:var(--tool-color);color:#fff;border-color:var(--tool-color)}
+    .bet-val{font-family:'Syne',sans-serif;font-weight:700;font-size:1.2rem;min-width:28px;text-align:center}
+
+    /* POPUP APUESTA */
+    .popup-overlay{position:fixed;inset:0;background:rgba(26,24,20,.55);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);z-index:300;display:flex;align-items:flex-end;justify-content:center;padding:1rem;opacity:0;pointer-events:none;transition:opacity .25s}
+    .popup-overlay.show{opacity:1;pointer-events:all}
+    .popup-card{background:var(--card-bg);border-radius:24px 24px 20px 20px;padding:1.5rem 1.5rem 2rem;width:100%;max-width:400px;transform:translateY(30px);transition:transform .35s cubic-bezier(.34,1.56,.64,1)}
+    .popup-overlay.show .popup-card{transform:translateY(0)}
+    .popup-player-label{font-size:.72rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:.25rem}
+    .popup-player-name{font-family:'Syne',sans-serif;font-weight:800;font-size:1.5rem;letter-spacing:-.04em;margin-bottom:.25rem}
+    .popup-player-sub{font-size:.8rem;color:var(--ink-soft);margin-bottom:1.5rem}
+    .popup-bet-display{display:flex;align-items:center;justify-content:center;gap:1.5rem;margin-bottom:1.5rem}
+    .popup-bet-num{font-family:'Syne',sans-serif;font-weight:800;font-size:3.5rem;line-height:1;letter-spacing:-.04em;min-width:60px;text-align:center}
+    .popup-bet-num .btn-c-big{width:52px;height:52px;border-radius:14px;font-size:1.5rem}
+    .popup-max-label{font-size:.72rem;color:var(--ink-soft);text-align:center;margin-bottom:1.25rem}
+    .popup-progress{display:flex;gap:.3rem;margin-bottom:1.5rem;justify-content:center;flex-wrap:wrap}
+    .popup-dot{width:10px;height:10px;border-radius:100px;background:var(--border);transition:background .2s}
+    .popup-dot.filled{background:var(--bet-color)}
+    .btn-popup-confirm{width:100%;height:52px;background:var(--ink);color:#fff;border:none;border-radius:14px;font-family:'DM Sans',sans-serif;font-size:1rem;font-weight:600;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background .15s}
+    .btn-popup-confirm:active{transform:scale(.98)}
+
+    /* RESUMEN APUESTAS */
+    .bets-summary{display:flex;flex-direction:column;gap:.4rem}
+    .bet-summary-row{display:flex;align-items:center;justify-content:space-between;padding:.6rem .9rem;border-radius:12px;background:var(--bg)}
+    .bet-summary-name{font-size:.88rem;font-weight:500}
+    .bet-summary-val{font-family:'Syne',sans-serif;font-weight:700;font-size:1rem}
+    .bet-summary-edit{font-size:.75rem;color:var(--tool-color);font-weight:600;cursor:pointer;padding:.2rem .5rem;border-radius:7px;border:1.5px solid var(--tool-color);background:transparent;font-family:'DM Sans',sans-serif;-webkit-tap-highlight-color:transparent}
+    .total-bets-alert{padding:.65rem 1rem;border-radius:11px;font-size:.82rem;font-weight:500;margin-top:.5rem;text-align:center}
+    .alert-ok{background:var(--green-bg);color:var(--green)}
+    .alert-warn{background:var(--red-bg);color:var(--red)}
+    .btn-go-results{width:100%;height:50px;background:var(--result-color);color:#fff;border:none;border-radius:13px;font-family:'DM Sans',sans-serif;font-size:.95rem;font-weight:600;cursor:pointer;margin-top:.75rem;-webkit-tap-highlight-color:transparent;transition:background .15s}
+    .btn-go-results:disabled{opacity:.45;cursor:not-allowed}
+    .btn-go-results:not(:disabled):active{transform:scale(.98)}
+
+    /* FASE RESULTADOS */
+    .results-grid{display:grid;gap:.65rem}
+    .result-row{display:grid;grid-template-columns:1fr auto auto;align-items:center;gap:.75rem;padding:.6rem .1rem;border-bottom:1px solid var(--border)}
+    .result-row:last-child{border-bottom:none}
+    .result-name{font-size:.88rem;font-weight:500}
+    .result-bet{font-size:.78rem;color:var(--ink-soft)}
+    .result-won-label{font-size:.75rem;color:var(--ink-soft);text-align:right}
+    .result-pts{font-family:'Syne',sans-serif;font-weight:700;font-size:.9rem;padding:.2rem .55rem;border-radius:8px;white-space:nowrap}
+    .result-pts.pos{background:var(--green-bg);color:var(--green)}
+    .result-pts.neg{background:var(--red-bg);color:var(--red)}
+    .result-won-val{font-family:'Syne',sans-serif;font-weight:700;font-size:1.1rem;text-align:center;min-width:24px}
+    .bet-controls{display:flex;align-items:center;gap:.4rem}
+    .btn-close-round{width:100%;height:50px;background:var(--ink);color:#fff;border:none;border-radius:13px;font-family:'DM Sans',sans-serif;font-size:.95rem;font-weight:600;cursor:pointer;margin-top:.25rem;-webkit-tap-highlight-color:transparent}
+    .btn-back-bets{width:100%;height:44px;background:var(--tag-bg);color:var(--ink-soft);border:none;border-radius:12px;font-family:'DM Sans',sans-serif;font-size:.85rem;font-weight:500;cursor:pointer;margin-top:.5rem;-webkit-tap-highlight-color:transparent}
+
+    /* TOTALES */
+    .totals-card{background:var(--ink);color:#fff;border-radius:18px;padding:1.25rem;margin-bottom:1rem}
+    .totals-title{font-family:'Syne',sans-serif;font-weight:700;font-size:.8rem;color:rgba(255,255,255,.5);margin-bottom:.85rem;text-transform:uppercase;letter-spacing:.05em}
+    .total-row{display:flex;align-items:center;justify-content:space-between;padding:.35rem 0}
+    .total-name{font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem}
+    .total-pts{font-family:'Syne',sans-serif;font-weight:800;font-size:1.4rem}
+    .leader-badge{font-size:.65rem;font-weight:700;padding:.15rem .5rem;border-radius:100px;background:rgba(255,255,255,.15)}
+
+    /* HISTORIAL */
+    .history-table{width:100%;border-collapse:collapse;font-size:.78rem}
+    .history-table th{font-family:'Syne',sans-serif;font-weight:700;text-align:left;padding:.4rem .2rem;border-bottom:1.5px solid var(--border);font-size:.7rem;color:var(--ink-soft)}
+    .history-table td{padding:.4rem .2rem;border-bottom:1px solid var(--border)}
+    .history-table tr:last-child td{border-bottom:none}
+    .pts-pos{color:var(--green);font-weight:600}
+    .pts-neg{color:var(--red);font-weight:600}
+    .btn-reset{width:100%;height:44px;background:var(--tag-bg);color:var(--ink-soft);border:none;border-radius:12px;font-family:'DM Sans',sans-serif;font-size:.85rem;font-weight:500;cursor:pointer;margin-top:.5rem}
+
+    /* WIN MODAL */
+    .modal-overlay{position:fixed;inset:0;background:rgba(26,24,20,.5);backdrop-filter:blur(6px);z-index:500;display:flex;align-items:center;justify-content:center;padding:1.25rem;opacity:0;pointer-events:none;transition:opacity .25s}
+    .modal-overlay.show{opacity:1;pointer-events:all}
+    .modal-card{background:var(--ink);color:#fff;border-radius:24px;padding:2.5rem 2rem;max-width:340px;width:100%;text-align:center;transform:scale(.85);transition:transform .35s cubic-bezier(.34,1.56,.64,1)}
+    .modal-overlay.show .modal-card{transform:scale(1)}
+    .modal-emoji{font-size:3rem;display:block;margin-bottom:.75rem}
+    .modal-title{font-family:'Syne',sans-serif;font-weight:800;font-size:1.4rem;letter-spacing:-.03em;margin-bottom:.4rem}
+    .modal-sub{font-size:.85rem;color:rgba(255,255,255,.6);margin-bottom:1.75rem}
+    .modal-btn{width:100%;height:46px;background:#fff;color:var(--ink);border:none;border-radius:13px;font-family:'DM Sans',sans-serif;font-size:.92rem;font-weight:600;cursor:pointer}
+
+    /* REGLAS */
+    .rules-section{padding:0 1.25rem 2rem;max-width:700px;margin:0 auto}
+    .rules-toggle{display:flex;align-items:center;gap:.5rem;width:100%;padding:1rem 1.25rem;background:var(--card-bg);border:1.5px solid var(--border);border-radius:16px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.9rem;font-weight:500;color:var(--ink);-webkit-tap-highlight-color:transparent;transition:background .15s}
+    .rules-toggle:hover{background:var(--tag-bg)}
+    .rules-toggle-arrow{margin-left:auto;transition:transform .25s;color:var(--ink-soft)}
+    .rules-toggle.open .rules-toggle-arrow{transform:rotate(180deg)}
+    .rules-body{display:none;padding-top:.5rem}
+    .rules-body.open{display:block}
+    .rules-card{background:var(--card-bg);border:1.5px solid var(--border);border-radius:20px;padding:1.5rem;margin-bottom:.75rem}
+    .rules-card h3{font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;margin-bottom:.75rem;display:flex;align-items:center;gap:.5rem}
+    .rules-card p,.rules-card li{font-size:.88rem;color:var(--ink-soft);line-height:1.65}
+    .rules-card ul,.rules-card ol{padding-left:1.2rem;display:flex;flex-direction:column;gap:.35rem}
+    .rules-highlight{background:var(--tool-bg);border:1.5px solid #c4b5fd;border-radius:14px;padding:1rem 1.25rem;margin-bottom:.75rem}
+    .rules-highlight p{font-size:.88rem;color:var(--tool-color);line-height:1.65}
+    .rules-highlight strong{color:var(--tool-color)}
+
+    /* SVG DIAGRAMS INSIDE RULES */
+    .diagram-wrap{margin:.85rem 0;border-radius:14px;overflow:hidden;border:1.5px solid var(--border);background:var(--bg)}
+    .score-formula{display:grid;grid-template-columns:1fr 1fr;gap:.65rem;margin:.75rem 0}
+    .formula-box{border-radius:13px;padding:.85rem 1rem;text-align:center}
+    .formula-box.green{background:var(--green-bg);border:1.5px solid #a7f3d0}
+    .formula-box.red{background:var(--red-bg);border:1.5px solid #fecaca}
+    .formula-label{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:.3rem}
+    .formula-label.green{color:var(--green)}
+    .formula-label.red{color:var(--red)}
+    .formula-math{font-family:'Syne',sans-serif;font-weight:800;font-size:1rem;margin-bottom:.2rem}
+    .formula-math.green{color:var(--green)}
+    .formula-math.red{color:var(--red)}
+    .formula-example{font-size:.75rem;color:var(--ink-soft)}
+
+    /* RELATED */
+    .related{padding:0 1.25rem 3rem;max-width:700px;margin:0 auto}
+    .related-title{font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-soft);font-weight:600;margin-bottom:.75rem}
+    .related-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.65rem}
+    .related-card{background:var(--card-bg);border:1.5px solid var(--border);border-radius:14px;padding:.9rem;text-decoration:none;color:var(--ink);display:flex;flex-direction:column;gap:.3rem;transition:transform .2s,border-color .2s}
+    .related-card:hover{transform:translateY(-2px);border-color:var(--tool-color)}
+    .related-icon{font-size:1.3rem}
+    .related-name{font-family:'Syne',sans-serif;font-size:.82rem;font-weight:700}
+    .related-cat{font-size:.7rem;color:var(--ink-soft)}
+
+    footer{border-top:1px solid var(--border);padding:1.75rem 1.25rem;max-width:700px;margin:0 auto;display:flex;flex-direction:column;gap:.5rem}
+    @media(min-width:540px){footer{flex-direction:row;align-items:center;justify-content:space-between}}
+    .footer-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:.95rem;color:var(--ink);text-decoration:none}
+    .footer-logo span{color:var(--accent)}
+    .footer-text{font-size:.75rem;color:var(--ink-soft)}
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="juegos-de-cartas.html" class="nav-back">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+    Juegos
+  </a>
+  <span class="nav-sep">/</span>
+  <a href="index.html" class="nav-logo">Mil<span>Sitios</span></a>
+  <span class="nav-chip">♠️ La Pocha</span>
+</nav>
+
+<header class="hero">
+  <div class="tool-chip">♠️ Juegos de cartas</div>
+  <h1>La Pocha</h1>
+  <p class="hero-sub">Apostás cuántas bazas creés que vas a ganar. Acertás: sumás. Te pasás o te quedás corto: perdés.</p>
+</header>
+
+<div class="body">
+
+  <!-- SETUP -->
+  <div class="setup" id="setup">
+    <div class="card">
+      <p class="card-title">👥 Jugadores</p>
+      <div class="player-inputs" id="playerInputs">
+        <div class="player-row"><input class="ms-input" value="Jugador 1" maxlength="14"/><button class="btn-icon" onclick="removePlayer(this)">×</button></div>
+        <div class="player-row"><input class="ms-input" value="Jugador 2" maxlength="14"/><button class="btn-icon" onclick="removePlayer(this)">×</button></div>
+        <div class="player-row"><input class="ms-input" value="Jugador 3" maxlength="14"/><button class="btn-icon" onclick="removePlayer(this)">×</button></div>
+      </div>
+      <button class="btn-add" onclick="addPlayer()">+ Agregar jugador</button>
+    </div>
+    <div class="card">
+      <p class="card-title">🃏 Cartas por ronda inicial</p>
+      <div style="display:flex;gap:.6rem;flex-wrap:wrap">
+        <button class="opt-btn active" onclick="setCards(1,this)">1 carta (sube)</button>
+        <button class="opt-btn" onclick="setCards(7,this)">7 cartas (baja)</button>
+      </div>
+      <p style="font-size:.75rem;color:var(--ink-soft);margin-top:.5rem">Modo estándar: empieza con 1 y sube hasta 7, luego baja hasta 1.</p>
+    </div>
+    <button class="btn-start" onclick="startGame()">♠️ &nbsp;¡A jugar!</button>
+  </div>
+
+  <!-- SCOREBOARD -->
+  <div class="scoreboard" id="scoreboard">
+
+    <div class="round-info-bar">
+      <div><div class="round-info-label">Ronda</div><div class="round-info-val" id="roundNum">1</div></div>
+      <div><div class="round-info-label">Primer jugador</div><div class="round-info-val" id="firstPlayerName" style="font-size:.85rem">—</div></div>
+      <div class="round-info-right"><div class="round-info-label">Bazas posibles</div><div class="round-info-val" id="bazasNum">1</div></div>
+    </div>
+
+    <!-- FASE APUESTAS: RESUMEN -->
+    <div class="card" id="betPhase">
+      <div class="phase-header bet-header">
+        <span class="phase-badge bet-badge">📝 Fase 1</span>
+        <span class="phase-title-text bet-text">Etapa de apuestas</span>
+      </div>
+      <div class="bets-summary" id="betsSummary"><!-- JS --></div>
+      <div id="betAlert" class="total-bets-alert" style="display:none"></div>
+      <button class="btn-go-results" id="btnGoResults" onclick="goToResults()" disabled>Comenzar ronda →</button>
+    </div>
+
+    <!-- FASE RESULTADOS -->
+    <div class="card" id="resultPhase" style="display:none">
+      <div class="phase-header result-header">
+        <span class="phase-badge result-badge">✅ Fase 2</span>
+        <span class="phase-title-text result-text">Cargando resultados</span>
+      </div>
+      <div class="results-grid" id="resultsGrid"><!-- JS --></div>
+      <button class="btn-close-round" onclick="closeRound()">Cerrar ronda y sumar →</button>
+      <button class="btn-back-bets" onclick="backToBets()">← Volver a las apuestas</button>
+    </div>
+
+    <!-- TOTALES -->
+    <div class="totals-card">
+      <div class="totals-title">Puntaje acumulado</div>
+      <div id="totalsList"><!-- JS --></div>
+    </div>
+
+    <!-- HISTORIAL -->
+    <div class="card">
+      <p class="card-title">📜 Historial</p>
+      <div style="overflow-x:auto">
+        <table class="history-table" id="historyTable">
+          <thead id="histHead"></thead>
+          <tbody id="histBody"><tr><td colspan="99" style="color:var(--ink-soft);padding:.5rem 0">No hay rondas cerradas aún.</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <button class="btn-reset" onclick="resetGame()">↺ Nueva partida</button>
+  </div>
+</div>
+
+<!-- POPUP APUESTA -->
+<div class="popup-overlay" id="betPopup">
+  <div class="popup-card">
+    <p class="popup-player-label">Turno de apuesta</p>
+    <p class="popup-player-name" id="popupPlayerName">—</p>
+    <p class="popup-player-sub" id="popupPlayerSub">¿Cuántas bazas apostás esta ronda?</p>
+    <div class="popup-bet-display">
+      <button class="btn-c btn-c-big" style="width:52px;height:52px;border-radius:14px;font-size:1.4rem" onclick="popupChangeBet(-1)">−</button>
+      <span class="popup-bet-num" id="popupBetNum">0</span>
+      <button class="btn-c plus-btn btn-c-big" style="width:52px;height:52px;border-radius:14px;font-size:1.4rem" onclick="popupChangeBet(1)">+</button>
+    </div>
+    <div class="popup-progress" id="popupProgress"></div>
+    <p class="popup-max-label" id="popupMaxLabel"></p>
+    <button class="btn-popup-confirm" id="btnPopupConfirm" onclick="confirmBet()">Confirmar apuesta →</button>
+  </div>
+</div>
+
+<!-- REGLAS -->
+<div class="rules-section">
+  <button class="rules-toggle" id="rulesToggle" onclick="toggleRules()">
+    <span>📖</span>
+    <span>Reglas e instrucciones de La Pocha</span>
+    <svg class="rules-toggle-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+  </button>
+  <div class="rules-body" id="rulesBody">
+
+    <div style="height:.5rem"></div>
+
+    <div class="rules-highlight">
+      <p>🎯 <strong>Objetivo:</strong> Acumular la mayor cantidad de puntos apostando exactamente cuántas bazas vas a ganar en cada ronda. Si acertás, ganás puntos. Si errás, perdés.</p>
+    </div>
+
+    <div class="rules-card">
+      <h3>👥 Jugadores y mazo</h3>
+      <ul>
+        <li>Pueden jugar de <strong>2 a 8 jugadores</strong>.</li>
+        <li>Se usa un mazo español de <strong>40 cartas</strong>.</li>
+        <li>Un jugador oficia de <strong>repartidor</strong> cada ronda. El repartidor rota en sentido horario.</li>
+      </ul>
+    </div>
+
+    <div class="rules-card">
+      <h3>🃏 Estructura de las rondas</h3>
+      <p style="margin-bottom:.65rem">La partida tiene un ciclo completo de rondas:</p>
+      <div class="diagram-wrap">
+        <svg viewBox="0 0 360 90" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block">
+          <rect width="360" height="90" fill="#F5F3EE"/>
+          <!-- Cards 1→7 -->
+          <text x="12" y="28" font-family="Syne, sans-serif" font-size="10" font-weight="700" fill="#6B6760">SUBE</text>
+          <text x="12" y="42" font-family="Syne, sans-serif" font-size="9" fill="#6B6760">1 carta</text>
+          <!-- Boxes -->
+          <g>
+            <rect x="10" y="50" width="28" height="28" rx="7" fill="#E97D16" opacity=".15"/>
+            <text x="24" y="69" text-anchor="middle" font-family="Syne, sans-serif" font-size="12" font-weight="800" fill="#E97D16">1</text>
+          </g>
+          <g>
+            <rect x="46" y="50" width="28" height="28" rx="7" fill="#E97D16" opacity=".2"/>
+            <text x="60" y="69" text-anchor="middle" font-family="Syne, sans-serif" font-size="12" font-weight="800" fill="#E97D16">2</text>
+          </g>
+          <g>
+            <rect x="82" y="50" width="28" height="28" rx="7" fill="#E97D16" opacity=".3"/>
+            <text x="96" y="69" text-anchor="middle" font-family="Syne, sans-serif" font-size="12" font-weight="800" fill="#E97D16">3</text>
+          </g>
+          <g>
+            <rect x="118" y="50" width="28" height="28" rx="7" fill="#E97D16" opacity=".4"/>
+            <text x="132" y="69" text-anchor="middle" font-family="Syne, sans-serif" font-size="12" font-weight="800" fill="#E97D16">4</text>
+          </g>
+          <g>
+            <rect x="154" y="50" width="28" height="28" rx="7" fill="#E97D16" opacity=".5"/>
+            <text x="168" y="69" text-anchor="middle" font-family="Syne, sans-serif" font-size="12" font-weight="800" fill="#E97D16">5</text>
+          </g>
+          <g>
+            <rect x="190" y="50" width="28" height="28" rx="7" fill="#E97D16" opacity=".65"/>
+            <text x="204" y="69" text-anchor="middle" font-family="Syne, sans-serif" font-size="12" font-weight="800" fill="#E97D16">6</text>
+          </g>
+          <g>
+            <rect x="226" y="50" width="28" height="28" rx="7" fill="#E97D16" opacity=".9"/>
+            <text x="240" y="69" text-anchor="middle" font-family="Syne, sans-serif" font-size="13" font-weight="800" fill="#fff">7</text>
+          </g>
+          <!-- Baja -->
+          <text x="270" y="28" font-family="Syne, sans-serif" font-size="10" font-weight="700" fill="#6B6760">BAJA</text>
+          <text x="270" y="42" font-family="Syne, sans-serif" font-size="9" fill="#6B6760">hasta 1</text>
+          <g>
+            <rect x="266" y="50" width="28" height="28" rx="7" fill="#0369A1" opacity=".65"/>
+            <text x="280" y="69" text-anchor="middle" font-family="Syne, sans-serif" font-size="12" font-weight="800" fill="#fff">6</text>
+          </g>
+          <g>
+            <rect x="302" y="50" width="28" height="28" rx="7" fill="#6B6760" opacity=".15"/>
+            <text x="316" y="69" text-anchor="middle" font-family="Syne, sans-serif" font-size="9" font-weight="700" fill="#6B6760">…1</text>
+          </g>
+          <!-- Arrow -->
+          <path d="M14 46 L242 46" stroke="#E97D16" stroke-width="1.5" stroke-dasharray="3,3" opacity=".4"/>
+          <path d="M270 46 L330 46" stroke="#0369A1" stroke-width="1.5" stroke-dasharray="3,3" opacity=".4"/>
+        </svg>
+      </div>
+      <ul>
+        <li>Modo estándar: empieza en <strong>1 carta</strong>, sube de a una hasta llegar a <strong>7 cartas</strong>, y luego baja de vuelta hasta 1.</li>
+        <li>También se puede empezar desde 7 y bajar.</li>
+        <li>En total son <strong>13 rondas</strong> en el modo estándar.</li>
+      </ul>
+    </div>
+
+    <div class="rules-card">
+      <h3>📋 Orden de juego en cada ronda</h3>
+      <ul>
+        <li>El jugador a la <strong>izquierda del repartidor</strong> apuesta primero.</li>
+        <li>El repartidor apuesta <strong>último</strong> — tiene la desventaja de no poder hacer que la suma sea igual al total de bazas.</li>
+        <li>En la siguiente ronda, el repartidor rota y el orden cambia en consecuencia.</li>
+      </ul>
+      <div class="diagram-wrap" style="margin-top:.85rem">
+        <svg viewBox="0 0 320 110" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block">
+          <rect width="320" height="110" fill="#F5F3EE"/>
+          <!-- Players circle -->
+          <circle cx="160" cy="55" r="36" fill="none" stroke="#E2DFD8" stroke-width="1.5"/>
+          <!-- P1 top -->
+          <circle cx="160" cy="19" r="13" fill="#E97D16" opacity=".2"/>
+          <text x="160" y="23" text-anchor="middle" font-family="Syne, sans-serif" font-size="8" font-weight="700" fill="#E97D16">J1</text>
+          <text x="160" y="10" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="7" fill="#E97D16" font-weight="600">1°</text>
+          <!-- P2 right -->
+          <circle cx="196" cy="55" r="13" fill="#E97D16" opacity=".15"/>
+          <text x="196" y="59" text-anchor="middle" font-family="Syne, sans-serif" font-size="8" font-weight="700" fill="#E97D16">J2</text>
+          <text x="213" y="59" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="7" fill="#E97D16" font-weight="600">2°</text>
+          <!-- P3 bottom left -->
+          <circle cx="131" cy="82" r="13" fill="#E97D16" opacity=".1"/>
+          <text x="131" y="86" text-anchor="middle" font-family="Syne, sans-serif" font-size="8" font-weight="700" fill="#E97D16">J3</text>
+          <text x="118" y="101" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="7" fill="#E97D16" font-weight="600">3°</text>
+          <!-- P4 = dealer, bottom right -->
+          <circle cx="180" cy="85" r="14" fill="#1A1814" opacity=".85"/>
+          <text x="180" y="89" text-anchor="middle" font-family="Syne, sans-serif" font-size="8" font-weight="700" fill="#fff">J4</text>
+          <text x="180" y="105" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="7" fill="#1A1814" font-weight="700">Reparte</text>
+          <!-- Arrow direction -->
+          <path d="M160 32 C170 32 183 40 183 53" stroke="#E97D16" stroke-width="1.5" fill="none" marker-end="url(#arr)" opacity=".6"/>
+          <defs>
+            <marker id="arr" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+              <path d="M0,0 L6,3 L0,6 Z" fill="#E97D16" opacity=".6"/>
+            </marker>
+          </defs>
+          <!-- Label -->
+          <text x="12" y="20" font-family="Syne, sans-serif" font-size="8" font-weight="700" fill="#6B6760">Ronda 1</text>
+          <text x="12" y="31" font-family="DM Sans, sans-serif" font-size="7.5" fill="#6B6760">J4 reparte → J1 apuesta primero</text>
+        </svg>
+      </div>
+    </div>
+
+    <div class="rules-card">
+      <h3>🚫 La regla del repartidor</h3>
+      <p>La suma total de apuestas de todos los jugadores <strong>no puede ser igual</strong> a la cantidad de bazas disponibles en esa ronda.</p>
+      <p style="margin-top:.5rem">Esto garantiza que siempre alguien "falle" su apuesta — por eso el <strong>repartidor apuesta último</strong>, asumiendo esa restricción.</p>
+    </div>
+
+    <div class="rules-card">
+      <h3>🏆 Sistema de puntaje</h3>
+      <div class="score-formula">
+        <div class="formula-box green">
+          <div class="formula-label green">✅ Si acertás</div>
+          <div class="formula-math green">10 + (N×10)</div>
+          <div class="formula-example">Apostaste 3 y ganaste 3 → <strong>+40 pts</strong></div>
+        </div>
+        <div class="formula-box red">
+          <div class="formula-label red">❌ Si errás</div>
+          <div class="formula-math red">−|diferencia|×10</div>
+          <div class="formula-example">Apostaste 3, ganaste 1 → <strong>−20 pts</strong></div>
+        </div>
+      </div>
+      <ul>
+        <li>Apostar <strong>0 bazas y ganar 0</strong> da <strong>+10 pts</strong> — es una apuesta válida y estratégica.</li>
+        <li>Mientras más bazas apostás y acertás, más puntos ganás.</li>
+        <li>Errar por más diferencia implica mayor penalidad.</li>
+      </ul>
+    </div>
+
+    <div class="rules-card">
+      <h3>🂡 ¿Qué es una baza?</h3>
+      <p>Una baza es una "mano" que se juega: cada jugador tira una carta y quien tira la carta más alta <strong>gana la baza</strong> y se lleva todas las cartas.</p>
+      <ul style="margin-top:.6rem">
+        <li>El palo que tiene el <strong>triunfo</strong> (definido al inicio de cada ronda) supera a cualquier otro palo.</li>
+        <li>Dentro de un mismo palo, el orden es: <strong>1 → 3 → Rey → Caballo → Sota → 7 → 6 → 5 → 4 → 2</strong>.</li>
+        <li>Si no tenés cartas del palo que se jugó, podés tirar cualquier carta — incluso el triunfo para ganar la baza.</li>
+      </ul>
+    </div>
+
+    <div class="rules-card">
+      <h3>🔄 Cómo se define el triunfo</h3>
+      <p>Después de repartir las cartas, el repartidor da vuelta la carta de arriba del mazo restante — ese palo es el <strong>triunfo de la ronda</strong>.</p>
+    </div>
+
+  </div>
+</div>
+
+<div class="related">
+  <p class="related-title">Otros juegos</p>
+  <div class="related-grid">
+    <a href="truco.html" class="related-card"><span class="related-icon">🃏</span><span class="related-name">Truco</span><span class="related-cat">Juegos de cartas</span></a>
+    <a href="escoba.html" class="related-card"><span class="related-icon">🂡</span><span class="related-name">Escoba de 15</span><span class="related-cat">Juegos de cartas</span></a>
+    <a href="dado.html" class="related-card"><span class="related-icon">🎲</span><span class="related-name">Dado Virtual</span><span class="related-cat">Juegos de cartas</span></a>
+  </div>
+</div>
+
+<footer>
+  <a href="index.html" class="footer-logo">Mil<span>Sitios</span></a>
+  <p class="footer-text">Hecho con ☕ en Argentina</p>
+</footer>
+
+<!-- WIN MODAL -->
+<div class="modal-overlay" id="winModal">
+  <div class="modal-card">
+    <span class="modal-emoji">🏆</span>
+    <p class="modal-title" id="winTitle">¡Ganó!</p>
+    <p class="modal-sub" id="winSub"></p>
+    <button class="modal-btn" onclick="resetGame()">Nueva partida</button>
+  </div>
+</div>
+
+<script>
+/* ── POCHA RULES ──────────────────────────────────────
+   Si apostás N bazas y ganás exactamente N:  10 + N*10
+   Si no acertás: -|diferencia|*10
+─────────────────────────────────────────────────────── */
+
+let players = [], totals = [], round = 1;
+let cardsPerRound = 1, direction = 1;
+let bets = [], wonBazas = [];
+let currentBetPlayerIndex = 0; // índice del jugador actual en el popup
+let betOrderIndices = []; // orden en el que apuestan (primer jugador de la ronda al frente)
+
+/* ── SETUP ─────────────────────────────────────────── */
+function addPlayer() {
+  const wrap = document.getElementById('playerInputs');
+  if (wrap.children.length >= 8) { alert('Máximo 8 jugadores.'); return; }
+  const row = document.createElement('div');
+  row.className = 'player-row';
+  row.innerHTML = `<input class="ms-input" value="Jugador ${wrap.children.length + 1}" maxlength="14"/><button class="btn-icon" onclick="removePlayer(this)">×</button>`;
+  wrap.appendChild(row);
+}
+
+function removePlayer(btn) {
+  if (document.querySelectorAll('.player-row').length <= 2) { alert('Mínimo 2 jugadores.'); return; }
+  btn.parentElement.remove();
+}
+
+function setCards(n, btn) {
+  cardsPerRound = n;
+  direction = n === 1 ? 1 : -1;
+  document.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function startGame() {
+  players = Array.from(document.querySelectorAll('#playerInputs .ms-input')).map(i => i.value || 'Jugador');
+  totals = players.map(() => 0);
+  bets = players.map(() => 0);
+  wonBazas = players.map(() => 0);
+  round = 1;
+  buildHistoryHead();
+  updateRoundInfo();
+  updateTotalsDisplay();
+  document.getElementById('setup').classList.add('hidden');
+  document.getElementById('scoreboard').classList.add('show');
+  startBettingPhase();
+}
+
+/* ── ROUND INFO ────────────────────────────────────── */
+function updateRoundInfo() {
+  document.getElementById('roundNum').textContent = round;
+  document.getElementById('bazasNum').textContent = cardsPerRound;
+  // Calcular quién es el primer jugador en esta ronda
+  // Ronda 1: jugador índice 0 va primero. Ronda 2: índice 1 va primero. Etc.
+  const firstIdx = (round - 1) % players.length;
+  document.getElementById('firstPlayerName').textContent = players[firstIdx];
+}
+
+/* ── BETTING PHASE ─────────────────────────────────── */
+function startBettingPhase() {
+  bets = players.map(() => 0);
+  // Calcular orden de apuesta: el primer jugador de la ronda va primero
+  const firstIdx = (round - 1) % players.length;
+  betOrderIndices = [];
+  for (let i = 0; i < players.length; i++) {
+    betOrderIndices.push((firstIdx + i) % players.length);
+  }
+  currentBetPlayerIndex = 0;
+  // Inicializar el resumen vacío (todos pendientes)
+  buildBetsSummary();
+  checkBetAlertAndButton();
+  document.getElementById('betPhase').style.display = '';
+  document.getElementById('resultPhase').style.display = 'none';
+  // Abrir popup para el primer jugador
+  openBetPopup();
+}
+
+function buildBetsSummary() {
+  const container = document.getElementById('betsSummary');
+  container.innerHTML = betOrderIndices.map((pi, orderIdx) => {
+    const pending = orderIdx >= currentBetPlayerIndex;
+    return `
+      <div class="bet-summary-row" id="bet-summary-row-${pi}">
+        <span class="bet-summary-name">${players[pi]}</span>
+        <div style="display:flex;align-items:center;gap:.6rem">
+          ${pending
+            ? `<span style="font-size:.78rem;color:var(--ink-soft);font-style:italic">Pendiente</span>`
+            : `<span class="bet-summary-val">${bets[pi]} baza${bets[pi] !== 1 ? 's' : ''}</span>
+               <button class="bet-summary-edit" onclick="editBet(${orderIdx})">Editar</button>`
+          }
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function editBet(orderIdx) {
+  currentBetPlayerIndex = orderIdx;
+  buildBetsSummary();
+  openBetPopup();
+}
+
+function openBetPopup() {
+  const pi = betOrderIndices[currentBetPlayerIndex];
+  document.getElementById('popupPlayerName').textContent = players[pi];
+  const isLast = currentBetPlayerIndex === players.length - 1;
+  const currentTotal = bets.reduce((a, b) => a + b, 0) - bets[pi]; // total sin la apuesta del jugador actual
+  let subText = `¿Cuántas bazas apostás esta ronda? (máx. ${cardsPerRound})`;
+  if (isLast) {
+    subText = `Apostás último esta ronda. No podés apostar ${cardsPerRound - currentTotal} (quedaría suma igual a ${cardsPerRound}).`;
+  }
+  document.getElementById('popupPlayerSub').textContent = subText;
+  document.getElementById('popupBetNum').textContent = bets[pi];
+  updatePopupProgress(bets[pi]);
+  document.getElementById('popupMaxLabel').textContent = `Bazas disponibles: ${cardsPerRound}`;
+  document.getElementById('popupProgress');
+  document.getElementById('betPopup').classList.add('show');
+  updatePopupConfirmButton();
+}
+
+function updatePopupProgress(val) {
+  const prog = document.getElementById('popupProgress');
+  prog.innerHTML = Array.from({ length: cardsPerRound + 1 }, (_, i) =>
+    `<div class="popup-dot ${i <= val && val > 0 ? 'filled' : i === 0 && val === 0 ? '' : ''}${i < val ? ' filled' : i === val && val > 0 ? ' filled' : ''}"></div>`
+  ).join('');
+  // Simpler: just fill up to val
+  prog.innerHTML = Array.from({ length: cardsPerRound + 1 }, (_, i) =>
+    `<div class="popup-dot ${i < val ? 'filled' : ''}"></div>`
+  ).join('');
+}
+
+function popupChangeBet(delta) {
+  const pi = betOrderIndices[currentBetPlayerIndex];
+  bets[pi] = Math.max(0, Math.min(cardsPerRound, bets[pi] + delta));
+  document.getElementById('popupBetNum').textContent = bets[pi];
+  updatePopupProgress(bets[pi]);
+  updatePopupConfirmButton();
+}
+
+function updatePopupConfirmButton() {
+  const pi = betOrderIndices[currentBetPlayerIndex];
+  const isLast = currentBetPlayerIndex === players.length - 1;
+  if (isLast) {
+    const otherTotal = bets.reduce((a, b) => a + b, 0) - bets[pi];
+    const forbidden = cardsPerRound - otherTotal;
+    const btn = document.getElementById('btnPopupConfirm');
+    if (bets[pi] === forbidden && forbidden >= 0) {
+      btn.disabled = true;
+      btn.textContent = `No podés apostar ${forbidden} (suma prohibida)`;
+      btn.style.background = '#DC2626';
+    } else {
+      btn.disabled = false;
+      btn.textContent = 'Confirmar apuesta →';
+      btn.style.background = '';
+    }
+  } else {
+    const btn = document.getElementById('btnPopupConfirm');
+    btn.disabled = false;
+    btn.textContent = 'Confirmar apuesta →';
+    btn.style.background = '';
+  }
+}
+
+function confirmBet() {
+  const pi = betOrderIndices[currentBetPlayerIndex];
+  const isLast = currentBetPlayerIndex === players.length - 1;
+  if (isLast) {
+    const otherTotal = bets.reduce((a, b) => a + b, 0) - bets[pi];
+    const forbidden = cardsPerRound - otherTotal;
+    if (bets[pi] === forbidden && forbidden >= 0) {
+      return; // Bloqueado
+    }
+  }
+  // Avanzar al siguiente
+  currentBetPlayerIndex++;
+  document.getElementById('betPopup').classList.remove('show');
+  buildBetsSummary();
+  checkBetAlertAndButton();
+  if (currentBetPlayerIndex < players.length) {
+    // Abrir popup del siguiente jugador después de la animación
+    setTimeout(() => openBetPopup(), 280);
+  }
+}
+
+function checkBetAlertAndButton() {
+  const total = bets.reduce((a, b) => a + b, 0);
+  const alert = document.getElementById('betAlert');
+  const btnGo = document.getElementById('btnGoResults');
+  const allDone = currentBetPlayerIndex >= players.length;
+
+  if (!allDone) {
+    alert.style.display = 'none';
+    btnGo.disabled = true;
+    return;
+  }
+
+  if (total === cardsPerRound) {
+    alert.className = 'total-bets-alert alert-warn';
+    alert.textContent = `⚠️ La suma de apuestas (${total}) es igual al total de bazas. Revisá las apuestas — alguien debe cambiar.`;
+    alert.style.display = '';
+    btnGo.disabled = true;
+  } else {
+    alert.className = 'total-bets-alert alert-ok';
+    alert.textContent = `✅ Apuestas listas — total apostado: ${total} de ${cardsPerRound} bazas.`;
+    alert.style.display = '';
+    btnGo.disabled = false;
+  }
+}
+
+/* ── RESULTS PHASE ─────────────────────────────────── */
+function goToResults() {
+  wonBazas = players.map(() => 0);
+  const grid = document.getElementById('resultsGrid');
+  grid.innerHTML = betOrderIndices.map(pi => `
+    <div class="result-row">
+      <div>
+        <div class="result-name">${players[pi]}</div>
+        <div class="result-bet">Apostó: ${bets[pi]} baza${bets[pi] !== 1 ? 's' : ''}</div>
+      </div>
+      <div style="text-align:center">
+        <div class="result-won-label">Ganó</div>
+        <div class="bet-controls" style="justify-content:center">
+          <button class="btn-c" onclick="changeWon(${pi},-1)">−</button>
+          <span class="bet-val" id="won-${pi}">0</span>
+          <button class="btn-c plus-btn" onclick="changeWon(${pi},1)">+</button>
+        </div>
+      </div>
+      <div class="result-pts" id="rpts-${pi}" style="opacity:.3">—</div>
+    </div>
+  `).join('');
+  document.getElementById('betPhase').style.display = 'none';
+  document.getElementById('resultPhase').style.display = '';
+}
+
+function changeWon(i, delta) {
+  wonBazas[i] = Math.max(0, Math.min(cardsPerRound, wonBazas[i] + delta));
+  document.getElementById('won-' + i).textContent = wonBazas[i];
+  const diff = wonBazas[i] - bets[i];
+  const pts = diff === 0 ? 10 + bets[i] * 10 : Math.abs(diff) * -10;
+  const el = document.getElementById('rpts-' + i);
+  el.textContent = (pts >= 0 ? '+' : '') + pts + ' pts';
+  el.className = 'result-pts ' + (pts >= 0 ? 'pos' : 'neg');
+  el.style.opacity = '1';
+}
+
+function backToBets() {
+  document.getElementById('betPhase').style.display = '';
+  document.getElementById('resultPhase').style.display = 'none';
+}
+
+function closeRound() {
+  const roundPts = players.map((p, i) => {
+    const diff = wonBazas[i] - bets[i];
+    return diff === 0 ? 10 + bets[i] * 10 : Math.abs(diff) * -10;
+  });
+  roundPts.forEach((p, i) => totals[i] += p);
+  addHistoryRow(roundPts);
+  updateTotalsDisplay();
+
+  // Advance round
+  if (cardsPerRound === 7 && direction === 1) direction = -1;
+  else if (cardsPerRound === 1 && direction === -1) { showWin(); return; }
+  cardsPerRound += direction;
+  if (cardsPerRound < 1) cardsPerRound = 1;
+  round++;
+  updateRoundInfo();
+  startBettingPhase();
+}
+
+/* ── TOTALS ────────────────────────────────────────── */
+function updateTotalsDisplay() {
+  const max = Math.max(...totals);
+  document.getElementById('totalsList').innerHTML =
+    players.map((p, i) => `
+      <div class="total-row">
+        <span class="total-name">${p}</span>
+        <span class="total-pts">${totals[i]}</span>
+        ${totals[i] === max && max !== 0 ? '<span class="leader-badge">👑</span>' : ''}
+      </div>
+    `).join('');
+}
+
+/* ── HISTORY ───────────────────────────────────────── */
+function buildHistoryHead() {
+  document.getElementById('histHead').innerHTML = `<tr><th>Ronda</th><th>Cartas</th>${players.map(p => `<th>${p}</th>`).join('')}</tr>`;
+  document.getElementById('histBody').innerHTML = '';
+}
+
+function addHistoryRow(roundPts) {
+  const tbody = document.getElementById('histBody');
+  const first = tbody.querySelector('tr td[colspan]');
+  if (first) first.parentElement.remove();
+  const prevCards = cardsPerRound - direction; // cartas que se jugaron (antes de avanzar)
+  const tr = document.createElement('tr');
+  tr.innerHTML = `<td>${round}</td><td>${cardsPerRound}</td>${roundPts.map(p => `<td class="${p >= 0 ? 'pts-pos' : 'pts-neg'}">${p >= 0 ? '+' : ''}${p}</td>`).join('')}`;
+  tbody.appendChild(tr);
+}
+
+/* ── WIN / RESET ───────────────────────────────────── */
+function showWin() {
+  const max = Math.max(...totals);
+  const winIdx = totals.indexOf(max);
+  document.getElementById('winTitle').textContent = '¡Ganó ' + players[winIdx] + '!';
+  document.getElementById('winSub').textContent = 'Terminó con ' + max + ' puntos.';
+  document.getElementById('winModal').classList.add('show');
+}
+
+function resetGame() {
+  document.getElementById('winModal').classList.remove('show');
+  document.getElementById('betPopup').classList.remove('show');
+  document.getElementById('setup').classList.remove('hidden');
+  document.getElementById('scoreboard').classList.remove('show');
+  players = []; totals = []; round = 1;
+  cardsPerRound = 1; direction = 1;
+}
+
+/* ── RULES TOGGLE ──────────────────────────────────── */
+function toggleRules() {
+  const toggle = document.getElementById('rulesToggle');
+  const body = document.getElementById('rulesBody');
+  toggle.classList.toggle('open');
+  body.classList.toggle('open');
+}
+</script>
+</body>
+</html>
