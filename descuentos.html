@@ -4,10 +4,10 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Calculador de Descuentos — MilSitios</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
-  <style>
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+
+<style>
     :root {
       --bg: #F5F3EE;
       --ink: #1A1814;
@@ -26,7 +26,7 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
     body {
-      font-family: 'DM Sans', sans-serif;
+      font-family: var(--font-ui);
       background: var(--bg);
       color: var(--ink);
       min-height: 100vh;
@@ -51,14 +51,14 @@
     .nav-back { display: flex; align-items: center; gap: .4rem; font-size: .85rem; font-weight: 500; color: var(--ink-soft); text-decoration: none; -webkit-tap-highlight-color: transparent; }
     .nav-back:hover { color: var(--ink); }
     .nav-sep { color: var(--border); }
-    .nav-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.1rem; letter-spacing: -.03em; color: var(--ink); text-decoration: none; }
+    .nav-logo { font-family: var(--font-ui); font-weight: 800; font-size: 1.1rem; letter-spacing: -.03em; color: var(--ink); text-decoration: none; }
     .nav-logo span { color: var(--accent); }
     .nav-chip { margin-left: auto; font-size: .75rem; color: var(--tool-color); font-weight: 600; }
 
     /* ── HERO ── */
     .hero { padding: 2rem 1.25rem 1.5rem; max-width: 700px; margin: 0 auto; text-align: center; }
     .tool-chip { display: inline-flex; align-items: center; gap: .4rem; background: var(--tool-bg); color: var(--tool-color); font-size: .72rem; font-weight: 600; letter-spacing: .07em; text-transform: uppercase; padding: .3rem .8rem; border-radius: 100px; margin-bottom: .9rem; }
-    h1 { font-family: 'Syne', sans-serif; font-weight: 800; font-size: clamp(1.9rem, 7vw, 3rem); line-height: 1; letter-spacing: -.04em; margin-bottom: .5rem; }
+    h1 { font-family: var(--font-ui); font-weight: 800; font-size: clamp(1.9rem, 7vw, 3rem); line-height: 1; letter-spacing: -.04em; margin-bottom: .5rem; }
     .hero-sub { font-size: .9rem; color: var(--ink-soft); font-weight: 300; line-height: 1.6; }
 
     /* ── BODY ── */
@@ -82,7 +82,7 @@
       border-radius: 11px;
       border: none;
       background: transparent;
-      font-family: 'DM Sans', sans-serif;
+      font-family: var(--font-ui);
       font-size: .72rem;
       font-weight: 500;
       color: var(--ink-soft);
@@ -109,7 +109,7 @@
       display: none;
     }
     .card.active-card { display: block; }
-    .card-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1rem; letter-spacing: -.02em; margin-bottom: 1.1rem; display: flex; align-items: center; gap: .5rem; }
+    .card-title { font-family: var(--font-ui); font-weight: 700; font-size: 1rem; letter-spacing: -.02em; margin-bottom: 1.1rem; display: flex; align-items: center; gap: .5rem; }
     .card-desc { font-size: .8rem; color: var(--ink-soft); margin-top: -.65rem; margin-bottom: 1rem; line-height: 1.5; }
 
     /* ── INPUTS ── */
@@ -125,14 +125,14 @@
     .ms-input {
       width: 100%; height: 48px;
       padding: 0 1rem;
-      font-family: 'DM Sans', sans-serif; font-size: 1rem;
+      font-family: var(--font-ui); font-size: 1rem;
       background: var(--bg); border: 1.5px solid var(--border);
       border-radius: 12px; outline: none; color: var(--ink);
       transition: border-color .2s, box-shadow .2s; -webkit-appearance: none;
     }
     .ms-input.has-prefix { padding-left: 2.1rem; }
     .ms-input:focus { border-color: var(--ink); box-shadow: 0 0 0 3px rgba(26,24,20,.06); background: var(--card-bg); }
-    .ms-input.big { height: 56px; font-size: 1.2rem; font-family: 'Syne', sans-serif; font-weight: 700; }
+    .ms-input.big { height: 56px; font-size: 1.2rem; font-family: var(--font-ui); font-weight: 700; }
 
     .fields-row { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; }
 
@@ -149,14 +149,14 @@
       background: var(--ink); cursor: pointer;
       box-shadow: 0 2px 8px rgba(0,0,0,.15);
     }
-    .slider-val { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1rem; min-width: 44px; text-align: right; }
+    .slider-val { font-family: var(--font-ui); font-weight: 700; font-size: 1rem; min-width: 44px; text-align: right; }
 
     /* stepper */
     .stepper-wrap { display: flex; align-items: center; gap: .5rem; }
     .btn-step { width: 40px; height: 40px; border-radius: 11px; border: 1.5px solid var(--border); background: var(--bg); font-size: 1.2rem; cursor: pointer; display: flex; align-items: center; justify-content: center; font-weight: 700; transition: background .15s; -webkit-tap-highlight-color: transparent; }
     .btn-step:hover { background: var(--tag-bg); }
     .btn-step:active { transform: scale(.92); }
-    .step-val { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.3rem; min-width: 36px; text-align: center; }
+    .step-val { font-family: var(--font-ui); font-weight: 800; font-size: 1.3rem; min-width: 36px; text-align: center; }
 
     /* ── RESULT PANEL ── */
     .result-panel {
@@ -176,14 +176,14 @@
       margin-bottom: 1.25rem; gap: .5rem; flex-wrap: wrap;
     }
     .result-pay-label { font-size: .72rem; text-transform: uppercase; letter-spacing: .08em; color: rgba(255,255,255,.5); margin-bottom: .2rem; }
-    .result-pay-amount { font-family: 'Syne', sans-serif; font-weight: 800; font-size: clamp(2.2rem,8vw,3.5rem); line-height: 1; letter-spacing: -.04em; }
+    .result-pay-amount { font-family: var(--font-ui); font-weight: 800; font-size: clamp(2.2rem,8vw,3.5rem); line-height: 1; letter-spacing: -.04em; }
     .result-save-badge {
       background: var(--accent); color: #fff;
       border-radius: 12px; padding: .5rem .9rem;
       text-align: center; flex-shrink: 0;
     }
     .result-save-label { font-size: .65rem; text-transform: uppercase; letter-spacing: .08em; opacity: .8; }
-    .result-save-amount { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.3rem; line-height: 1.1; }
+    .result-save-amount { font-family: var(--font-ui); font-weight: 800; font-size: 1.3rem; line-height: 1.1; }
 
     .result-breakdown {
       border-top: 1px solid rgba(255,255,255,.1);
@@ -195,7 +195,7 @@
       font-size: .85rem;
     }
     .result-line .rl-label { color: rgba(255,255,255,.6); }
-    .result-line .rl-val { font-family: 'Syne', sans-serif; font-weight: 600; }
+    .result-line .rl-val { font-family: var(--font-ui); font-weight: 600; }
     .result-line.highlight .rl-val { color: #6EE7B7; }
     .result-line.strikethrough .rl-val { text-decoration: line-through; opacity: .5; }
 
@@ -211,7 +211,7 @@
       width: 100%; height: 52px;
       background: var(--accent); color: #fff;
       border: none; border-radius: 14px;
-      font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700;
+      font-family: var(--font-ui); font-size: 1rem; font-weight: 700;
       cursor: pointer; -webkit-tap-highlight-color: transparent;
       transition: transform .15s, box-shadow .2s;
       display: flex; align-items: center; justify-content: center; gap: .4rem;
@@ -228,21 +228,21 @@
     }
     .compare-item.winner { border-color: var(--green); background: var(--green-bg); }
     .compare-item-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: .75rem; }
-    .compare-item-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: .85rem; }
+    .compare-item-name { font-family: var(--font-ui); font-weight: 700; font-size: .85rem; }
     .compare-winner-badge { font-size: .65rem; font-weight: 700; background: var(--green); color: #fff; padding: .2rem .55rem; border-radius: 100px; }
     .compare-fields { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; }
     .compare-result { font-size: .78rem; color: var(--green); font-weight: 600; margin-top: .35rem; }
 
-    .btn-add-item { display: flex; align-items: center; justify-content: center; gap: .4rem; width: 100%; padding: .6rem; border: 1.5px dashed var(--border); background: transparent; border-radius: 12px; font-family: 'DM Sans', sans-serif; font-size: .82rem; color: var(--ink-soft); cursor: pointer; -webkit-tap-highlight-color: transparent; margin-bottom: .85rem; transition: background .15s; }
+    .btn-add-item { display: flex; align-items: center; justify-content: center; gap: .4rem; width: 100%; padding: .6rem; border: 1.5px dashed var(--border); background: transparent; border-radius: 12px; font-family: var(--font-ui); font-size: .82rem; color: var(--ink-soft); cursor: pointer; -webkit-tap-highlight-color: transparent; margin-bottom: .85rem; transition: background .15s; }
     .btn-add-item:hover { background: var(--tag-bg); }
 
     /* ── CUOTAS ── */
     .cuotas-table { width: 100%; border-collapse: collapse; font-size: .82rem; margin-top: .25rem; }
-    .cuotas-table th { font-family: 'Syne', sans-serif; font-weight: 700; text-align: left; padding: .45rem .3rem; border-bottom: 1.5px solid var(--border); font-size: .72rem; color: var(--ink-soft); }
+    .cuotas-table th { font-family: var(--font-ui); font-weight: 700; text-align: left; padding: .45rem .3rem; border-bottom: 1.5px solid var(--border); font-size: .72rem; color: var(--ink-soft); }
     .cuotas-table td { padding: .5rem .3rem; border-bottom: 1px solid var(--border); }
     .cuotas-table tr:last-child td { border-bottom: none; }
     .cuotas-table .best-row td { color: var(--green); font-weight: 600; }
-    .cuotas-table .best-row td:first-child { font-family: 'Syne', sans-serif; font-weight: 700; }
+    .cuotas-table .best-row td:first-child { font-family: var(--font-ui); font-weight: 700; }
 
     /* ── RELATED ── */
     .related { padding: 0 1.25rem 3rem; max-width: 700px; margin: 0 auto; }
@@ -251,20 +251,23 @@
     .related-card { background: var(--card-bg); border: 1.5px solid var(--border); border-radius: 14px; padding: .9rem; text-decoration: none; color: var(--ink); display: flex; flex-direction: column; gap: .3rem; transition: transform .2s, border-color .2s; }
     .related-card:hover { transform: translateY(-2px); border-color: var(--tool-color); }
     .related-icon { font-size: 1.3rem; }
-    .related-name { font-family: 'Syne', sans-serif; font-size: .82rem; font-weight: 700; }
+    .related-name { font-family: var(--font-ui); font-size: .82rem; font-weight: 700; }
     .related-cat { font-size: .7rem; color: var(--ink-soft); }
 
     footer { border-top: 1px solid var(--border); padding: 1.75rem 1.25rem; max-width: 700px; margin: 0 auto; display: flex; flex-direction: column; gap: .5rem; }
     @media(min-width:540px) { footer { flex-direction: row; align-items: center; justify-content: space-between; } }
-    .footer-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: .95rem; color: var(--ink); text-decoration: none; }
+    .footer-logo { font-family: var(--font-ui); font-weight: 800; font-size: .95rem; color: var(--ink); text-decoration: none; }
     .footer-logo span { color: var(--accent); }
     .footer-text { font-size: .75rem; color: var(--ink-soft); }
 
     @keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
     .fade-in { animation: fadeUp .4s ease both; }
   </style>
+  <link rel="stylesheet" href="assets/theme.css"/>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml"/>
+  <meta name="description" content="Compará ofertas, combiná descuentos y calculá cuánto ahorrás. Gratis y sin registro en MilSitios."/>
 </head>
-<body>
+<body data-category="finance">
 
 <nav>
   <a href="index.html" class="nav-back">
@@ -513,7 +516,7 @@
 <div class="related">
   <p class="related-title">También te puede interesar</p>
   <div class="related-grid">
-    <a href="milsitios-micrositio.html" class="related-card"><span class="related-icon">🎰</span><span class="related-name">Sorteo Online</span><span class="related-cat">Social & Grupos</span></a>
+    <a href="sorteo.html" class="related-card"><span class="related-icon">🎰</span><span class="related-name">Sorteo Online</span><span class="related-cat">Social & Grupos</span></a>
     <a href="juegos-de-cartas.html" class="related-card"><span class="related-icon">🃏</span><span class="related-name">Juegos de Cartas</span><span class="related-cat">Entretenimiento</span></a>
     <a href="index.html" class="related-card"><span class="related-icon">🛠</span><span class="related-name">Ver todos</span><span class="related-cat">MilSitios</span></a>
   </div>

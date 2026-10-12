@@ -4,10 +4,10 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Dividir Gastos — MilSitios</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
-  <style>
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+
+<style>
     :root {
       --bg: #F5F3EE;
       --ink: #1A1814;
@@ -30,7 +30,7 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
     body {
-      font-family: 'DM Sans', sans-serif;
+      font-family: var(--font-ui);
       background: var(--bg);
       color: var(--ink);
       min-height: 100vh;
@@ -55,14 +55,14 @@
     .nav-back { display: flex; align-items: center; gap: .4rem; font-size: .85rem; font-weight: 500; color: var(--ink-soft); text-decoration: none; -webkit-tap-highlight-color: transparent; }
     .nav-back:hover { color: var(--ink); }
     .nav-sep { color: var(--border); }
-    .nav-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.1rem; letter-spacing: -.03em; color: var(--ink); text-decoration: none; }
+    .nav-logo { font-family: var(--font-ui); font-weight: 800; font-size: 1.1rem; letter-spacing: -.03em; color: var(--ink); text-decoration: none; }
     .nav-logo span { color: var(--accent); }
     .nav-chip { margin-left: auto; font-size: .75rem; color: var(--tool-color); font-weight: 600; }
 
     /* ── HERO ── */
     .hero { padding: 2rem 1.25rem 1.5rem; max-width: 700px; margin: 0 auto; text-align: center; }
     .tool-chip { display: inline-flex; align-items: center; gap: .4rem; background: var(--tool-bg); color: var(--tool-color); font-size: .72rem; font-weight: 600; letter-spacing: .07em; text-transform: uppercase; padding: .3rem .8rem; border-radius: 100px; margin-bottom: .9rem; }
-    h1 { font-family: 'Syne', sans-serif; font-weight: 800; font-size: clamp(1.9rem, 7vw, 3rem); line-height: 1; letter-spacing: -.04em; margin-bottom: .5rem; }
+    h1 { font-family: var(--font-ui); font-weight: 800; font-size: clamp(1.9rem, 7vw, 3rem); line-height: 1; letter-spacing: -.04em; margin-bottom: .5rem; }
     .hero-sub { font-size: .9rem; color: var(--ink-soft); font-weight: 300; line-height: 1.6; }
 
     /* ── BODY ── */
@@ -76,7 +76,7 @@
       padding: 1.4rem;
       margin-bottom: 1rem;
     }
-    .card-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1rem; letter-spacing: -.02em; margin-bottom: 1.1rem; display: flex; align-items: center; gap: .5rem; }
+    .card-title { font-family: var(--font-ui); font-weight: 700; font-size: 1rem; letter-spacing: -.02em; margin-bottom: 1.1rem; display: flex; align-items: center; gap: .5rem; }
     .card-desc { font-size: .8rem; color: var(--ink-soft); margin-top: -.65rem; margin-bottom: 1rem; line-height: 1.5; }
 
     /* ── INPUTS ── */
@@ -86,7 +86,7 @@
     .ms-input {
       width: 100%; height: 48px;
       padding: 0 1rem;
-      font-family: 'DM Sans', sans-serif; font-size: 1rem;
+      font-family: var(--font-ui); font-size: 1rem;
       background: var(--bg); border: 1.5px solid var(--border);
       border-radius: 12px; outline: none; color: var(--ink);
       transition: border-color .2s, box-shadow .2s; -webkit-appearance: none;
@@ -104,11 +104,11 @@
     .step-num {
       width: 28px; height: 28px; border-radius: 50%;
       background: var(--ink); color: #fff;
-      font-family: 'Syne', sans-serif; font-weight: 800; font-size: .8rem;
+      font-family: var(--font-ui); font-weight: 800; font-size: .8rem;
       display: flex; align-items: center; justify-content: center;
       flex-shrink: 0;
     }
-    .step-label { font-family: 'Syne', sans-serif; font-weight: 700; font-size: .95rem; letter-spacing: -.02em; }
+    .step-label { font-family: var(--font-ui); font-weight: 700; font-size: .95rem; letter-spacing: -.02em; }
 
     /* ── PARTICIPANTES ── */
     .participantes-wrap { display: flex; flex-direction: column; gap: .5rem; margin-bottom: .85rem; }
@@ -121,13 +121,13 @@
     .part-avatar {
       width: 32px; height: 32px; border-radius: 50%;
       background: var(--tool-bg); color: var(--tool-color);
-      font-family: 'Syne', sans-serif; font-weight: 800; font-size: .85rem;
+      font-family: var(--font-ui); font-weight: 800; font-size: .85rem;
       display: flex; align-items: center; justify-content: center;
       flex-shrink: 0;
     }
     .part-name-input {
       flex: 1; border: none; background: transparent;
-      font-family: 'DM Sans', sans-serif; font-size: .95rem; color: var(--ink);
+      font-family: var(--font-ui); font-size: .95rem; color: var(--ink);
       outline: none; padding: .25rem 0;
     }
     .part-name-input::placeholder { color: var(--ink-soft); }
@@ -144,7 +144,7 @@
       display: flex; align-items: center; justify-content: center; gap: .4rem;
       width: 100%; padding: .65rem; border: 1.5px dashed var(--border);
       background: transparent; border-radius: 12px;
-      font-family: 'DM Sans', sans-serif; font-size: .82rem; color: var(--ink-soft);
+      font-family: var(--font-ui); font-size: .82rem; color: var(--ink-soft);
       cursor: pointer; -webkit-tap-highlight-color: transparent;
       transition: background .15s, border-color .15s;
     }
@@ -155,7 +155,7 @@
     .moneda-chip {
       padding: .4rem .85rem; border-radius: 100px;
       border: 1.5px solid var(--border); background: transparent;
-      font-family: 'DM Sans', sans-serif; font-size: .82rem; font-weight: 500;
+      font-family: var(--font-ui); font-size: .82rem; font-weight: 500;
       color: var(--ink-soft); cursor: pointer;
       transition: all .15s; -webkit-tap-highlight-color: transparent;
     }
@@ -164,7 +164,7 @@
     .moneda-custom-input {
       width: 52px; height: 36px; text-align: center;
       border: 1.5px solid var(--border); border-radius: 10px;
-      background: var(--bg); font-family: 'Syne', sans-serif;
+      background: var(--bg); font-family: var(--font-ui);
       font-size: .9rem; font-weight: 700; color: var(--ink); outline: none;
       transition: border-color .2s;
     }
@@ -181,14 +181,14 @@
     .gasto-num {
       width: 24px; height: 24px; border-radius: 6px;
       background: var(--tool-bg); color: var(--tool-color);
-      font-family: 'Syne', sans-serif; font-weight: 800; font-size: .72rem;
+      font-family: var(--font-ui); font-weight: 800; font-size: .72rem;
       display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px;
     }
     .gasto-fields { flex: 1; }
     .gasto-row-top { display: grid; grid-template-columns: 1fr auto; gap: .6rem; align-items: end; margin-bottom: .6rem; }
     .gasto-input-desc {
       width: 100%; height: 42px; padding: 0 .9rem;
-      font-family: 'DM Sans', sans-serif; font-size: .9rem;
+      font-family: var(--font-ui); font-size: .9rem;
       background: var(--card-bg); border: 1.5px solid var(--border);
       border-radius: 10px; outline: none; color: var(--ink);
       transition: border-color .2s;
@@ -203,7 +203,7 @@
     }
     .gasto-input-monto {
       width: 110px; height: 42px; padding: 0 .75rem 0 1.9rem;
-      font-family: 'Syne', sans-serif; font-size: .95rem; font-weight: 700;
+      font-family: var(--font-ui); font-size: .95rem; font-weight: 700;
       background: var(--card-bg); border: 1.5px solid var(--border);
       border-radius: 10px; outline: none; color: var(--ink);
       transition: border-color .2s; -webkit-appearance: none;
@@ -215,7 +215,7 @@
 
     .gasto-select {
       width: 100%; height: 38px; padding: 0 .75rem;
-      font-family: 'DM Sans', sans-serif; font-size: .85rem;
+      font-family: var(--font-ui); font-size: .85rem;
       background: var(--card-bg); border: 1.5px solid var(--border);
       border-radius: 10px; outline: none; color: var(--ink);
       transition: border-color .2s; cursor: pointer;
@@ -242,7 +242,7 @@
     .part-check-btn {
       padding: .3rem .75rem; border-radius: 100px;
       border: 1.5px solid var(--border); background: var(--card-bg);
-      font-family: 'DM Sans', sans-serif; font-size: .8rem; font-weight: 500;
+      font-family: var(--font-ui); font-size: .8rem; font-weight: 500;
       color: var(--ink-soft); cursor: pointer;
       transition: all .15s; -webkit-tap-highlight-color: transparent;
     }
@@ -253,7 +253,7 @@
     .div-mode-btn {
       padding: .3rem .7rem; border-radius: 100px;
       border: 1.5px solid var(--border); background: transparent;
-      font-family: 'DM Sans', sans-serif; font-size: .75rem; font-weight: 500;
+      font-family: var(--font-ui); font-size: .75rem; font-weight: 500;
       color: var(--ink-soft); cursor: pointer;
       transition: all .15s; -webkit-tap-highlight-color: transparent;
     }
@@ -265,7 +265,7 @@
     .split-name { font-size: .82rem; color: var(--ink); flex: 1; }
     .split-input {
       width: 80px; height: 34px; text-align: right; padding: 0 .65rem;
-      font-family: 'Syne', sans-serif; font-size: .85rem; font-weight: 700;
+      font-family: var(--font-ui); font-size: .85rem; font-weight: 700;
       border: 1.5px solid var(--border); border-radius: 8px;
       background: var(--card-bg); outline: none; color: var(--ink);
       -webkit-appearance: none; transition: border-color .2s;
@@ -278,7 +278,7 @@
       width: 100%; height: 54px;
       background: var(--accent); color: #fff;
       border: none; border-radius: 14px;
-      font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700;
+      font-family: var(--font-ui); font-size: 1rem; font-weight: 700;
       cursor: pointer; -webkit-tap-highlight-color: transparent;
       transition: transform .15s, box-shadow .2s;
       display: flex; align-items: center; justify-content: center; gap: .5rem;
@@ -303,17 +303,17 @@
     .balance-row.neutro { border-color: var(--border); }
     .balance-avatar {
       width: 38px; height: 38px; border-radius: 50%;
-      font-family: 'Syne', sans-serif; font-weight: 800; font-size: .9rem;
+      font-family: var(--font-ui); font-weight: 800; font-size: .9rem;
       display: flex; align-items: center; justify-content: center; flex-shrink: 0;
     }
     .balance-row.positivo .balance-avatar { background: #D1FAE5; color: var(--green); }
     .balance-row.negativo .balance-avatar { background: #FEE2E2; color: var(--red); }
     .balance-row.neutro .balance-avatar { background: var(--tag-bg); color: var(--ink-soft); }
     .balance-info { flex: 1; min-width: 0; }
-    .balance-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: .9rem; }
+    .balance-name { font-family: var(--font-ui); font-weight: 700; font-size: .9rem; }
     .balance-detail { font-size: .75rem; color: var(--ink-soft); margin-top: .1rem; }
     .balance-amount {
-      font-family: 'Syne', sans-serif; font-weight: 800;
+      font-family: var(--font-ui); font-weight: 800;
       font-size: 1.05rem; letter-spacing: -.02em; flex-shrink: 0;
     }
     .balance-row.positivo .balance-amount { color: var(--green); }
@@ -327,7 +327,7 @@
       color: #fff;
     }
     .transfer-title {
-      font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1rem;
+      font-family: var(--font-ui); font-weight: 800; font-size: 1rem;
       letter-spacing: -.02em; margin-bottom: 1.1rem;
       display: flex; align-items: center; gap: .5rem;
     }
@@ -348,7 +348,7 @@
     .transfer-text strong { font-weight: 700; color: #fff; }
     .transfer-text .from { color: rgba(255,255,255,.65); }
     .transfer-amount {
-      font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.05rem;
+      font-family: var(--font-ui); font-weight: 800; font-size: 1.05rem;
       color: #6EE7B7; flex-shrink: 0;
     }
 
@@ -369,7 +369,7 @@
     }
     .cat-breakdown-emoji { font-size: 1.1rem; margin-bottom: .2rem; }
     .cat-breakdown-name { font-size: .72rem; color: var(--ink-soft); margin-bottom: .1rem; }
-    .cat-breakdown-amount { font-family: 'Syne', sans-serif; font-weight: 800; font-size: .95rem; }
+    .cat-breakdown-amount { font-family: var(--font-ui); font-weight: 800; font-size: .95rem; }
 
     /* totales */
     .totales-row {
@@ -379,14 +379,14 @@
     }
     .totales-row:last-child { border-bottom: none; }
     .totales-row .tl { color: var(--ink-soft); }
-    .totales-row .tr { font-family: 'Syne', sans-serif; font-weight: 700; }
+    .totales-row .tr { font-family: var(--font-ui); font-weight: 700; }
 
     /* compartir */
     .btn-share {
       width: 100%; height: 48px;
       background: var(--card-bg); color: var(--ink);
       border: 1.5px solid var(--border); border-radius: 14px;
-      font-family: 'Syne', sans-serif; font-size: .88rem; font-weight: 700;
+      font-family: var(--font-ui); font-size: .88rem; font-weight: 700;
       cursor: pointer; -webkit-tap-highlight-color: transparent;
       transition: all .2s;
       display: flex; align-items: center; justify-content: center; gap: .5rem;
@@ -404,7 +404,7 @@
       display: flex; align-items: center; justify-content: center; gap: .4rem;
       margin: 0 auto 2rem; padding: .5rem 1.25rem;
       border: 1.5px solid var(--border); border-radius: 100px;
-      background: transparent; font-family: 'DM Sans', sans-serif;
+      background: transparent; font-family: var(--font-ui);
       font-size: .82rem; color: var(--ink-soft); cursor: pointer;
       -webkit-tap-highlight-color: transparent; transition: all .2s;
     }
@@ -417,12 +417,12 @@
     .related-card { background: var(--card-bg); border: 1.5px solid var(--border); border-radius: 14px; padding: .9rem; text-decoration: none; color: var(--ink); display: flex; flex-direction: column; gap: .3rem; transition: transform .2s, border-color .2s; }
     .related-card:hover { transform: translateY(-2px); border-color: var(--tool-color); }
     .related-icon { font-size: 1.3rem; }
-    .related-name { font-family: 'Syne', sans-serif; font-size: .82rem; font-weight: 700; }
+    .related-name { font-family: var(--font-ui); font-size: .82rem; font-weight: 700; }
     .related-cat { font-size: .7rem; color: var(--ink-soft); }
 
     footer { border-top: 1px solid var(--border); padding: 1.75rem 1.25rem; max-width: 700px; margin: 0 auto; display: flex; flex-direction: column; gap: .5rem; }
     @media(min-width:540px) { footer { flex-direction: row; align-items: center; justify-content: space-between; } }
-    .footer-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: .95rem; color: var(--ink); text-decoration: none; }
+    .footer-logo { font-family: var(--font-ui); font-weight: 800; font-size: .95rem; color: var(--ink); text-decoration: none; }
     .footer-logo span { color: var(--accent); }
     .footer-text { font-size: .75rem; color: var(--ink-soft); }
 
@@ -445,7 +445,7 @@
     .juntada-input {
       width: 100%; height: 52px;
       padding: 0 1rem;
-      font-family: 'Syne', sans-serif; font-size: 1.05rem; font-weight: 700;
+      font-family: var(--font-ui); font-size: 1.05rem; font-weight: 700;
       background: var(--bg); border: 1.5px solid var(--border);
       border-radius: 12px; outline: none; color: var(--ink);
       transition: border-color .2s, box-shadow .2s; -webkit-appearance: none;
@@ -457,7 +457,7 @@
       display: flex; align-items: center; justify-content: space-between;
       margin-bottom: 1rem; flex-wrap: wrap; gap: .5rem;
     }
-    .result-topbar-title { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.15rem; letter-spacing: -.03em; }
+    .result-topbar-title { font-family: var(--font-ui); font-weight: 800; font-size: 1.15rem; letter-spacing: -.03em; }
     .result-topbar-meta { font-size: .78rem; color: var(--ink-soft); }
 
     .summary-chips { display: flex; gap: .5rem; flex-wrap: wrap; margin-bottom: 1rem; }
@@ -476,8 +476,11 @@
       .fields-row { grid-template-columns: 1fr; }
     }
   </style>
+  <link rel="stylesheet" href="assets/theme.css"/>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml"/>
+  <meta name="description" content="Dividí la cuenta y descubrí quién le debe a quién. Sin hacer cuentas de más. Gratis y sin registro en MilSitios."/>
 </head>
-<body>
+<body data-category="finance">
 
 <nav>
   <a href="index.html" class="nav-back">

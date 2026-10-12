@@ -1,0 +1,55 @@
+/* Shared design tokens. Category colors are used throughout each tool. */
+:root {
+  --font-ui: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --bg: #fff; --ink: #222; --ink-soft: #686868;
+  --accent: #d92e50; --accent-soft: #fff0f3;
+  --card-bg: #fff; --border: #e7e7e7; --tag-bg: #f5f5f5;
+  --social-color: #996214; --social-bg: #fff6e5;
+  --finance-color: #246653; --finance-bg: #eaf5ee;
+  --text-color: #ac3c63; --text-bg: #fbeef3;
+  --games-color: #6952ab; --games-bg: #f1edfa;
+}
+body[data-category="social"] { --tool-color: var(--social-color); --tool-bg: var(--social-bg); }
+body[data-category="finance"] { --tool-color: var(--finance-color); --tool-bg: var(--finance-bg); }
+body[data-category="text"] { --tool-color: var(--text-color); --tool-bg: var(--text-bg); }
+body[data-category="games"] { --tool-color: var(--games-color); --tool-bg: var(--games-bg); }
+body { font-family: var(--font-ui); background: var(--bg); color: var(--ink); }
+body::before { content: none; }
+body > nav { height: 80px; padding: 0 max(24px, calc((100vw - 1200px) / 2)); background: #fff; border-bottom: 1px solid var(--border); gap: 16px; }
+.nav-logo, .footer-logo { font-family: var(--font-ui); font-weight: 750; letter-spacing: -.05em; }
+.nav-logo { font-size: 24px; }
+.nav-logo span, .footer-logo span { color: var(--accent); }
+.nav-back { border: 1px solid var(--border); border-radius: 30px; padding: 10px 14px; color: var(--ink); }
+.nav-chip, .nav-tool-name { background: var(--tag-bg); padding: 8px 12px; border-radius: 30px; font-size: 12px; }
+.hero, .tool-header { padding-top: 44px; padding-bottom: 26px; }
+h1, .tool-title { font-family: var(--font-ui); font-weight: 700; font-size: clamp(30px, 5vw, 44px); line-height: 1.12; letter-spacing: -.045em; }
+.hero-sub, .tool-header > .tool-desc { font-size: 15px; font-weight: 400; line-height: 1.65; margin-top: 12px; }
+.tool-chip { background: var(--tool-bg); color: var(--tool-color); border-radius: 30px; padding: 7px 12px; font-size: 12px; letter-spacing: 0; text-transform: none; }
+.card, .section-card, .stat-card, .team-card, .game-card, .textarea-wrap { border: 1px solid var(--border); border-radius: 20px; box-shadow: 0 4px 18px #22222204; }
+.card { padding: 24px; }
+.card-title, .step-label, .sec-title, .game-name { letter-spacing: -.025em; }
+.ms-input, .ms-textarea, .juntada-input, .part-name-input { border-width: 1px; border-radius: 12px; }
+.ms-input { min-height: 46px; }
+.btn, .btn-start, .btn-roll, .btn-calc, .btn-big, .btn-end-round { border-radius: 12px; }
+.btn-primary, .btn-start, .btn-roll, .btn-calc, .btn-big, .btn-end-round { background: var(--tool-color); color: #fff; border-color: var(--tool-color); }
+.btn-primary:hover, .btn-start:hover, .btn-roll:hover, .btn-calc:hover, .btn-big:hover, .btn-end-round:hover { filter: brightness(.94); }
+.related-card { border: 1px solid var(--border); border-radius: 16px; background: #fff; }
+.game-card { padding: 28px; }
+.game-icon { background: var(--games-bg); border-radius: 18px; }
+button, input, textarea, select { font-family: var(--font-ui); }
+button { touch-action: manipulation; }
+:where(a, button, input, textarea, select):focus-visible { outline: 3px solid var(--ink); outline-offset: 4px; }
+input[type="text"], input[type="number"], input[type="search"], textarea, select { font-size: 16px; }
+.skip-link { position: fixed; top: -80px; left: 16px; z-index: 9999; background: #222; color: white; padding: 14px 20px; border-radius: 10px; }
+.skip-link:focus { top: 12px; }
+@media(max-width: 540px) {
+  body > nav { height: 68px; padding: 0 16px; gap: 10px; }
+  .nav-logo { font-size: 21px; }
+  .nav-chip, .nav-tool-name { font-size: 10px; padding: 7px 9px; }
+  .nav-sep { display: none; }
+  .hero, .tool-header { padding-top: 30px; }
+  .card { padding: 18px; }
+}
+@media(prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-delay: 0ms !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+}

@@ -4,10 +4,10 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Sorteo Online — MilSitios</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
-  <style>
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+
+<style>
     :root {
       --bg: #F5F3EE;
       --ink: #1A1814;
@@ -26,7 +26,7 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
     body {
-      font-family: 'DM Sans', sans-serif;
+      font-family: var(--font-ui);
       background: var(--bg);
       color: var(--ink);
       min-height: 100vh;
@@ -51,14 +51,14 @@
     .nav-back { display: flex; align-items: center; gap: .4rem; font-size: .85rem; font-weight: 500; color: var(--ink-soft); text-decoration: none; -webkit-tap-highlight-color: transparent; }
     .nav-back:hover { color: var(--ink); }
     .nav-sep { color: var(--border); }
-    .nav-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.1rem; letter-spacing: -.03em; color: var(--ink); text-decoration: none; }
+    .nav-logo { font-family: var(--font-ui); font-weight: 800; font-size: 1.1rem; letter-spacing: -.03em; color: var(--ink); text-decoration: none; }
     .nav-logo span { color: var(--accent); }
     .nav-chip { margin-left: auto; font-size: .75rem; color: var(--tool-color); font-weight: 600; }
 
     /* ── HERO ── */
     .hero { padding: 2rem 1.25rem 1.5rem; max-width: 700px; margin: 0 auto; text-align: center; }
     .tool-chip { display: inline-flex; align-items: center; gap: .4rem; background: var(--tool-bg); color: var(--tool-color); font-size: .72rem; font-weight: 600; letter-spacing: .07em; text-transform: uppercase; padding: .3rem .8rem; border-radius: 100px; margin-bottom: .9rem; }
-    h1 { font-family: 'Syne', sans-serif; font-weight: 800; font-size: clamp(1.9rem, 7vw, 3rem); line-height: 1; letter-spacing: -.04em; margin-bottom: .5rem; }
+    h1 { font-family: var(--font-ui); font-weight: 800; font-size: clamp(1.9rem, 7vw, 3rem); line-height: 1; letter-spacing: -.04em; margin-bottom: .5rem; }
     .hero-sub { font-size: .9rem; color: var(--ink-soft); font-weight: 300; line-height: 1.6; }
 
     /* ── BODY ── */
@@ -66,7 +66,7 @@
 
     /* ── CARD ── */
     .card { background: var(--card-bg); border: 1.5px solid var(--border); border-radius: 20px; padding: 1.4rem; margin-bottom: 1rem; }
-    .card-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: .95rem; letter-spacing: -.02em; margin-bottom: 1rem; display: flex; align-items: center; gap: .5rem; }
+    .card-title { font-family: var(--font-ui); font-weight: 700; font-size: .95rem; letter-spacing: -.02em; margin-bottom: 1rem; display: flex; align-items: center; gap: .5rem; }
     .card-desc { font-size: .8rem; color: var(--ink-soft); margin-top: -.65rem; margin-bottom: 1rem; line-height: 1.5; }
 
     /* ── MODE TABS ── */
@@ -86,7 +86,7 @@
       border-radius: 11px;
       border: none;
       background: transparent;
-      font-family: 'DM Sans', sans-serif;
+      font-family: var(--font-ui);
       font-size: .72rem;
       font-weight: 500;
       color: var(--ink-soft);
@@ -105,7 +105,7 @@
     .ms-input {
       width: 100%; height: 46px;
       padding: 0 1rem;
-      font-family: 'DM Sans', sans-serif; font-size: .95rem;
+      font-family: var(--font-ui); font-size: .95rem;
       background: var(--bg); border: 1.5px solid var(--border);
       border-radius: 12px; outline: none; color: var(--ink);
       transition: border-color .2s, box-shadow .2s; -webkit-appearance: none;
@@ -114,7 +114,7 @@
     .ms-textarea {
       width: 100%; min-height: 80px;
       padding: .75rem 1rem;
-      font-family: 'DM Sans', sans-serif; font-size: .9rem; line-height: 1.5;
+      font-family: var(--font-ui); font-size: .9rem; line-height: 1.5;
       background: var(--bg); border: 1.5px solid var(--border);
       border-radius: 12px; outline: none; color: var(--ink); resize: vertical;
       transition: border-color .2s; -webkit-appearance: none;
@@ -139,7 +139,7 @@
     .pcount { margin-left: auto; font-size: .75rem; color: var(--ink-soft); font-weight: 500; }
 
     /* ── BUTTONS ── */
-    .btn { height: 44px; padding: 0 1.1rem; font-family: 'DM Sans', sans-serif; font-size: .88rem; font-weight: 500; border: none; border-radius: 12px; cursor: pointer; display: inline-flex; align-items: center; gap: .4rem; transition: all .15s; white-space: nowrap; -webkit-tap-highlight-color: transparent; }
+    .btn { height: 44px; padding: 0 1.1rem; font-family: var(--font-ui); font-size: .88rem; font-weight: 500; border: none; border-radius: 12px; cursor: pointer; display: inline-flex; align-items: center; gap: .4rem; transition: all .15s; white-space: nowrap; -webkit-tap-highlight-color: transparent; }
     .btn:active { transform: scale(.97); }
     .btn-ghost { background: var(--tag-bg); color: var(--ink-soft); }
     .btn-ghost:hover { background: var(--border); color: var(--ink); }
@@ -150,7 +150,7 @@
       width: 100%; height: 56px;
       background: var(--accent); color: #fff;
       border: none; border-radius: 14px;
-      font-family: 'Syne', sans-serif; font-size: 1.05rem; font-weight: 700;
+      font-family: var(--font-ui); font-size: 1.05rem; font-weight: 700;
       cursor: pointer; display: flex; align-items: center; justify-content: center; gap: .5rem;
       transition: transform .15s, box-shadow .2s;
       -webkit-tap-highlight-color: transparent;
@@ -164,7 +164,7 @@
 
     /* ── COUNTDOWN CONFIG ── */
     .countdown-opts { display: flex; gap: .45rem; flex-wrap: wrap; }
-    .cd-btn { padding: .35rem .8rem; border-radius: 100px; border: 1.5px solid var(--border); background: var(--bg); font-family: 'DM Sans', sans-serif; font-size: .8rem; font-weight: 500; cursor: pointer; transition: all .15s; -webkit-tap-highlight-color: transparent; }
+    .cd-btn { padding: .35rem .8rem; border-radius: 100px; border: 1.5px solid var(--border); background: var(--bg); font-family: var(--font-ui); font-size: .8rem; font-weight: 500; cursor: pointer; transition: all .15s; -webkit-tap-highlight-color: transparent; }
     .cd-btn.active { background: var(--ink); color: #fff; border-color: var(--ink); }
 
     /* ── STEPPER ── */
@@ -172,11 +172,11 @@
     .btn-step { width: 36px; height: 36px; border-radius: 10px; border: 1.5px solid var(--border); background: var(--bg); font-size: 1.1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; font-weight: 700; transition: background .15s; -webkit-tap-highlight-color: transparent; }
     .btn-step:hover { background: var(--tag-bg); }
     .btn-step:active { transform: scale(.92); }
-    .step-val { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.2rem; min-width: 32px; text-align: center; }
+    .step-val { font-family: var(--font-ui); font-weight: 800; font-size: 1.2rem; min-width: 32px; text-align: center; }
 
     /* ── GRUPOS CONFIG ── */
     .grupos-mode-row { display: flex; gap: .45rem; margin-bottom: .85rem; }
-    .gmode-btn { flex: 1; padding: .5rem .5rem; border-radius: 11px; border: 1.5px solid var(--border); background: var(--bg); font-family: 'DM Sans', sans-serif; font-size: .78rem; font-weight: 500; cursor: pointer; text-align: center; transition: all .15s; -webkit-tap-highlight-color: transparent; }
+    .gmode-btn { flex: 1; padding: .5rem .5rem; border-radius: 11px; border: 1.5px solid var(--border); background: var(--bg); font-family: var(--font-ui); font-size: .78rem; font-weight: 500; cursor: pointer; text-align: center; transition: all .15s; -webkit-tap-highlight-color: transparent; }
     .gmode-btn.active { background: var(--ink); color: #fff; border-color: var(--ink); }
 
     /* ── OVERLAY / COUNTDOWN ── */
@@ -190,7 +190,7 @@
     .overlay.show { opacity: 1; pointer-events: all; }
 
     .cd-number {
-      font-family: 'Syne', sans-serif; font-weight: 800;
+      font-family: var(--font-ui); font-weight: 800;
       font-size: clamp(7rem, 30vw, 14rem);
       line-height: 1; letter-spacing: -.06em;
       color: #fff;
@@ -212,30 +212,30 @@
 
     .result-emoji { font-size: 2.5rem; display: block; margin-bottom: .5rem; }
     .result-label { font-size: .72rem; text-transform: uppercase; letter-spacing: .1em; color: rgba(255,255,255,.45); margin-bottom: .4rem; }
-    .result-winner { font-family: 'Syne', sans-serif; font-weight: 800; font-size: clamp(1.8rem, 7vw, 2.8rem); letter-spacing: -.04em; line-height: 1.1; margin-bottom: .35rem; }
+    .result-winner { font-family: var(--font-ui); font-weight: 800; font-size: clamp(1.8rem, 7vw, 2.8rem); letter-spacing: -.04em; line-height: 1.1; margin-bottom: .35rem; }
     .result-sub { font-size: .82rem; color: rgba(255,255,255,.5); margin-bottom: 1.5rem; }
 
     /* multi ganadores */
     .result-list { display: flex; flex-direction: column; gap: .6rem; margin-bottom: 1.5rem; text-align: left; }
     .result-list-item { display: flex; align-items: center; gap: .75rem; background: rgba(255,255,255,.08); border-radius: 12px; padding: .65rem 1rem; }
-    .result-pos { font-family: 'Syne', sans-serif; font-weight: 800; font-size: .85rem; color: rgba(255,255,255,.4); min-width: 24px; }
-    .result-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1rem; }
+    .result-pos { font-family: var(--font-ui); font-weight: 800; font-size: .85rem; color: rgba(255,255,255,.4); min-width: 24px; }
+    .result-name { font-family: var(--font-ui); font-weight: 700; font-size: 1rem; }
 
     /* grupos */
     .groups-grid { display: grid; grid-template-columns: 1fr 1fr; gap: .65rem; margin-bottom: 1.5rem; text-align: left; }
     @media(min-width: 480px) { .groups-grid { grid-template-columns: repeat(3, 1fr); } }
     .group-card { background: rgba(255,255,255,.08); border-radius: 14px; padding: .85rem 1rem; }
-    .group-name { font-family: 'Syne', sans-serif; font-weight: 800; font-size: .82rem; color: rgba(255,255,255,.5); margin-bottom: .5rem; text-transform: uppercase; letter-spacing: .05em; }
+    .group-name { font-family: var(--font-ui); font-weight: 800; font-size: .82rem; color: rgba(255,255,255,.5); margin-bottom: .5rem; text-transform: uppercase; letter-spacing: .05em; }
     .group-members { display: flex; flex-direction: column; gap: .25rem; }
     .group-member { font-size: .85rem; font-weight: 500; }
 
     /* orden */
     .order-list { display: flex; flex-direction: column; gap: .4rem; margin-bottom: 1.5rem; text-align: left; }
     .order-item { display: flex; align-items: center; gap: .65rem; background: rgba(255,255,255,.07); border-radius: 10px; padding: .5rem .9rem; }
-    .order-num { font-family: 'Syne', sans-serif; font-weight: 800; font-size: .78rem; color: rgba(255,255,255,.35); min-width: 20px; }
+    .order-num { font-family: var(--font-ui); font-weight: 800; font-size: .78rem; color: rgba(255,255,255,.35); min-width: 20px; }
     .order-name { font-size: .88rem; font-weight: 500; }
 
-    .btn-result-action { background: rgba(255,255,255,.12); color: #fff; height: 44px; padding: 0 1.5rem; border: none; border-radius: 12px; font-family: 'DM Sans', sans-serif; font-size: .9rem; font-weight: 500; cursor: pointer; transition: background .2s; -webkit-tap-highlight-color: transparent; display: inline-flex; align-items: center; gap: .4rem; }
+    .btn-result-action { background: rgba(255,255,255,.12); color: #fff; height: 44px; padding: 0 1.5rem; border: none; border-radius: 12px; font-family: var(--font-ui); font-size: .9rem; font-weight: 500; cursor: pointer; transition: background .2s; -webkit-tap-highlight-color: transparent; display: inline-flex; align-items: center; gap: .4rem; }
     .btn-result-action:hover { background: rgba(255,255,255,.2); }
     .btn-result-row { display: flex; gap: .5rem; justify-content: center; flex-wrap: wrap; }
 
@@ -243,7 +243,7 @@
     .history-list { display: flex; flex-direction: column; gap: .4rem; max-height: 220px; overflow-y: auto; }
     .history-item { display: flex; align-items: flex-start; gap: .65rem; padding: .55rem .1rem; border-bottom: 1px solid var(--border); font-size: .8rem; }
     .history-item:last-child { border-bottom: none; }
-    .history-mode { font-family: 'Syne', sans-serif; font-size: .68rem; font-weight: 700; color: var(--ink-soft); min-width: 60px; text-transform: uppercase; letter-spacing: .04em; padding-top: .1rem; }
+    .history-mode { font-family: var(--font-ui); font-size: .68rem; font-weight: 700; color: var(--ink-soft); min-width: 60px; text-transform: uppercase; letter-spacing: .04em; padding-top: .1rem; }
     .history-result { flex: 1; color: var(--ink); line-height: 1.5; }
     .history-time { font-size: .68rem; color: var(--ink-soft); white-space: nowrap; padding-top: .1rem; }
     .history-empty { font-size: .82rem; color: var(--ink-soft); }
@@ -259,12 +259,12 @@
     .related-card { background: var(--card-bg); border: 1.5px solid var(--border); border-radius: 14px; padding: .9rem; text-decoration: none; color: var(--ink); display: flex; flex-direction: column; gap: .3rem; transition: transform .2s, border-color .2s; }
     .related-card:hover { transform: translateY(-2px); border-color: var(--tool-color); }
     .related-icon { font-size: 1.3rem; }
-    .related-name { font-family: 'Syne', sans-serif; font-size: .82rem; font-weight: 700; }
+    .related-name { font-family: var(--font-ui); font-size: .82rem; font-weight: 700; }
     .related-cat { font-size: .7rem; color: var(--ink-soft); }
 
     footer { border-top: 1px solid var(--border); padding: 1.75rem 1.25rem; max-width: 700px; margin: 0 auto; display: flex; flex-direction: column; gap: .5rem; }
     @media(min-width:540px) { footer { flex-direction: row; align-items: center; justify-content: space-between; } }
-    .footer-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: .95rem; color: var(--ink); text-decoration: none; }
+    .footer-logo { font-family: var(--font-ui); font-weight: 800; font-size: .95rem; color: var(--ink); text-decoration: none; }
     .footer-logo span { color: var(--accent); }
     .footer-text { font-size: .75rem; color: var(--ink-soft); }
 
@@ -275,8 +275,11 @@
     @keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
     .fi { animation: fadeUp .4s ease both; }
   </style>
+  <link rel="stylesheet" href="assets/theme.css"/>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml"/>
+  <meta name="description" content="Un nombre, un ganador. Sorteá, armá grupos y dejá que decida el azar. Gratis y sin registro en MilSitios."/>
 </head>
-<body>
+<body data-category="social">
 
 <nav>
   <a href="index.html" class="nav-back">
