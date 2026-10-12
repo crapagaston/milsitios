@@ -25,8 +25,23 @@ Copiá una tarjeta `.tool-card` de `index.html`, actualizá su enlace, imagen, t
 
 El sitio sigue siendo estático y conserva las URLs existentes. No requiere un comando de build; el directorio publicado es la raíz del repositorio. Conservá la configuración de Netlify que ya utiliza el proyecto.
 
-El rediseño está preparado en una rama separada. La versión publicada cambia cuando se integra en la rama que Netlify tenga configurada para producción. Si el proyecto tiene habilitadas las Deploy Previews, Netlify puede generar una vista previa desde el pull request.
+Las propuestas se preparan en una rama separada y Netlify genera una Deploy Preview desde el pull request. Integrar en `main` activa la publicación del proyecto en su dirección habitual.
 
 ## Verificación del rediseño
 
-Se verificaron los enlaces y recursos locales de las once páginas, los IDs únicos, la sintaxis de JavaScript y SVG, y las interacciones del buscador y filtros con un DOM simulado. Los scripts de las herramientas se conservaron sin cambios. Queda pendiente comprobar visualmente en un navegador de escritorio y móvil, y probar los flujos completos de cada herramienta antes de publicar.
+Se verificaron los enlaces y recursos locales de las once páginas, los IDs únicos, la sintaxis de JavaScript y SVG, y las interacciones del buscador y filtros con un DOM simulado. Los scripts de las herramientas se conservaron sin cambios. El propietario revisó la vista previa y autorizó publicar el rediseño el 12 de octubre de 2026. La comprobación visual automatizada y los recorridos completos en escritorio y móvil no se realizaron en el entorno de desarrollo; las verificaciones de código no los sustituyen.
+
+## Continuar el proyecto desde ChatGPT
+
+Preferencia del propietario (12 de octubre de 2026): pedir nuevas herramientas desde la conversación y que el asistente implemente e integre los cambios, sin que el propietario tenga que copiar código o editar GitHub manualmente.
+
+Para cada pedido concreto:
+
+1. Leer la versión actual de `main` y conservar HTML/CSS/JS vanilla, sin backend ni APIs externas.
+2. Crear la herramienta completa, siguiendo `assets/theme.css`, con diseño adaptable y una URL descriptiva.
+3. Sumar la tarjeta a la portada, su categoría, ilustración, palabras clave, metadescripción y los enlaces relacionados que correspondan. Actualizar los recuentos.
+4. Verificar los cálculos o flujos relevantes, los enlaces y la versión móvil cuando haya un navegador disponible. Informar cualquier limitación de validación.
+5. Preparar los cambios en una rama y un pull request; integrar y publicar lo solicitado una vez verificado, según la autorización del pedido y esta preferencia. No hace falta pedir nuevamente que el usuario copie código o pulse los botones de GitHub.
+6. Confirmar el estado real de Netlify y devolver el enlace a la herramienta. No afirmar que está publicada si el despliegue no está confirmado.
+
+Pedir aclaración si falta una definición esencial o se requieren servicios pagos, datos sensibles o cambios fuera del alcance. Este flujo se ejecuta cuando el usuario hace un pedido; no es una tarea programada en segundo plano. Requiere que el acceso a GitHub continúe disponible.
