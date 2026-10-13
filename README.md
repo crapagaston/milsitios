@@ -1,6 +1,6 @@
 # MilSitios
 
-Nueve microherramientas gratuitas, sin registro, hechas con HTML, CSS y JavaScript. `juegos-de-cartas.html` agrupa los cuatro juegos; no es una herramienta adicional.
+Diez microherramientas gratuitas, sin registro, hechas con HTML, CSS y JavaScript. `juegos-de-cartas.html` agrupa los cuatro juegos; no es una herramienta adicional.
 
 ## Abrir el proyecto
 
@@ -45,3 +45,9 @@ Para cada pedido concreto:
 6. Confirmar el estado real de Netlify y devolver el enlace a la herramienta. No afirmar que está publicada si el despliegue no está confirmado.
 
 Pedir aclaración si falta una definición esencial o se requieren servicios pagos, datos sensibles o cambios fuera del alcance. Este flujo se ejecuta cuando el usuario hace un pedido; no es una tarea programada en segundo plano. Requiere que el acceso a GitHub continúe disponible.
+
+## Generador de QR
+
+`generador-qr.html`, `assets/qr.css` y `assets/qr.js`: QR estáticos para enlaces HTTP(S), WhatsApp, Wi-Fi y texto UTF-8. Descarga PNG y SVG con margen de cuatro módulos, corrección de errores M y contraste mínimo 4,5:1. Los cambios invalidan el QR anterior para evitar descargar datos desactualizados. No guarda ni envía contenido.
+
+Se incluye localmente qrcode-generator 1.4.4 de Kazuhiko Arase (MIT) en `assets/vendor/qrcode.js`, con su licencia. No requiere CDN, API, backend ni instalación en producción.
