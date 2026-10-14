@@ -57,3 +57,9 @@ Se incluye localmente qrcode-generator 1.4.4 de Kazuhiko Arase (MIT) en `assets/
 `minijuegos.html` es el catálogo separado de minijuegos; la portada lo enlaza desde navegación y un bloque propio, fuera del buscador y recuento de herramientas. Para agregar juegos, sumar tarjetas a este catálogo y actualizar su recuento, sin incluirlas en `#tools-grid`.
 
 `test-de-reflejos.html`, `assets/minijuegos.css` y `assets/reflejos.js`: cinco intentos con espera aleatoria, detección de anticipación, promedio, mejor intento, récord de promedio local y compartir. Usa contacto inicial o teclado, ignora repetición y pausa al perder foco/ocultar la pestaña. El almacenamiento y la función compartir son opcionales; no hay servicios externos.
+
+## Clavá los 10 segundos
+
+`clava-los-10-segundos.html`, `assets/tiempo.css`, `assets/tiempo.js` y `assets/tiempo-core.js`: aventura de 6/12/18 niveles (tres aciertos por nivel), tiempo base 5/10/15/30 segundos, tres dificultades y 3/5/7 vidas. Seis variantes cíclicas con margen decreciente; práctica ilimitada con variante seleccionable. Cada intento requiere iniciar y detener; la preparación siguiente es separada para leer reglas antes de contar. Pausa sin penalización al salir de la pestaña, límite de espera por intento y almacenamiento local opcional de ajustes/récords por configuración. No persiste partidas en curso.
+
+El catálogo de Minijuegos contiene dos juegos. Las herramientas y el test de reflejos se mantienen separados de esta implementación.
