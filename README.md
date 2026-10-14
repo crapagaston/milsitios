@@ -51,3 +51,9 @@ Pedir aclaración si falta una definición esencial o se requieren servicios pag
 `generador-qr.html`, `assets/qr.css` y `assets/qr.js`: QR estáticos para enlaces HTTP(S), WhatsApp, Wi-Fi y texto UTF-8. Descarga PNG y SVG con margen de cuatro módulos, corrección de errores M y contraste mínimo 4,5:1. Los cambios invalidan el QR anterior para evitar descargar datos desactualizados. No guarda ni envía contenido.
 
 Se incluye localmente qrcode-generator 1.4.4 de Kazuhiko Arase (MIT) en `assets/vendor/qrcode.js`, con su licencia. No requiere CDN, API, backend ni instalación en producción.
+
+## Minijuegos
+
+`minijuegos.html` es el catálogo separado de minijuegos; la portada lo enlaza desde navegación y un bloque propio, fuera del buscador y recuento de herramientas. Para agregar juegos, sumar tarjetas a este catálogo y actualizar su recuento, sin incluirlas en `#tools-grid`.
+
+`test-de-reflejos.html`, `assets/minijuegos.css` y `assets/reflejos.js`: cinco intentos con espera aleatoria, detección de anticipación, promedio, mejor intento, récord de promedio local y compartir. Usa contacto inicial o teclado, ignora repetición y pausa al perder foco/ocultar la pestaña. El almacenamiento y la función compartir son opcionales; no hay servicios externos.
