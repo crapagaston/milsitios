@@ -1,6 +1,6 @@
 # MilSitios
 
-Diez microherramientas gratuitas, sin registro, hechas con HTML, CSS y JavaScript. `juegos-de-cartas.html` agrupa los cuatro juegos; no es una herramienta adicional.
+Once microherramientas gratuitas, sin registro, hechas con HTML, CSS y JavaScript. `juegos-de-cartas.html` agrupa los cuatro juegos; no es una herramienta adicional.
 
 ## Abrir el proyecto
 
@@ -23,7 +23,7 @@ Copiá una tarjeta `.tool-card` de `index.html`, actualizá su enlace, imagen, t
 
 ## GitHub y Netlify
 
-El sitio sigue siendo estático y conserva las URLs existentes. No requiere un comando de build; el directorio publicado es la raíz del repositorio. Conservá la configuración de Netlify que ya utiliza el proyecto.
+El sitio conserva las URLs existentes y publica los HTML desde la raíz del repositorio. Amigo Invisible agrega una función de Netlify y una dependencia de almacenamiento; Netlify instala dependencias y empaqueta la función sin compilar el frontend. Conservá la configuración de Netlify que ya utiliza el proyecto.
 
 Las propuestas se preparan en una rama separada y Netlify genera una Deploy Preview desde el pull request. Integrar en `main` activa la publicación del proyecto en su dirección habitual.
 
@@ -37,7 +37,7 @@ Preferencia del propietario (12 de octubre de 2026): pedir nuevas herramientas d
 
 Para cada pedido concreto:
 
-1. Leer la versión actual de `main` y conservar HTML/CSS/JS vanilla, sin backend ni APIs externas.
+1. Leer la versión actual de `main` y conservar HTML/CSS/JS vanilla. Las herramientas existentes siguen siendo locales; Amigo Invisible incorpora funciones de Netlify, almacenamiento y correo según el pedido del propietario del 7 de noviembre de 2026.
 2. Crear la herramienta completa, siguiendo `assets/theme.css`, con diseño adaptable y una URL descriptiva.
 3. Sumar la tarjeta a la portada, su categoría, ilustración, palabras clave, metadescripción y los enlaces relacionados que correspondan. Actualizar los recuentos.
 4. Verificar los cálculos o flujos relevantes, los enlaces y la versión móvil cuando haya un navegador disponible. Informar cualquier limitación de validación.
@@ -63,3 +63,7 @@ Se incluye localmente qrcode-generator 1.4.4 de Kazuhiko Arase (MIT) en `assets/
 `clava-los-10-segundos.html`, `assets/tiempo.css`, `assets/tiempo.js` y `assets/tiempo-core.js`: aventura de 6/12/18 niveles (tres aciertos por nivel), tiempo base 5/10/15/30 segundos, tres dificultades y 3/5/7 vidas. Seis variantes cíclicas con margen decreciente; práctica ilimitada con variante seleccionable. Cada intento requiere iniciar y detener; la preparación siguiente es separada para leer reglas antes de contar. Pausa sin penalización al salir de la pestaña, límite de espera por intento y almacenamiento local opcional de ajustes/récords por configuración. No persiste partidas en curso.
 
 El catálogo de Minijuegos contiene dos juegos. Las herramientas y el test de reflejos se mantienen separados de esta implementación.
+
+## Amigo Invisible
+
+`amigo-invisible.html`, `assets/amigo-*` y `netlify/`: sorteo por correo, acceso privado recuperable, restricciones, corrección y reenvío de asignaciones, mensajes editables por ocasión, vista previa, prueba, borrador e historial. Requiere activar Resend y variables privadas de Netlify; sin configurar envíos, muestra el estado de preparación y permite explorar modelos. Ver [activación, límites y privacidad](AMIGO-INVISIBLE.md). Las otras diez herramientas siguen funcionando sin servicios externos.
